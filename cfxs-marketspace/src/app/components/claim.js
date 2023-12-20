@@ -4,7 +4,15 @@ import ClaimModal from "@/app/components/claimModal";
 import * as FluentWallet from "@cfxjs/use-wallet-react/ethereum/Fluent";
 import * as MetaMask from "@cfxjs/use-wallet-react/ethereum/MetaMask";
 import * as OKXWallet from "@cfxjs/use-wallet-react/ethereum/OKX";
-import { isCorrectChainId } from "@/app/utils";
+import {
+  isCorrectChainId,
+  maxSelectedItemsCount,
+  oldContractAddress,
+} from "@/app/utils";
+import { BrowserProvider, Contract } from "ethers";
+import React, { useState } from "react";
+import { abi as oldCfxsContractAbi } from "@/app/contracts/oldCfxsContractAbi.json";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function Claim() {
   const fluentWalletStatus = FluentWallet.useStatus();
@@ -17,7 +25,11 @@ export default function Claim() {
   const okxWalletAccount = OKXWallet.useAccount();
   const okxWalletChainId = OKXWallet.useChainId();
 
-  const _isConnectWallet = () =>
+  const [balance, setBalance] = useState("");
+  const [loadingData, setLoadingData] = useState(false);
+  const [cfxsItems, setCfxsItems] = React.useState([]);
+
+  const account = () =>
     fluentWalletAccount || metaMaskWalletAccount || okxWalletAccount;
 
   const _isCorrectChainId = () =>
@@ -30,11 +42,101 @@ export default function Claim() {
       okxWalletChainId
     );
 
+  const browserProvier = fluentWalletAccount
+    ? FluentWallet.provider
+    : metaMaskWalletAccount
+    ? MetaMask.provider
+    : okxWalletAccount
+    ? OKXWallet.provider
+    : window.ethereum;
+
+  const handleOpenClaimModal = () => {
+    setLoadingData(true);
+    const provider = new BrowserProvider(browserProvier);
+    const contract = new Contract(
+      oldContractAddress,
+      oldCfxsContractAbi,
+      provider
+    );
+
+    // get Cfxs balance
+    contract
+      .balanceOf("0x054d9e37a2f95f5262b31c1ae2d43bfe1e85f5b0")
+      .then((balance) => {
+        console.log(balance);
+        setBalance(balance + "");
+        if (balance > 0) {
+          console.log("get items");
+          fetch("https://jsonplaceholder.typicode.com/todos")
+            .then((response) => response.json())
+            .then((items) => {
+              console.log(items);
+              if (items.length > 0 && Array.isArray(items)) {
+                setCfxsItems(
+                  items.map((c, i) => {
+                    return {
+                      id: c.id,
+                      amount: 1,
+                      checked: i < maxSelectedItemsCount,
+                    };
+                  })
+                );
+              }
+            })
+            .finally(() => {
+              setLoadingData(false);
+            });
+        }
+      })
+      .catch(() => {
+        setLoadingData(false);
+      });
+    document.getElementById("claimModal").showModal();
+  };
+
+  const handleClaim = () => {
+    const checkedCfxsItems = cfxsItems.filter((c) => c.checked);
+    if (checkedCfxsItems.length > 0) {
+      const provider = new BrowserProvider(FluentWallet.provider);
+      const contract = new Contract(
+        oldContractAddress,
+        oldCfxsContractAbi,
+        provider
+      );
+      provider.getSigner().then((signer) => {
+        const contractWithSigner = contract.connect(signer);
+        contractWithSigner
+          .CreateCFXs()
+          .then((tx) => {
+            console.log(tx);
+
+            tx.wait(2)
+              .then((txReceipt) => {
+                console.log(txReceipt);
+                toast("Success: " + txReceipt.transactionHash, {
+                  type: "success",
+                });
+                // remove claimed cfxs
+                console.log(checkedCfxsItems);
+              })
+              .catch((err) => {
+                console.error(err);
+                toast(err ? err.message : "Unknown Error", { type: "error" });
+              });
+          })
+          .catch((err) => {
+            console.error(err);
+            toast(err ? err.message : "Unknown Error", { type: "error" });
+          });
+      });
+    }
+  };
+
   return (
     <>
       <div
         role="alert"
-        className="alert alert-error bg-red-100 mt-4 text-error border-none shadow-xl"
+        className="alert alert-error bg-red-100 mt-4 text-error border-none shadow-lg"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -74,10 +176,10 @@ export default function Claim() {
           <div className="mx-2 pt-2">
             <button
               className="btn btn-error text-white"
-              onClick={() => document.getElementById("claimModal").showModal()}
-              disabled={!_isConnectWallet() || !_isCorrectChainId()}
+              onClick={handleOpenClaimModal}
+              disabled={!account() || !_isCorrectChainId()}
             >
-              {_isConnectWallet()
+              {account()
                 ? _isCorrectChainId()
                   ? "Claim Cfxs"
                   : "Wrong Network"
@@ -86,7 +188,15 @@ export default function Claim() {
           </div>
         </div>
       </div>
-      <ClaimModal />
+      <ClaimModal
+        balance={balance}
+        loadingData={loadingData}
+        cfxsItems={cfxsItems}
+        setCfxsItems={setCfxsItems}
+        handleClaim={handleClaim}
+        refreshData={handleOpenClaimModal}
+        ToastContainer={ToastContainer}
+      />
     </>
   );
 }

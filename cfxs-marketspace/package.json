@@ -11,9 +11,13 @@
   "dependencies": {
     "@cfxjs/use-wallet-react": "^0.0.2-3",
     "decimal.js": "^10.4.3",
+    "ethers": "^6.9.1",
+    "js-conflux-sdk": "^2.3.0",
     "next": "14.0.4",
     "react": "^18",
     "react-dom": "^18",
+    "react-hot-toast": "^2.4.1",
+    "react-toastify": "^9.1.3",
     "zustand": "^4.4.7"
   },
   "devDependencies": {

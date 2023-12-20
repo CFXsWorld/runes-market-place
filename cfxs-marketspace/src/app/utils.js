@@ -1,5 +1,8 @@
 export const correctChainId = "1030";
 export const correctChainIdHex = "0x406";
+export const eSpaceRpc = "https://emain-rpc.nftrainbow.cn/VKdPKZBdjg";
+export const oldContractAddress = "0xc6e865c213c89ca42a622c5572d19f00d84d7a16";
+export const maxSelectedItemsCount = 100;
 
 export const addressFormat = (
   fluentWalletAccount,
