@@ -16,6 +16,8 @@ import { abi as oldCfxsContractAbi } from "@/app/contracts/oldCfxsContractAbi.js
 import bridgeContractAbi from "@/app/contracts/bridgeContractAbi.json";
 import { toast, ToastContainer } from "react-toastify";
 
+const globalThis = typeof window !== "undefined" ? window : {};
+
 export default function Claim() {
   const fluentWalletStatus = FluentWallet.useStatus();
   const fluentWalletAccount = FluentWallet.useAccount();
@@ -53,7 +55,7 @@ export default function Claim() {
     ? MetaMask.provider
     : okxWalletAccount
     ? OKXWallet.provider
-    : window.ethereum;
+    : globalThis.ethereum;
 
   const provider = new BrowserProvider(browserProvier);
   const contract = new Contract(
@@ -110,7 +112,7 @@ export default function Claim() {
   const handleOpenClaimModal = () => {
     document.getElementById("claimModal").showModal();
     setLoadingData(true);
-    const ref = window.setTimeout(() => {
+    const ref = globalThis.setTimeout(() => {
       // get Cfxs balance
       contract
         .balanceOf(account())
@@ -130,7 +132,7 @@ export default function Claim() {
           setBalance("Failed to get balance, please try again.");
           setLoadingData(false);
         });
-      window.clearTimeout(ref);
+      globalThis.clearTimeout(ref);
     }, 3000);
   };
 
