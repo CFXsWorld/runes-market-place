@@ -2,11 +2,11 @@
   "rewrites": [
     {
       "source": "/getCfxsList",
-      "destination": "http://test.conins.io/",
+      "destination": "http://test.conins.io/"
     },
     {
       "source": "/del",
-      "destination": "http://test.conins.io/del",
+      "destination": "http://test.conins.io/del"
     }
   ]
 }
