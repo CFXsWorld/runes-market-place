@@ -13,17 +13,21 @@ import { maxSelectedItemsCount, oldContractAddress } from "@/app/utils";
 
 export default function ClaimModal({
   cfxsItems,
+  cfxsTotalCount,
   setCfxsItems,
+  loadMoreData,
   balance,
   loadingData,
   handleClaim,
   refreshData,
   ToastContainer,
+  loadingClaim,
+  handleQuickSelected,
+  handleClearSelected,
 }) {
   const isChecked = cfxsItems.some((c) => c.checked);
 
   const onCheck = (id) => {
-    console.log(provider);
     setCfxsItems(
       cfxsItems.map((c) => {
         return c.id === id ? { ...c, checked: !c.checked } : c;
@@ -31,32 +35,10 @@ export default function ClaimModal({
     );
   };
 
-  // quick select top 24 items
-  const handleQuickSelected = () => {
-    setCfxsItems(
-      cfxsItems.map((c, i) => {
-        return { ...c, checked: i < maxSelectedItemsCount };
-      })
-    );
-  };
-
-  const handleClearSelected = () => {
-    setCfxsItems(
-      cfxsItems.map((c) => {
-        return { ...c, checked: false };
-      })
-    );
-  };
-
   return (
     <div>
       <dialog id="claimModal" className="modal">
-        <div className="toast">
-          <div className="alert alert-info">
-            <span>New message arrived.</span>
-          </div>
-        </div>
-        <div className="modal-box max-w-5xl">
+        <div className="modal-box max-w-screen-lg min-h-96">
           <ToastContainer />
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
@@ -67,7 +49,7 @@ export default function ClaimModal({
           <div className="pt-4">
             Claimable:{" "}
             {loadingData ? (
-              <span className="loading loading-spinner loading-xs"></span>
+              <span className="loading loading-spinner loading-xs" />
             ) : (
               <span className="text-primary">{balance}</span>
             )}{" "}
@@ -78,46 +60,62 @@ export default function ClaimModal({
             >
               Select top {maxSelectedItemsCount}
             </button>
+            <button
+              className="btn btn-primary btn-xs ml-4"
+              onClick={handleQuickSelected}
+            >
+              Select top {maxSelectedItemsCount / 2}
+            </button>
             <button className="btn btn-xs ml-2" onClick={handleClearSelected}>
               Clear
             </button>
             <button className="btn btn-info btn-xs ml-2" onClick={refreshData}>
               Refresh Data
+              {loadingData && (
+                <span className="loading loading-spinner loading-sm" />
+              )}
             </button>
           </div>
           <div className="py-4">
             <button
               className="btn btn-primary"
               onClick={handleClaim}
-              disabled={!isChecked}
+              disabled={!isChecked || loadingClaim}
             >
               {isChecked ? "Claim Cfxs" : "Please check some cfxs"}
+              {loadingClaim && <span className="loading loading-spinner" />}
             </button>
           </div>
           <div className="flex flex-row flex-wrap">
-            {loadingData ? (
-              <span className="loading loading-spinner loading-lg"></span>
-            ) : (
-              cfxsItems.map((c, i) => (
+            <div>
+              {cfxsItems.map((c, i) => (
                 <div className="stats shadow rounded-lg m-2 border" key={i}>
-                  <div className="stat px-4 py-3">
-                    <div className="stat-desc">#{c.id}</div>
-                    <div className="stat-value mt-1 px-2 font-normal">
-                      {c.amount}
-                      <span className="font-light text-lg"> cfxs</span>
-                    </div>
-                    <div className="stat-figure text-primary">
+                  <div className="stat px-3 py-2">
+                    <div className="stat-desc text-xs">#{c.id}</div>
+                    <div className="flex items-center">
+                      <div className="stat-value mt-1 font-normal text-lg">
+                        <span>{c.amount}</span>
+                        <span className="font-light text-base"> cfxs</span>
+                      </div>
                       <input
                         type="checkbox"
                         checked={c.checked}
                         onChange={() => onCheck(c.id)}
-                        className="checkbox checkbox-sm checkbox-primary"
+                        className="checkbox checkbox-sm checkbox-primary ml-3"
                       />
                     </div>
                   </div>
                 </div>
-              ))
-            )}
+              ))}
+              {cfxsTotalCount > cfxsItems.length && (
+                <button className="btn btn-info" onClick={() => loadMoreData()}>
+                  Load More
+                  {loadingData && (
+                    <span className="loading loading-spinner loading-sm" />
+                  )}
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </dialog>

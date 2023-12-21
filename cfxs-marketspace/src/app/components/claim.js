@@ -5,6 +5,7 @@ import * as FluentWallet from "@cfxjs/use-wallet-react/ethereum/Fluent";
 import * as MetaMask from "@cfxjs/use-wallet-react/ethereum/MetaMask";
 import * as OKXWallet from "@cfxjs/use-wallet-react/ethereum/OKX";
 import {
+  bridgeContractAddress,
   isCorrectChainId,
   maxSelectedItemsCount,
   oldContractAddress,
@@ -12,6 +13,7 @@ import {
 import { BrowserProvider, Contract } from "ethers";
 import React, { useState } from "react";
 import { abi as oldCfxsContractAbi } from "@/app/contracts/oldCfxsContractAbi.json";
+import bridgeContractAbi from "@/app/contracts/bridgeContractAbi.json";
 import { toast, ToastContainer } from "react-toastify";
 
 export default function Claim() {
@@ -27,6 +29,9 @@ export default function Claim() {
 
   const [balance, setBalance] = useState("");
   const [loadingData, setLoadingData] = useState(false);
+  const [loadingClaim, setLoadingClaim] = useState(false);
+  const [cfxsTotalCount, setCfxsTotalCount] = React.useState(2000);
+  const [cfxsStartIndex, setCfxsStartIndex] = React.useState(0);
   const [cfxsItems, setCfxsItems] = React.useState([]);
 
   const account = () =>
@@ -50,86 +55,178 @@ export default function Claim() {
     ? OKXWallet.provider
     : window.ethereum;
 
-  const handleOpenClaimModal = () => {
-    setLoadingData(true);
-    const provider = new BrowserProvider(browserProvier);
-    const contract = new Contract(
-      oldContractAddress,
-      oldCfxsContractAbi,
-      provider
-    );
+  const provider = new BrowserProvider(browserProvier);
+  const contract = new Contract(
+    oldContractAddress,
+    oldCfxsContractAbi,
+    provider
+  );
+  const bridgeContract = new Contract(
+    bridgeContractAddress,
+    bridgeContractAbi,
+    provider
+  );
 
-    // get Cfxs balance
-    contract
-      .balanceOf("0x054d9e37a2f95f5262b31c1ae2d43bfe1e85f5b0")
-      .then((balance) => {
-        console.log(balance);
-        setBalance(balance + "");
-        if (balance > 0) {
-          console.log("get items");
-          fetch("https://jsonplaceholder.typicode.com/todos")
-            .then((response) => response.json())
-            .then((items) => {
-              console.log(items);
-              if (items.length > 0 && Array.isArray(items)) {
-                setCfxsItems(
-                  items.map((c, i) => {
-                    return {
-                      id: c.id,
-                      amount: 1,
-                      checked: i < maxSelectedItemsCount,
-                    };
-                  })
-                );
-              }
+  const loadMoreData = (isReset) => {
+    console.log(isReset);
+    setLoadingData(true);
+    return fetch(
+      `/getCfxsList?owner=${
+        "0xf9BE9cd007021Dc84EAE2E9793D24a72225D12e9" || account()
+      }&startIndex=${cfxsStartIndex}&size=128`,
+      {
+        // method: "POST",
+        // headers: {
+        //   "Content-Type": "application/json",
+        // },
+        // body: JSON.stringify(),
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setCfxsTotalCount(data.count);
+        if (data.rows.length > 0 && Array.isArray(data.rows)) {
+          setCfxsItems(
+            (isReset ? data.rows : cfxsItems.concat(data.rows)).map((c, i) => {
+              return {
+                id: c.id,
+                amount: 1,
+                checked: i < maxSelectedItemsCount,
+              };
             })
-            .finally(() => {
-              setLoadingData(false);
-            });
+          );
+          setCfxsStartIndex(cfxsStartIndex + data.rows.length);
         }
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => {
         setLoadingData(false);
       });
+  };
+
+  const handleOpenClaimModal = () => {
     document.getElementById("claimModal").showModal();
+    setLoadingData(true);
+    const ref = window.setTimeout(() => {
+      // get Cfxs balance
+      contract
+        .balanceOf(account())
+        .then((balance) => {
+          console.log(balance);
+          setBalance(balance + "");
+          if (balance > 0) {
+            console.log("get items");
+            loadMoreData(true);
+          } else {
+            setLoadingData(false);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          toast(err ? err.message : "Unknown Error", { type: "error" });
+          setBalance("Failed to get balance, please try again.");
+          setLoadingData(false);
+        });
+      window.clearTimeout(ref);
+    }, 3000);
   };
 
   const handleClaim = () => {
     const checkedCfxsItems = cfxsItems.filter((c) => c.checked);
     if (checkedCfxsItems.length > 0) {
-      const provider = new BrowserProvider(FluentWallet.provider);
-      const contract = new Contract(
-        oldContractAddress,
-        oldCfxsContractAbi,
-        provider
-      );
+      const ids = checkedCfxsItems.map((c) => c.id);
+      setLoadingClaim(true);
       provider.getSigner().then((signer) => {
-        const contractWithSigner = contract.connect(signer);
+        const contractWithSigner = bridgeContract.connect(signer);
         contractWithSigner
-          .CreateCFXs()
+          .ExTestToMain(ids)
           .then((tx) => {
             console.log(tx);
 
             tx.wait(2)
               .then((txReceipt) => {
                 console.log(txReceipt);
-                toast("Success: " + txReceipt.transactionHash, {
-                  type: "success",
-                });
+
                 // remove claimed cfxs
                 console.log(checkedCfxsItems);
+                fetch(`/del`, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    owner: account(),
+                    id: ids,
+                  }),
+                })
+                  .then((data) => {
+                    console.log(data);
+
+                    // remove claimed cfxs from UI
+                    setCfxsItems(
+                      cfxsItems
+                        .filter((c) => !ids.includes(c.id))
+                        .map((c, i) => {
+                          return {
+                            ...c,
+                            checked: i < maxSelectedItemsCount,
+                          };
+                        })
+                    );
+                    // if (data.success) {
+                    // }
+                    toast("Success: " + txReceipt.hash, {
+                      type: "success",
+                    });
+                  })
+                  .catch((err) => {
+                    console.error(err);
+                    toast(err ? err.message : "Unknown Error", {
+                      type: "error",
+                    });
+                  })
+                  .finally(() => {
+                    setLoadingClaim(false);
+                  });
               })
               .catch((err) => {
                 console.error(err);
                 toast(err ? err.message : "Unknown Error", { type: "error" });
+                setLoadingClaim(false);
               });
           })
           .catch((err) => {
             console.error(err);
             toast(err ? err.message : "Unknown Error", { type: "error" });
+            setLoadingClaim(false);
           });
       });
     }
+  };
+
+  // quick select top items
+  const handleQuickSelected = (isHalf) => {
+    if (cfxsItems.length > 0)
+      setCfxsItems(
+        cfxsItems.map((c, i) => {
+          return {
+            ...c,
+            checked:
+              i < isHalf ? maxSelectedItemsCount / 2 : maxSelectedItemsCount,
+          };
+        })
+      );
+  };
+
+  const handleClearSelected = () => {
+    setCfxsItems(
+      cfxsItems.map((c) => {
+        return { ...c, checked: false };
+      })
+    );
   };
 
   return (
@@ -193,9 +290,14 @@ export default function Claim() {
         loadingData={loadingData}
         cfxsItems={cfxsItems}
         setCfxsItems={setCfxsItems}
+        loadMoreData={loadMoreData}
+        cfxsTotalCount={cfxsTotalCount}
         handleClaim={handleClaim}
         refreshData={handleOpenClaimModal}
         ToastContainer={ToastContainer}
+        loadingClaim={loadingClaim}
+        handleQuickSelected={handleQuickSelected}
+        handleClearSelected={handleClearSelected}
       />
     </>
   );

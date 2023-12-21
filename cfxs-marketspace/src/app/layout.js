@@ -8,7 +8,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout(props) {
   return (
-    <html lang="en" title="Cfxs Marketspace">
+    <html lang="en">
+      <title>Cfxs Marketspace</title>
       <body className={inter.className}>
         <Container {...props} />
       </body>
