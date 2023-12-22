@@ -13,6 +13,7 @@ const nextConfig = {
     ];
   },
   distDir: "dist",
+  swcMinify: false,
 };
 
 module.exports = nextConfig;
