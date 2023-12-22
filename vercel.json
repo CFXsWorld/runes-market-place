@@ -1,6 +1,6 @@
 {
+  "framework": "nextjs",
   "rewrites": [
-    { "source": "/(.*)", "destination": "/" },
     {
       "source": "/getCfxsList",
       "destination": "http://test.conins.io/"
