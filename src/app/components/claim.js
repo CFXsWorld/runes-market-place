@@ -8,12 +8,14 @@ import {
   bridgeContractAddress,
   isCorrectChainId,
   maxSelectedItemsCount,
+  newContractAddress,
   oldContractAddress,
 } from "@/app/utils";
-import { BrowserProvider, Contract } from "ethers";
+import { BrowserProvider, Contract, getAddress } from "ethers";
 import React, { useState } from "react";
 import { abi as oldCfxsContractAbi } from "@/app/contracts/oldCfxsContractAbi.json";
-import bridgeContractAbi from "@/app/contracts/bridgeContractAbi.json";
+// import { abi as bridgeContractAbi } from "@/app/contracts/bridgeContractTestnet.json"; //FIXME test
+import { abi as bridgeContractAbi } from "@/app/contracts/bridgeContractMainnet.json"; //prod
 import { toast, ToastContainer } from "react-toastify";
 
 const globalThis = typeof window !== "undefined" ? window : {};
@@ -32,9 +34,10 @@ export default function Claim() {
   const [balance, setBalance] = useState("");
   const [loadingData, setLoadingData] = useState(false);
   const [loadingClaim, setLoadingClaim] = useState(false);
-  const [cfxsTotalCount, setCfxsTotalCount] = React.useState(2000);
+  const [cfxsTotalCount, setCfxsTotalCount] = React.useState(0);
   const [cfxsStartIndex, setCfxsStartIndex] = React.useState(0);
   const [cfxsItems, setCfxsItems] = React.useState([]);
+  const [warningText, setWarningText] = React.useState("");
 
   const account = () =>
     fluentWalletAccount || metaMaskWalletAccount || okxWalletAccount;
@@ -73,16 +76,9 @@ export default function Claim() {
     console.log(isReset);
     setLoadingData(true);
     return fetch(
-      `/getCfxsList?owner=${
-        "0xf9BE9cd007021Dc84EAE2E9793D24a72225D12e9" || account()
-      }&startIndex=${cfxsStartIndex}&size=128`,
-      {
-        // method: "POST",
-        // headers: {
-        //   "Content-Type": "application/json",
-        // },
-        // body: JSON.stringify(),
-      }
+      `/getCfxsList?owner=${getAddress(
+        account()
+      )}&startIndex=${cfxsStartIndex}&size=128`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -112,6 +108,7 @@ export default function Claim() {
   const handleOpenClaimModal = () => {
     document.getElementById("claimModal").showModal();
     setLoadingData(true);
+    setWarningText("");
     const ref = globalThis.setTimeout(() => {
       // get Cfxs balance
       contract
@@ -129,7 +126,7 @@ export default function Claim() {
         .catch((err) => {
           console.error(err);
           toast(err ? err.message : "Unknown Error", { type: "error" });
-          setBalance("Failed to get balance, please try again.");
+          setWarningText("Failed to get balance, please try again.");
           setLoadingData(false);
         });
       globalThis.clearTimeout(ref);
@@ -148,25 +145,43 @@ export default function Claim() {
           .then((tx) => {
             console.log(tx);
 
+            setWarningText(
+              "Please wait for the transaction and do not close the window."
+            );
+
             tx.wait(2)
               .then((txReceipt) => {
                 console.log(txReceipt);
 
                 // remove claimed cfxs
                 console.log(checkedCfxsItems);
+                const delData = new URLSearchParams();
+                delData.append(
+                  "id",
+                  `[${ids.map((id) => `"${id}"`).join(",")}]`
+                );
+                delData.append("owner", getAddress(account()));
                 fetch(`/del`, {
                   method: "POST",
                   headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": "application/x-www-form-urlencoded",
                   },
-                  body: JSON.stringify({
-                    owner: account(),
-                    id: ids,
-                  }),
+                  body: delData,
                 })
                   .then((data) => {
                     console.log(data);
-
+                    try {
+                      const jsonData = data.json();
+                      if (jsonData && jsonData.state) {
+                        for (let i = 0; i < jsonData.state.length; i++) {
+                          const jsonDatum = jsonData[i];
+                          if (!jsonDatum.ok)
+                            throw new Error(jsonDatum.id + " Error");
+                        }
+                      }
+                    } catch (err) {
+                      console.error(err);
+                    }
                     // remove claimed cfxs from UI
                     setCfxsItems(
                       cfxsItems
@@ -192,12 +207,14 @@ export default function Claim() {
                   })
                   .finally(() => {
                     setLoadingClaim(false);
+                    setWarningText("");
                   });
               })
               .catch((err) => {
                 console.error(err);
                 toast(err ? err.message : "Unknown Error", { type: "error" });
                 setLoadingClaim(false);
+                setWarningText("");
               });
           })
           .catch((err) => {
@@ -257,18 +274,18 @@ export default function Claim() {
             Please claim the cfxs from the test contract(
             <a
               className="no-underline text-primary hover:underline"
-              href="https://evm.confluxscan.io/address/0xc6e865c213c89ca42a622c5572d19f00d84d7a16"
+              href={"https://evm.confluxscan.io/address/" + oldContractAddress}
               target="_blank"
             >
-              0xc6e865c213c89ca42a622c5572d19f00d84d7a16
+              {oldContractAddress}
             </a>
             ) to the new contract(
             <a
               className="no-underline text-primary hover:underline"
-              href="https://evm.confluxscan.io/address/0xc6e865c213c89ca42a622c5572d19f00d84d7a16"
+              href={"https://evm.confluxscan.io/address/" + newContractAddress}
               target="_blank"
             >
-              0xc6e865c213c89ca42a622c5572d19f00d84d7a16
+              {newContractAddress}
             </a>
             )
           </p>
@@ -300,6 +317,7 @@ export default function Claim() {
         loadingClaim={loadingClaim}
         handleQuickSelected={handleQuickSelected}
         handleClearSelected={handleClearSelected}
+        warningText={warningText}
       />
     </>
   );

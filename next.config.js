@@ -3,6 +3,10 @@ const nextConfig = {
   async rewrites() {
     return [
       {
+        source: "/getCfxsListTest",
+        destination: "http://test.conins.io/test",
+      },
+      {
         source: "/getCfxsList",
         destination: "http://test.conins.io/",
       },

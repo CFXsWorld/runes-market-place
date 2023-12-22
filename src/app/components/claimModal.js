@@ -24,6 +24,7 @@ export default function ClaimModal({
   loadingClaim,
   handleQuickSelected,
   handleClearSelected,
+  warningText,
 }) {
   const isChecked = cfxsItems.some((c) => c.checked);
 
@@ -38,7 +39,7 @@ export default function ClaimModal({
   return (
     <div>
       <dialog id="claimModal" className="modal">
-        <div className="modal-box max-w-screen-lg min-h-96">
+        <div className="modal-box max-w-screen-lg" style={{ minHeight: "96%" }}>
           <ToastContainer />
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
@@ -85,6 +86,7 @@ export default function ClaimModal({
               {isChecked ? "Claim Cfxs" : "Please check some cfxs"}
               {loadingClaim && <span className="loading loading-spinner" />}
             </button>
+            <span className="text-warning ml-2">{warningText}</span>
           </div>
           <div className="flex flex-row flex-wrap">
             <div>

@@ -11,8 +11,10 @@ import {
   correctChainIdHex,
   isCorrectChainId,
 } from "@/app/utils";
+import { useRouter } from "next/navigation";
 
 export default function ConnectWallet() {
+  const router = useRouter();
   const fluentWalletStatus = FluentWallet.useStatus();
   const fluentWalletAccount = FluentWallet.useAccount();
   const fluentWalletChainId = FluentWallet.useChainId();
@@ -74,7 +76,7 @@ export default function ConnectWallet() {
     let address =
       fluentWalletAccount || metaMaskWalletAccount || okxWalletAccount;
     if (address) {
-      if (!isCorrectChainId()) {
+      if (!_isCorrectChainId()) {
         if (fluentWalletAccount) {
           FluentWallet.switchChain(correctChainIdHex);
         } else if (metaMaskWalletAccount) {
@@ -85,6 +87,7 @@ export default function ConnectWallet() {
       } else {
         // My Assets
         console.log("assets");
+        router.push("/myAssets");
       }
     } else {
       document.getElementById("walletModal").showModal();
