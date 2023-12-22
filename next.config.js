@@ -11,6 +11,10 @@ const nextConfig = {
         destination: "http://test.conins.io/",
       },
       {
+        source: "/getCfxsNewList",
+        destination: "http://test.conins.io/newlist",
+      },
+      {
         source: "/del",
         destination: "http://test.conins.io/del",
       },

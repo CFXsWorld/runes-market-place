@@ -11,7 +11,7 @@ import {
   newContractAddress,
   oldContractAddress,
 } from "@/app/utils";
-import { BrowserProvider, Contract } from "ethers";
+import { BrowserProvider, Contract, getAddress } from "ethers";
 import { abi as oldCfxsContractAbi } from "@/app/contracts/oldCfxsContractAbi.json";
 import { abi as newCfxsContractAbi } from "@/app/contracts/newCfxsContractAbi.json";
 import { abi as bridgeContractAbi } from "@/app/contracts/bridgeContractMainnet.json"; //prod
@@ -80,50 +80,111 @@ export default function Page() {
     provider
   );
 
+  const loadMoreOldData = (isReset) => {
+    if (account()) {
+      setLoadingOldData(true);
+      return fetch(
+        `/getCfxsList?owner=${getAddress(
+          account()
+        )}&startIndex=${oldCfxsStartIndex}&size=128`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          setOldCfxsTotalCount(data.count);
+          if (data.rows.length > 0 && Array.isArray(data.rows)) {
+            setOldCfxsItems(
+              isReset ? data.rows : oldCfxsItems.concat(data.rows)
+            );
+            setOldCfxsStartIndex(oldCfxsStartIndex + data.rows.length);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        })
+        .finally(() => {
+          setLoadingOldData(false);
+        });
+    }
+  };
+
+  const loadMoreNewData = (isReset) => {
+    if (account()) {
+      setLoadingNewData(true);
+      return fetch(
+        `/getCfxsNewList?owner=${getAddress(
+          account()
+        )}&startIndex=${newCfxsStartIndex}&size=128`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          setNewCfxsTotalCount(data.count);
+          if (data.rows.length > 0 && Array.isArray(data.rows)) {
+            setNewCfxsItems(
+              isReset ? data.rows : newCfxsItems.concat(data.rows)
+            );
+            setNewCfxsStartIndex(newCfxsStartIndex + data.rows.length);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        })
+        .finally(() => {
+          setLoadingNewData(false);
+        });
+    }
+  };
+
   const getOldCfxsBalance = () => {
-    setLoadingOldData(true);
-    setWarningOldText("");
-    newContract
-      .balanceOf(account())
-      .then((balance) => {
-        console.log("getOldCfxsBalance", balance);
-        setOldBalance(balance + "");
-        if (balance > 0) {
-          console.log("get items");
+    if (account()) {
+      setLoadingOldData(true);
+      setWarningOldText("");
+      oldContract
+        .balanceOf(account())
+        .then((balance) => {
+          console.log("getOldCfxsBalance", balance);
+          setOldBalance(balance + "");
+          if (balance > 0) {
+            console.log("get old items");
+            loadMoreOldData(true);
+            setLoadingOldData(false);
+          } else {
+            setLoadingOldData(false);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          toast(err ? err.message : "Unknown Error", { type: "error" });
+          setWarningOldText("Failed to get balance, please retry.");
           setLoadingOldData(false);
-        } else {
-          setLoadingOldData(false);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        toast(err ? err.message : "Unknown Error", { type: "error" });
-        setWarningOldText("Failed to get balance, please try again.");
-        setLoadingOldData(false);
-      });
+        });
+    }
   };
 
   const getNewCfxsBalance = () => {
-    setLoadingNewData(true);
-    setWarningNewText("");
-    oldContract
-      .balanceOf(account())
-      .then((balance) => {
-        console.log("getNewCfxsBalance", balance);
-        setNewBalance(balance + "");
-        if (balance > 0) {
-          console.log("get items");
+    if (account()) {
+      setLoadingNewData(true);
+      setWarningNewText("");
+      newContract
+        .balanceOf(account())
+        .then((balance) => {
+          console.log("getNewCfxsBalance", balance);
+          setNewBalance(balance + "");
+          if (balance > 0) {
+            console.log("get new items");
+            loadMoreNewData(true);
+          } else {
+            setLoadingNewData(false);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          toast(err ? err.message : "Unknown Error", { type: "error" });
+          setWarningNewText("Failed to get balance, please retry.");
           setLoadingNewData(false);
-        } else {
-          setLoadingNewData(false);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        toast(err ? err.message : "Unknown Error", { type: "error" });
-        setWarningNewText("Failed to get balance, please try again.");
-        setLoadingNewData(false);
-      });
+        });
+    }
   };
 
   useEffect(() => {
@@ -146,13 +207,13 @@ export default function Page() {
           className={tabTitleClassName(0)}
           onClick={() => setActiveTab(0)}
         >
-          New Cfxs
+          Old Cfxs
         </button>
         <button
           className={tabTitleClassName(1)}
           onClick={() => setActiveTab(1)}
         >
-          Old Cfxs
+          New Cfxs
         </button>
       </div>
       {activeTab === 0 && (
@@ -175,6 +236,36 @@ export default function Page() {
               )}
             </button>
           </div>
+          <div className="flex flex-row flex-wrap mt-2">
+            <div>
+              {oldCfxsItems.map((c, i) => (
+                <div className="stats shadow rounded-lg m-2 border" key={i}>
+                  <div className="stat px-3 py-2">
+                    <div className="stat-desc text-xs">#{c.id}</div>
+                    <div className="flex items-center">
+                      <div className="stat-value mt-1 font-normal text-lg">
+                        <span>{c.amount}</span>
+                        <span className="font-light text-base"> cfxs</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              <div>
+                {oldCfxsTotalCount > oldCfxsItems.length && (
+                  <button
+                    className="btn btn-info ml-2"
+                    onClick={() => loadMoreOldData()}
+                  >
+                    Load More
+                    {loadingOldData && (
+                      <span className="loading loading-spinner loading-sm" />
+                    )}
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       )}
       {activeTab === 1 && (
@@ -196,6 +287,36 @@ export default function Page() {
                 <span className="loading loading-spinner loading-sm" />
               )}
             </button>
+          </div>
+          <div className="flex flex-row flex-wrap mt-2">
+            <div>
+              {newCfxsItems.map((c, i) => (
+                <div className="stats shadow rounded-lg m-2 border" key={i}>
+                  <div className="stat px-3 py-2">
+                    <div className="stat-desc text-xs">#{c.id}</div>
+                    <div className="flex items-center">
+                      <div className="stat-value mt-1 font-normal text-lg">
+                        <span>{c.amount}</span>
+                        <span className="font-light text-base"> cfxs</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              <div>
+                {newCfxsTotalCount > newCfxsItems.length && (
+                  <button
+                    className="btn btn-info ml-2"
+                    onClick={() => loadMoreNewData()}
+                  >
+                    Load More
+                    {loadingNewData && (
+                      <span className="loading loading-spinner loading-sm" />
+                    )}
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       )}

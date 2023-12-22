@@ -54,7 +54,9 @@ export default function ClaimModal({
             ) : (
               <span className="text-primary">{balance}</span>
             )}{" "}
-            (Claim up to {maxSelectedItemsCount} each time)
+            <span className="text-xs">
+              (Claim up to {maxSelectedItemsCount} each time)
+            </span>
             <button
               className="btn btn-primary btn-xs ml-4"
               onClick={handleQuickSelected}
@@ -62,13 +64,16 @@ export default function ClaimModal({
               Select top {maxSelectedItemsCount}
             </button>
             <button
-              className="btn btn-primary btn-xs ml-4"
-              onClick={handleQuickSelected}
+              className="btn btn-primary btn-xs ml-2"
+              onClick={() => handleQuickSelected(true)}
             >
               Select top {maxSelectedItemsCount / 2}
             </button>
-            <button className="btn btn-xs ml-2" onClick={handleClearSelected}>
-              Clear
+            <button
+              className="btn btn-primary btn-xs ml-2"
+              onClick={handleClearSelected}
+            >
+              Clear Selected
             </button>
             <button className="btn btn-info btn-xs ml-2" onClick={refreshData}>
               Refresh Data

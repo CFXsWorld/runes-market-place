@@ -73,36 +73,42 @@ export default function Claim() {
   );
 
   const loadMoreData = (isReset) => {
-    console.log(isReset);
-    setLoadingData(true);
-    return fetch(
-      `/getCfxsList?owner=${getAddress(
-        account()
-      )}&startIndex=${cfxsStartIndex}&size=128`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setCfxsTotalCount(data.count);
-        if (data.rows.length > 0 && Array.isArray(data.rows)) {
-          setCfxsItems(
-            (isReset ? data.rows : cfxsItems.concat(data.rows)).map((c, i) => {
-              return {
-                id: c.id,
-                amount: 1,
-                checked: i < maxSelectedItemsCount,
-              };
-            })
-          );
-          setCfxsStartIndex(cfxsStartIndex + data.rows.length);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      })
-      .finally(() => {
-        setLoadingData(false);
-      });
+    if (account()) {
+      setLoadingData(true);
+      return fetch(
+        `/getCfxsList?owner=${getAddress(
+          account()
+        )}&startIndex=${cfxsStartIndex}&size=128`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          setCfxsTotalCount(data.count);
+          if (cfxsItems === 0 && data.rows.length === 0) {
+            setCfxsItems([]);
+          }
+          if (data.rows.length > 0 && Array.isArray(data.rows)) {
+            setCfxsItems(
+              (isReset ? data.rows : cfxsItems.concat(data.rows)).map(
+                (c, i) => {
+                  return {
+                    id: c.id,
+                    amount: 1,
+                    checked: i < maxSelectedItemsCount,
+                  };
+                }
+              )
+            );
+            setCfxsStartIndex(cfxsStartIndex + data.rows.length);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        })
+        .finally(() => {
+          setLoadingData(false);
+        });
+    }
   };
 
   const handleOpenClaimModal = () => {
@@ -126,7 +132,7 @@ export default function Claim() {
         .catch((err) => {
           console.error(err);
           toast(err ? err.message : "Unknown Error", { type: "error" });
-          setWarningText("Failed to get balance, please try again.");
+          setWarningText("Failed to get balance, please retry.");
           setLoadingData(false);
         });
       globalThis.clearTimeout(ref);
