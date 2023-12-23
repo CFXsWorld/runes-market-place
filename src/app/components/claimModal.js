@@ -40,7 +40,10 @@ export default function ClaimModal({
     <div>
       <dialog id="claimModal" className="modal">
         <div className="modal-box max-w-screen-lg" style={{ minHeight: "96%" }}>
-          <ToastContainer />
+          <ToastContainer
+            style={{ width: "800px", maxWidth: "98%" }}
+            position="top-right"
+          />
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
               ✕

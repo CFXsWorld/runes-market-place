@@ -18,26 +18,34 @@ export const bridgeContractAddress =
 export const maxSelectedItemsCount = 32;
 
 export const addressFormat = (
+  defaultWalletAccount,
   fluentWalletAccount,
   metaMaskWalletAccount,
   okxWalletAccount
 ) => {
   let address =
-    fluentWalletAccount || metaMaskWalletAccount || okxWalletAccount;
+    defaultWalletAccount ||
+    fluentWalletAccount ||
+    metaMaskWalletAccount ||
+    okxWalletAccount;
   return address
     ? `${address.substr(0, 6)}...${address.substr(address.length - 4, 4)}`
     : "";
 };
 
 export const isCorrectChainId = (
+  defaultWalletAccount,
   fluentWalletAccount,
   metaMaskWalletAccount,
   okxWalletAccount,
+  defaultWalletChainId,
   fluentWalletChainId,
   metaMaskWalletChainId,
   okxWalletChainId
 ) => {
-  let chainId = fluentWalletAccount
+  let chainId = defaultWalletAccount
+    ? defaultWalletChainId
+    : fluentWalletAccount
     ? fluentWalletChainId
     : metaMaskWalletAccount
     ? metaMaskWalletChainId

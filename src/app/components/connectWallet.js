@@ -2,6 +2,7 @@
 
 import React, { memo, useCallback, useEffect } from "react";
 
+import * as DefaultWallet from "@cfxjs/use-wallet-react/ethereum";
 import * as FluentWallet from "@cfxjs/use-wallet-react/ethereum/Fluent";
 import * as MetaMask from "@cfxjs/use-wallet-react/ethereum/MetaMask";
 import * as OKXWallet from "@cfxjs/use-wallet-react/ethereum/OKX";
@@ -15,6 +16,9 @@ import { useRouter } from "next/navigation";
 
 export default function ConnectWallet() {
   const router = useRouter();
+  const defaultWalletStatus = DefaultWallet.useStatus();
+  const defaultWalletAccount = DefaultWallet.useAccount();
+  const defaultWalletChainId = DefaultWallet.useChainId();
   const fluentWalletStatus = FluentWallet.useStatus();
   const fluentWalletAccount = FluentWallet.useAccount();
   const fluentWalletChainId = FluentWallet.useChainId();
@@ -24,6 +28,18 @@ export default function ConnectWallet() {
   const okxWalletStatus = OKXWallet.useStatus();
   const okxWalletAccount = OKXWallet.useAccount();
   const okxWalletChainId = OKXWallet.useChainId();
+
+  const connectDefaultWallet = () => {
+    return DefaultWallet.connect().then(() => {
+      if (defaultWalletChainId !== correctChainId) {
+        DefaultWallet.switchChain(correctChainIdHex).then(() => {
+          document.getElementById("walletModal").close();
+        });
+      } else {
+        document.getElementById("walletModal").close();
+      }
+    });
+  };
 
   const connectFluentWallet = () => {
     return FluentWallet.connect().then(() => {
@@ -36,6 +52,7 @@ export default function ConnectWallet() {
       }
     });
   };
+
   const connectMetamask = () => {
     return MetaMask.connect().then(() => {
       if (metaMaskWalletChainId !== correctChainId) {
@@ -47,6 +64,7 @@ export default function ConnectWallet() {
       }
     });
   };
+
   const connectOKXWallet = () => {
     return OKXWallet.connect().then(() => {
       if (okxWalletChainId !== correctChainId) {
@@ -60,13 +78,20 @@ export default function ConnectWallet() {
   };
 
   const _addressFormat = () =>
-    addressFormat(fluentWalletAccount, metaMaskWalletAccount, okxWalletAccount);
+    addressFormat(
+      defaultWalletAccount,
+      fluentWalletAccount,
+      metaMaskWalletAccount,
+      okxWalletAccount
+    );
 
   const _isCorrectChainId = () =>
     isCorrectChainId(
+      defaultWalletAccount,
       fluentWalletAccount,
       metaMaskWalletAccount,
       okxWalletAccount,
+      defaultWalletChainId,
       fluentWalletChainId,
       metaMaskWalletChainId,
       okxWalletChainId
@@ -74,9 +99,15 @@ export default function ConnectWallet() {
 
   const handleHeaderConnectWallet = () => {
     let address =
-      fluentWalletAccount || metaMaskWalletAccount || okxWalletAccount;
+      defaultWalletAccount ||
+      fluentWalletAccount ||
+      metaMaskWalletAccount ||
+      okxWalletAccount;
     if (address) {
       if (!_isCorrectChainId()) {
+        if (defaultWalletAccount) {
+          DefaultWallet.switchChain(correctChainIdHex);
+        }
         if (fluentWalletAccount) {
           FluentWallet.switchChain(correctChainIdHex);
         } else if (metaMaskWalletAccount) {
@@ -114,8 +145,26 @@ export default function ConnectWallet() {
           </form>
           <h3 className="font-bold text-lg">Connect Web3 Wallet</h3>
           <div className="pt-4 flex flex-col justify-center items-center">
+            {defaultWalletStatus !== "not-installed" && (
+              <div className="mt-2">
+                <button
+                  onClick={connectDefaultWallet}
+                  className="btn btn-primary"
+                >
+                  {defaultWalletStatus === "in-activating" && "Connecting..."}
+                  {defaultWalletStatus === "not-active" &&
+                    "Connect Default Web3 Wallet"}
+                  {defaultWalletStatus === "active" &&
+                    `${
+                      _isCorrectChainId()
+                        ? "Default Web3 Wallet"
+                        : "Wrong Network"
+                    } (${_addressFormat()})`}
+                </button>
+              </div>
+            )}
             {fluentWalletStatus !== "not-installed" && (
-              <div>
+              <div className="mt-2">
                 <button
                   onClick={connectFluentWallet}
                   className="btn btn-primary"

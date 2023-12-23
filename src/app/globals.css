@@ -29,3 +29,12 @@ body {
 .btn{
   font-weight: normal;
 }
+
+.toastBox {
+  width: 100%;
+}
+@media (max-width: 768px) {
+  .toastBox {
+    width: 70%;
+  }
+}

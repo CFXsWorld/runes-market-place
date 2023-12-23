@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import * as DefaultWallet from "@cfxjs/use-wallet-react/ethereum";
 import * as FluentWallet from "@cfxjs/use-wallet-react/ethereum/Fluent";
 import * as MetaMask from "@cfxjs/use-wallet-react/ethereum/MetaMask";
 import * as OKXWallet from "@cfxjs/use-wallet-react/ethereum/OKX";
@@ -18,6 +19,9 @@ import { abi as bridgeContractAbi } from "@/app/contracts/bridgeContractMainnet.
 import { toast, ToastContainer } from "react-toastify";
 
 export default function Page() {
+  const defaultWalletStatus = DefaultWallet.useStatus();
+  const defaultWalletAccount = DefaultWallet.useAccount();
+  const defaultWalletChainId = DefaultWallet.useChainId();
   const fluentWalletStatus = FluentWallet.useStatus();
   const fluentWalletAccount = FluentWallet.useAccount();
   const fluentWalletChainId = FluentWallet.useChainId();
@@ -43,19 +47,26 @@ export default function Page() {
   const [warningNewText, setWarningNewText] = React.useState("");
 
   const account = () =>
-    fluentWalletAccount || metaMaskWalletAccount || okxWalletAccount;
+    defaultWalletAccount ||
+    fluentWalletAccount ||
+    metaMaskWalletAccount ||
+    okxWalletAccount;
 
   const _isCorrectChainId = () =>
     isCorrectChainId(
+      defaultWalletAccount,
       fluentWalletAccount,
       metaMaskWalletAccount,
       okxWalletAccount,
+      defaultWalletChainId,
       fluentWalletChainId,
       metaMaskWalletChainId,
       okxWalletChainId
     );
 
-  const browserProvier = fluentWalletAccount
+  const browserProvier = defaultWalletAccount
+    ? DefaultWallet.provider
+    : fluentWalletAccount
     ? FluentWallet.provider
     : metaMaskWalletAccount
     ? MetaMask.provider

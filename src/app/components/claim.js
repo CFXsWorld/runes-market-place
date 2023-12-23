@@ -1,6 +1,7 @@
 "use client";
 import ClaimModal from "@/app/components/claimModal";
 
+import * as DefaultWallet from "@cfxjs/use-wallet-react/ethereum";
 import * as FluentWallet from "@cfxjs/use-wallet-react/ethereum/Fluent";
 import * as MetaMask from "@cfxjs/use-wallet-react/ethereum/MetaMask";
 import * as OKXWallet from "@cfxjs/use-wallet-react/ethereum/OKX";
@@ -21,6 +22,9 @@ import { toast, ToastContainer } from "react-toastify";
 const globalThis = typeof window !== "undefined" ? window : {};
 
 export default function Claim() {
+  const defaultWalletStatus = DefaultWallet.useStatus();
+  const defaultWalletAccount = DefaultWallet.useAccount();
+  const defaultWalletChainId = DefaultWallet.useChainId();
   const fluentWalletStatus = FluentWallet.useStatus();
   const fluentWalletAccount = FluentWallet.useAccount();
   const fluentWalletChainId = FluentWallet.useChainId();
@@ -40,19 +44,26 @@ export default function Claim() {
   const [warningText, setWarningText] = React.useState("");
 
   const account = () =>
-    fluentWalletAccount || metaMaskWalletAccount || okxWalletAccount;
+    defaultWalletAccount ||
+    fluentWalletAccount ||
+    metaMaskWalletAccount ||
+    okxWalletAccount;
 
   const _isCorrectChainId = () =>
     isCorrectChainId(
+      defaultWalletAccount,
       fluentWalletAccount,
       metaMaskWalletAccount,
       okxWalletAccount,
+      defaultWalletChainId,
       fluentWalletChainId,
       metaMaskWalletChainId,
       okxWalletChainId
     );
 
-  const browserProvier = fluentWalletAccount
+  const browserProvier = defaultWalletAccount
+    ? DefaultWallet.provider
+    : fluentWalletAccount
     ? FluentWallet.provider
     : metaMaskWalletAccount
     ? MetaMask.provider
@@ -276,7 +287,7 @@ export default function Claim() {
 
         <div>
           <h3 className="mx-2 font-bold">Attention:</h3>
-          <p className="mx-2">
+          <p className="mx-2 text-wrap whitespace-normal break-all">
             Please claim the cfxs from the test contract(
             <a
               className="no-underline text-primary hover:underline"
