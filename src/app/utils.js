@@ -16,6 +16,7 @@ export const newContractAddress = "0xd3a4d837e0a7b40de0b4024fa0f93127dd47b8b8";
 export const bridgeContractAddress =
   "0x5c3c1a119300669990863861a854616ecb04b463";
 export const maxSelectedItemsCount = 32;
+export const pageItemCount = 128;
 
 export const addressFormat = (
   defaultWalletAccount,

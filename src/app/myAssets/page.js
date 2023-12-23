@@ -11,6 +11,7 @@ import {
   maxSelectedItemsCount,
   newContractAddress,
   oldContractAddress,
+  pageItemCount,
 } from "@/app/utils";
 import { BrowserProvider, Contract, getAddress } from "ethers";
 import { abi as oldCfxsContractAbi } from "@/app/contracts/oldCfxsContractAbi.json";
@@ -94,10 +95,15 @@ export default function Page() {
   const loadMoreOldData = (isReset) => {
     if (account()) {
       setLoadingOldData(true);
+      if (isReset) {
+        setOldCfxsItems(() => []);
+        setOldCfxsTotalCount(() => 0);
+        setOldCfxsStartIndex(() => 0);
+      }
       return fetch(
-        `/getCfxsList?owner=${getAddress(
-          account()
-        )}&startIndex=${oldCfxsStartIndex}&size=128`
+        `/getCfxsList?owner=${getAddress(account())}&startIndex=${
+          isReset ? 0 : oldCfxsStartIndex
+        }&size=${pageItemCount}`
       )
         .then((response) => response.json())
         .then((data) => {
@@ -107,7 +113,9 @@ export default function Page() {
             setOldCfxsItems(
               isReset ? data.rows : oldCfxsItems.concat(data.rows)
             );
-            setOldCfxsStartIndex(oldCfxsStartIndex + data.rows.length);
+            setOldCfxsStartIndex(
+              (isReset ? 0 : oldCfxsStartIndex) + data.rows.length
+            );
           }
         })
         .catch((err) => {
@@ -122,10 +130,15 @@ export default function Page() {
   const loadMoreNewData = (isReset) => {
     if (account()) {
       setLoadingNewData(true);
+      if (isReset) {
+        setNewCfxsItems(() => []);
+        setNewCfxsTotalCount(() => 0);
+        setNewCfxsStartIndex(() => 0);
+      }
       return fetch(
-        `/getCfxsNewList?owner=${getAddress(
-          account()
-        )}&startIndex=${newCfxsStartIndex}&size=128`
+        `/getCfxsNewList?owner=${getAddress(account())}&startIndex=${
+          isReset ? 0 : newCfxsStartIndex
+        }&size=${pageItemCount}`
       )
         .then((response) => response.json())
         .then((data) => {
@@ -135,7 +148,9 @@ export default function Page() {
             setNewCfxsItems(
               isReset ? data.rows : newCfxsItems.concat(data.rows)
             );
-            setNewCfxsStartIndex(newCfxsStartIndex + data.rows.length);
+            setNewCfxsStartIndex(
+              (isReset ? 0 : newCfxsStartIndex) + data.rows.length
+            );
           }
         })
         .catch((err) => {

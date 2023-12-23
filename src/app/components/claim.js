@@ -11,6 +11,7 @@ import {
   maxSelectedItemsCount,
   newContractAddress,
   oldContractAddress,
+  pageItemCount,
 } from "@/app/utils";
 import { BrowserProvider, Contract, getAddress } from "ethers";
 import React, { useState } from "react";
@@ -86,18 +87,20 @@ export default function Claim() {
   const loadMoreData = (isReset) => {
     if (account()) {
       setLoadingData(true);
+      if (isReset) {
+        setCfxsItems(() => []);
+        setCfxsTotalCount(() => 0);
+        setCfxsStartIndex(() => 0);
+      }
       return fetch(
-        `/getCfxsList?owner=${getAddress(
-          account()
-        )}&startIndex=${cfxsStartIndex}&size=128`
+        `/getCfxsList?owner=${getAddress(account())}&startIndex=${
+          isReset ? 0 : cfxsStartIndex
+        }&size=${pageItemCount}`
       )
         .then((response) => response.json())
         .then((data) => {
           console.log(data);
           setCfxsTotalCount(data.count);
-          if (cfxsItems === 0 && data.rows.length === 0) {
-            setCfxsItems([]);
-          }
           if (data.rows.length > 0 && Array.isArray(data.rows)) {
             setCfxsItems(
               (isReset ? data.rows : cfxsItems.concat(data.rows)).map(
@@ -110,7 +113,9 @@ export default function Claim() {
                 }
               )
             );
-            setCfxsStartIndex(cfxsStartIndex + data.rows.length);
+            setCfxsStartIndex(
+              (isReset ? 0 : cfxsStartIndex) + data.rows.length
+            );
           }
         })
         .catch((err) => {
@@ -251,7 +256,7 @@ export default function Claim() {
           return {
             ...c,
             checked:
-              i < isHalf ? maxSelectedItemsCount / 2 : maxSelectedItemsCount,
+              i < (isHalf ? maxSelectedItemsCount / 2 : maxSelectedItemsCount),
           };
         })
       );
