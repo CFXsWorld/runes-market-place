@@ -170,67 +170,61 @@ export default function Claim() {
             setWarningText(
               "Please wait for the transaction and do not close the window."
             );
+            // remove claimed cfxs
+            console.log(checkedCfxsItems);
+            const delData = new URLSearchParams();
+            delData.append("id", `[${ids.map((id) => `"${id}"`).join(",")}]`);
+            delData.append("owner", getAddress(account()));
+            fetch(`/del`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+              body: delData,
+            })
+              .then((data) => {
+                console.log(data);
+                try {
+                  const jsonData = data.json();
+                  if (jsonData && jsonData.state) {
+                    for (let i = 0; i < jsonData.state.length; i++) {
+                      const jsonDatum = jsonData[i];
+                      if (!jsonDatum.ok)
+                        throw new Error(jsonDatum.id + " Error");
+                    }
+                  }
+                } catch (err) {
+                  console.error(err);
+                }
+                // remove claimed cfxs from UI
+                setCfxsItems(
+                  cfxsItems
+                    .filter((c) => !ids.includes(c.id))
+                    .map((c, i) => {
+                      return {
+                        ...c,
+                        checked: i < maxSelectedItemsCount,
+                      };
+                    })
+                );
+                // if (data.success) {
+                // }
+              })
+              .catch((err) => {
+                console.error(err);
+                toast(err ? err.message : "Unknown Error", {
+                  type: "error",
+                });
+              });
 
             tx.wait(2)
               .then((txReceipt) => {
                 console.log(txReceipt);
-
-                // remove claimed cfxs
-                console.log(checkedCfxsItems);
-                const delData = new URLSearchParams();
-                delData.append(
-                  "id",
-                  `[${ids.map((id) => `"${id}"`).join(",")}]`
-                );
-                delData.append("owner", getAddress(account()));
-                fetch(`/del`, {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                  },
-                  body: delData,
-                })
-                  .then((data) => {
-                    console.log(data);
-                    try {
-                      const jsonData = data.json();
-                      if (jsonData && jsonData.state) {
-                        for (let i = 0; i < jsonData.state.length; i++) {
-                          const jsonDatum = jsonData[i];
-                          if (!jsonDatum.ok)
-                            throw new Error(jsonDatum.id + " Error");
-                        }
-                      }
-                    } catch (err) {
-                      console.error(err);
-                    }
-                    // remove claimed cfxs from UI
-                    setCfxsItems(
-                      cfxsItems
-                        .filter((c) => !ids.includes(c.id))
-                        .map((c, i) => {
-                          return {
-                            ...c,
-                            checked: i < maxSelectedItemsCount,
-                          };
-                        })
-                    );
-                    // if (data.success) {
-                    // }
-                    toast("Success: " + txReceipt.hash, {
-                      type: "success",
-                    });
-                  })
-                  .catch((err) => {
-                    console.error(err);
-                    toast(err ? err.message : "Unknown Error", {
-                      type: "error",
-                    });
-                  })
-                  .finally(() => {
-                    setLoadingClaim(false);
-                    setWarningText("");
-                  });
+                toast("Success: " + txReceipt.hash, {
+                  type: "success",
+                });
+                setLoadingClaim(false);
+                setWarningText("");
               })
               .catch((err) => {
                 console.error(err);
