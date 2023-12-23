@@ -51,7 +51,7 @@ export default function ClaimModal({
           </form>
           <h3 className="font-bold text-lg">Claim Cfxs</h3>
           <div className="pt-4">
-            Sum:{" "}
+            Old Sum:{" "}
             {loadingData ? (
               <span className="loading loading-spinner loading-xs" />
             ) : (

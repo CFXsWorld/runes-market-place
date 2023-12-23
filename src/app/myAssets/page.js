@@ -250,7 +250,7 @@ export default function Page() {
       {activeTab === 0 && (
         <div className="px-4 py-4 text-lg">
           <div className="pt-2">
-            Old Cfxs Contract Sum:{" "}
+            Old Sum:{" "}
             {loadingOldData ? (
               <span className="loading loading-spinner loading-xs" />
             ) : (
@@ -308,7 +308,7 @@ export default function Page() {
       {activeTab === 1 && (
         <div className="px-4 py-4 text-lg">
           <div className="pt-2">
-            New Cfxs Contract Balance:{" "}
+            New Balance:{" "}
             {loadingNewData ? (
               <span className="loading loading-spinner loading-xs" />
             ) : (
