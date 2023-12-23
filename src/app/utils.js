@@ -15,7 +15,7 @@ export const oldContractAddress = "0xc6e865c213c89ca42a622c5572d19f00d84d7a16";
 export const newContractAddress = "0xd3a4d837e0a7b40de0b4024fa0f93127dd47b8b8";
 export const bridgeContractAddress =
   "0x5c3c1a119300669990863861a854616ecb04b463";
-export const maxSelectedItemsCount = 64;
+export const maxSelectedItemsCount = 32;
 
 export const addressFormat = (
   fluentWalletAccount,
