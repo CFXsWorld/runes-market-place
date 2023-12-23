@@ -216,7 +216,12 @@ export default function Page() {
   useEffect(() => {
     getOldCfxsBalance();
     getNewCfxsBalance();
-  }, []);
+  }, [
+    defaultWalletAccount,
+    fluentWalletAccount,
+    metaMaskWalletAccount,
+    okxWalletAccount,
+  ]);
 
   const tabTitleClassName = (tabIndex) =>
     `inline-flex items-center h-10 px-4 -mb-px text-xl text-center bg-transparent border-b-2 whitespace-nowrap focus:outline-none ${
@@ -245,12 +250,18 @@ export default function Page() {
       {activeTab === 0 && (
         <div className="px-4 py-4 text-lg">
           <div className="pt-2">
-            Old Cfxs Contract Balance:{" "}
+            Old Cfxs Contract Sum:{" "}
             {loadingOldData ? (
               <span className="loading loading-spinner loading-xs" />
             ) : (
               <span className="text-primary">{oldBalance}</span>
-            )}
+            )}{" "}
+            Claimable:{" "}
+            {loadingOldData ? (
+              <span className="loading loading-spinner loading-xs" />
+            ) : (
+              <span className="text-primary">{oldCfxsTotalCount}</span>
+            )}{" "}
             <span className="text-warning ml-2">{warningOldText}</span>
             <button
               className="btn btn-info btn-xs ml-2"
@@ -302,7 +313,7 @@ export default function Page() {
               <span className="loading loading-spinner loading-xs" />
             ) : (
               <span className="text-primary">{newBalance}</span>
-            )}
+            )}{" "}
             <span className="text-warning ml-2">{warningNewText}</span>
             <button
               className="btn btn-info btn-xs ml-2"

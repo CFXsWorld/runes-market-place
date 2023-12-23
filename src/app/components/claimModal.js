@@ -51,11 +51,17 @@ export default function ClaimModal({
           </form>
           <h3 className="font-bold text-lg">Claim Cfxs</h3>
           <div className="pt-4">
-            Claimable:{" "}
+            Sum:{" "}
             {loadingData ? (
               <span className="loading loading-spinner loading-xs" />
             ) : (
               <span className="text-primary">{balance}</span>
+            )}{" "}
+            Claimable:{" "}
+            {loadingData ? (
+              <span className="loading loading-spinner loading-xs" />
+            ) : (
+              <span className="text-primary">{cfxsTotalCount}</span>
             )}{" "}
             <span className="text-xs">
               (Claim up to {maxSelectedItemsCount} each time)

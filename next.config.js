@@ -18,6 +18,10 @@ const nextConfig = {
         source: "/del",
         destination: "http://test.conins.io/del",
       },
+      {
+        source: "/delPre",
+        destination: "http://test.conins.io/del/pre",
+      },
     ];
   },
   distDir: "dist",
