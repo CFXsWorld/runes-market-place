@@ -33,7 +33,7 @@ export default function Page() {
   const okxWalletAccount = OKXWallet.useAccount();
   const okxWalletChainId = OKXWallet.useChainId();
 
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeTab, setActiveTab] = useState(1);
   const [oldBalance, setOldBalance] = useState("");
   const [newBalance, setNewBalance] = useState("");
   const [loadingOldData, setLoadingOldData] = useState(false);
@@ -235,16 +235,16 @@ export default function Page() {
       <h1 className="text-2xl ml-2">My Assets</h1>
       <div className="flex overflow-x-auto overflow-y-hidden border-b border-gray-300 whitespace-nowrap px-4 pt-4">
         <button
-          className={tabTitleClassName(0)}
-          onClick={() => setActiveTab(0)}
-        >
-          Old Cfxs
-        </button>
-        <button
           className={tabTitleClassName(1)}
           onClick={() => setActiveTab(1)}
         >
           New Cfxs
+        </button>
+        <button
+          className={tabTitleClassName(0)}
+          onClick={() => setActiveTab(0)}
+        >
+          Old Cfxs
         </button>
       </div>
       {activeTab === 0 && (
@@ -307,23 +307,53 @@ export default function Page() {
       )}
       {activeTab === 1 && (
         <div className="px-4 py-4 text-lg">
-          <div className="pt-2">
-            New Balance:{" "}
-            {loadingNewData ? (
-              <span className="loading loading-spinner loading-xs" />
-            ) : (
-              <span className="text-primary">{newBalance}</span>
-            )}{" "}
-            <span className="text-warning ml-2">{warningNewText}</span>
-            <button
-              className="btn btn-info btn-xs ml-2"
-              onClick={getNewCfxsBalance}
-            >
-              Refresh Data
-              {loadingNewData && (
-                <span className="loading loading-spinner loading-sm" />
-              )}
-            </button>
+          <div className="pt-2 flex justify-between items-center">
+            <div>
+              New Balance:{" "}
+              {loadingNewData ? (
+                <span className="loading loading-spinner loading-xs" />
+              ) : (
+                <span className="text-primary">{newBalance}</span>
+              )}{" "}
+              <span className="text-warning ml-2">{warningNewText}</span>
+              <button
+                className="btn btn-info btn-xs ml-2"
+                onClick={getNewCfxsBalance}
+              >
+                Refresh Data
+                {loadingNewData && (
+                  <span className="loading loading-spinner loading-sm" />
+                )}
+              </button>
+            </div>
+            <div className="dropdown dropdown-end">
+              <div tabIndex={0} role="button" className="btn btn-primary">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  className="inline-block w-5 h-5 stroke-current"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+                  />
+                </svg>
+              </div>
+              <ul
+                tabIndex={0}
+                className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
+              >
+                <li>
+                  <a>Coming Soon</a>
+                </li>
+                {/*<li>*/}
+                {/*  <a>List on Marketspace</a>*/}
+                {/*</li>*/}
+              </ul>
+            </div>
           </div>
           <div className="flex flex-row flex-wrap mt-2">
             <div>

@@ -39,6 +39,7 @@ export default function Claim() {
   const [balance, setBalance] = useState("");
   const [loadingData, setLoadingData] = useState(false);
   const [loadingClaim, setLoadingClaim] = useState(false);
+  const [loadingSync, setLoadingSync] = useState(false);
   const [cfxsTotalCount, setCfxsTotalCount] = React.useState(0);
   const [cfxsStartIndex, setCfxsStartIndex] = React.useState(0);
   const [cfxsItems, setCfxsItems] = React.useState([]);
@@ -289,6 +290,46 @@ export default function Claim() {
     );
   };
 
+  const syncData = () => {
+    if (account()) {
+      setLoadingSync(true);
+      const syncData = new URLSearchParams();
+      syncData.append("owner", getAddress(account()));
+      fetch(`/sync`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: syncData,
+      })
+        .then((data) => {
+          console.log(data);
+          data
+            .json()
+            .then((j) => {
+              if (j.mess && j.mess === "ok") {
+                toast("Data sync successful", { type: "success" });
+              } else {
+                toast("Data sync is too frequent, please try again later", {
+                  type: "warning",
+                });
+              }
+            })
+            .catch((err) => {
+              console.error(err);
+              toast("Data sync failed", { type: "error" });
+            });
+        })
+        .catch((err) => {
+          console.error(err);
+          toast(err ? err.message : "Unknown Error", { type: "error" });
+        })
+        .finally(() => {
+          setLoadingSync(false);
+        });
+    }
+  };
+
   return (
     <>
       <div
@@ -359,6 +400,8 @@ export default function Claim() {
         handleQuickSelected={handleQuickSelected}
         handleClearSelected={handleClearSelected}
         warningText={warningText}
+        syncData={syncData}
+        loadingSync={loadingSync}
       />
     </>
   );

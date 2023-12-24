@@ -25,6 +25,8 @@ export default function ClaimModal({
   handleQuickSelected,
   handleClearSelected,
   warningText,
+  syncData,
+  loadingSync,
 }) {
   const isChecked = cfxsItems.some((c) => c.checked);
 
@@ -101,6 +103,18 @@ export default function ClaimModal({
               {loadingClaim && <span className="loading loading-spinner" />}
             </button>
             <span className="text-warning ml-2">{warningText}</span>
+            <div className="tooltip" data-tip="Click if the data is incorrect">
+              <button
+                className="btn btn-accent"
+                onClick={syncData}
+                disabled={loadingClaim || loadingSync}
+              >
+                Sync Data
+                {loadingClaim && loadingSync && (
+                  <span className="loading loading-spinner" />
+                )}
+              </button>
+            </div>
           </div>
           <div className="flex flex-row flex-wrap">
             <div>
