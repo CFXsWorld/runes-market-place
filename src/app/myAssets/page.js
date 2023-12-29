@@ -5,15 +5,8 @@ import * as DefaultWallet from "@cfxjs/use-wallet-react/ethereum";
 import * as FluentWallet from "@cfxjs/use-wallet-react/ethereum/Fluent";
 import * as MetaMask from "@cfxjs/use-wallet-react/ethereum/MetaMask";
 import * as OKXWallet from "@cfxjs/use-wallet-react/ethereum/OKX";
-import {
-  bridgeContractAddress,
-  isCorrectChainId,
-  maxSelectedItemsCount,
-  newContractAddress,
-  oldContractAddress,
-  pageItemCount,
-} from "@/app/utils";
-import { BrowserProvider, Contract, getAddress } from "ethers";
+import { bridgeContractAddress, isCorrectChainId, isTest, maxSelectedItemsCount, newContractAddress, oldContractAddress, pageItemCount } from "@/app/utils";
+import { BrowserProvider, Contract, getAddress, isAddress } from "ethers";
 import { abi as oldCfxsContractAbi } from "@/app/contracts/oldCfxsContractAbi.json";
 import { abi as newCfxsContractAbi } from "@/app/contracts/newCfxsContractAbi.json";
 import { abi as bridgeContractAbi } from "@/app/contracts/bridgeContractMainnet.json"; //prod
@@ -33,7 +26,7 @@ export default function Page() {
   const okxWalletAccount = OKXWallet.useAccount();
   const okxWalletChainId = OKXWallet.useChainId();
 
-  const [activeTab, setActiveTab] = useState(1);
+  const [activeTab, setActiveTab] = useState(0);
   const [oldBalance, setOldBalance] = useState("");
   const [newBalance, setNewBalance] = useState("");
   const [loadingOldData, setLoadingOldData] = useState(false);
@@ -46,12 +39,9 @@ export default function Page() {
   const [newCfxsItems, setNewCfxsItems] = React.useState([]);
   const [warningOldText, setWarningOldText] = React.useState("");
   const [warningNewText, setWarningNewText] = React.useState("");
+  const [loadingTransfer, setLoadingTransfer] = React.useState(false);
 
-  const account = () =>
-    defaultWalletAccount ||
-    fluentWalletAccount ||
-    metaMaskWalletAccount ||
-    okxWalletAccount;
+  const account = () => defaultWalletAccount || fluentWalletAccount || metaMaskWalletAccount || okxWalletAccount;
 
   const _isCorrectChainId = () =>
     isCorrectChainId(
@@ -76,21 +66,9 @@ export default function Page() {
     : globalThis.ethereum;
 
   const provider = new BrowserProvider(browserProvier);
-  const oldContract = new Contract(
-    oldContractAddress,
-    oldCfxsContractAbi,
-    provider
-  );
-  const newContract = new Contract(
-    newContractAddress,
-    newCfxsContractAbi,
-    provider
-  );
-  const bridgeContract = new Contract(
-    bridgeContractAddress,
-    bridgeContractAbi,
-    provider
-  );
+  const oldContract = new Contract(oldContractAddress, oldCfxsContractAbi, provider);
+  const newContract = new Contract(newContractAddress, newCfxsContractAbi, provider);
+  const bridgeContract = new Contract(bridgeContractAddress, bridgeContractAbi, provider);
 
   const loadMoreOldData = (isReset) => {
     if (account()) {
@@ -101,21 +79,15 @@ export default function Page() {
         setOldCfxsStartIndex(() => 0);
       }
       return fetch(
-        `/getCfxsList?owner=${getAddress(account())}&startIndex=${
-          isReset ? 0 : oldCfxsStartIndex
-        }&size=${pageItemCount}`
+        `/${isTest ? "getCfxsListTest" : "getCfxsList"}?owner=${getAddress(account())}&startIndex=${isReset ? 0 : oldCfxsStartIndex}&size=${pageItemCount}`
       )
         .then((response) => response.json())
         .then((data) => {
           console.log(data);
           setOldCfxsTotalCount(data.count);
           if (data.rows.length > 0 && Array.isArray(data.rows)) {
-            setOldCfxsItems(
-              isReset ? data.rows : oldCfxsItems.concat(data.rows)
-            );
-            setOldCfxsStartIndex(
-              (isReset ? 0 : oldCfxsStartIndex) + data.rows.length
-            );
+            setOldCfxsItems(isReset ? data.rows : oldCfxsItems.concat(data.rows));
+            setOldCfxsStartIndex((isReset ? 0 : oldCfxsStartIndex) + data.rows.length);
           }
         })
         .catch((err) => {
@@ -135,8 +107,8 @@ export default function Page() {
         setNewCfxsTotalCount(() => 0);
         setNewCfxsStartIndex(() => 0);
       }
-      return fetch(
-        `/getCfxsNewList?owner=${getAddress(account())}&startIndex=${
+      fetch(
+        `/${isTest ? "getCfxsNewListTest" : "getCfxsNewList"}?owner=${getAddress(account())}&startIndex=${
           isReset ? 0 : newCfxsStartIndex
         }&size=${pageItemCount}`
       )
@@ -145,12 +117,8 @@ export default function Page() {
           console.log(data);
           setNewCfxsTotalCount(data.count);
           if (data.rows.length > 0 && Array.isArray(data.rows)) {
-            setNewCfxsItems(
-              isReset ? data.rows : newCfxsItems.concat(data.rows)
-            );
-            setNewCfxsStartIndex(
-              (isReset ? 0 : newCfxsStartIndex) + data.rows.length
-            );
+            setNewCfxsItems(isReset ? data.rows : newCfxsItems.concat(data.rows));
+            setNewCfxsStartIndex((isReset ? 0 : newCfxsStartIndex) + data.rows.length);
           }
         })
         .catch((err) => {
@@ -216,61 +184,186 @@ export default function Page() {
   useEffect(() => {
     getOldCfxsBalance();
     getNewCfxsBalance();
-  }, [
-    defaultWalletAccount,
-    fluentWalletAccount,
-    metaMaskWalletAccount,
-    okxWalletAccount,
-  ]);
+  }, [defaultWalletAccount, fluentWalletAccount, metaMaskWalletAccount, okxWalletAccount]);
 
   const tabTitleClassName = (tabIndex) =>
     `inline-flex items-center h-10 px-4 -mb-px text-xl text-center bg-transparent border-b-2 whitespace-nowrap focus:outline-none ${
-      activeTab === tabIndex
-        ? "text-indigo-600 border-blue-500"
-        : "text-gray-600 border-transparent hover:border-blue-500 hover:text-indigo-600"
+      activeTab === tabIndex ? "text-indigo-600 border-blue-500" : "text-gray-600 border-transparent hover:border-blue-500 hover:text-indigo-600"
     }`;
+
+  // quick select top items
+  const handleQuickSelected = (isHalf) => {
+    if (newCfxsItems.length > 0)
+      setNewCfxsItems(
+        newCfxsItems.map((c, i) => {
+          return {
+            ...c,
+            checked: i < (isHalf ? maxSelectedItemsCount / 2 : maxSelectedItemsCount),
+          };
+        })
+      );
+  };
+
+  const handleClearSelected = () => {
+    setNewCfxsItems(
+      newCfxsItems.map((c) => {
+        return { ...c, checked: false };
+      })
+    );
+  };
+
+  const handleTransfer = () => {
+    const getToAddress = prompt("Please enter transfer destination address:");
+    const checkedCfxsItems = newCfxsItems.filter((c) => c.checked);
+    if (checkedCfxsItems.length > 0) {
+      if (getToAddress && isAddress(getToAddress)) {
+        const ids = checkedCfxsItems.map((c) => c.id);
+        setLoadingTransfer(true);
+        provider.getSigner().then((signer) => {
+          const contractWithSigner = newContract.connect(signer);
+          contractWithSigner
+            .transfer(ids)
+            .then((tx) => {
+              console.log(tx);
+
+              setWarningNewText("Please wait for the transaction and do not close the window.");
+
+              // remove claimed cfxs from UI
+              const oldNewCfxsItems = [...newCfxsItems];
+              setNewCfxsItems(
+                newCfxsItems
+                  .filter((c) => !ids.includes(c.id))
+                  .map((c, i) => {
+                    return {
+                      ...c,
+                      checked: i < maxSelectedItemsCount,
+                    };
+                  })
+              );
+
+              tx.wait(2)
+                .then((txReceipt) => {
+                  console.log(txReceipt);
+                  toast("Success: " + txReceipt.hash, {
+                    type: "success",
+                  });
+                })
+                .catch((err) => {
+                  console.error(err);
+                  setNewCfxsItems(oldNewCfxsItems);
+                  toast(err ? err.message : "Unknown Error", { type: "error" });
+                })
+                .finally(() => {
+                  setLoadingTransfer(false);
+                  setWarningNewText("");
+                });
+            })
+            .catch((err) => {
+              console.error(err);
+              toast(err ? err.message : "Unknown Error", { type: "error" });
+              setLoadingTransfer(false);
+            });
+        });
+      } else {
+        toast("Invalid Address", { type: "error" });
+      }
+    }
+  };
 
   return (
     <div className="mt-4">
       <h1 className="text-2xl ml-2">My Assets</h1>
       <div className="flex overflow-x-auto overflow-y-hidden border-b border-gray-300 whitespace-nowrap px-4 pt-4">
-        <button
-          className={tabTitleClassName(1)}
-          onClick={() => setActiveTab(1)}
-        >
+        <button className={tabTitleClassName(0)} onClick={() => setActiveTab(0)}>
           New Cfxs
         </button>
-        <button
-          className={tabTitleClassName(0)}
-          onClick={() => setActiveTab(0)}
-        >
+        <button className={tabTitleClassName(1)} onClick={() => setActiveTab(1)}>
           Old Cfxs
         </button>
       </div>
       {activeTab === 0 && (
         <div className="px-4 py-4 text-lg">
+          <div className="pt-2 flex justify-between items-center max-w-full">
+            <div className="flex justify-between items-center">
+              Balance: {loadingNewData ? <span className="loading loading-spinner loading-xs" /> : <span className="text-primary">{newBalance}</span>}{" "}
+            </div>
+            <div className="dropdown dropdown-end">
+              <div tabIndex={0} role="button" className="btn btn-primary btn-sm md:btn-md">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-5 h-5 stroke-current">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+                  />
+                </svg>
+              </div>
+              <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                {/*<li>*/}
+                {/*  <a onClick={handleQuickSelected}>Select top {maxSelectedItemsCount}</a>*/}
+                {/*</li>*/}
+                {/*<li>*/}
+                {/*  <a onClick={() => handleQuickSelected(true)}>Select top {maxSelectedItemsCount / 2}</a>*/}
+                {/*</li>*/}
+                {/*<li>*/}
+                {/*  <a onClick={handleClearSelected}>Clear Selected</a>*/}
+                {/*</li>*/}
+                <li>
+                  <a onClick={getNewCfxsBalance}>
+                    Refresh Data
+                    {loadingNewData && <span className="loading loading-spinner loading-sm" />}
+                  </a>
+                </li>
+                {/*<li>*/}
+                {/*  <a className="font-bold" onClick={handleTransfer}>*/}
+                {/*    Transfer {loadingTransfer && <span className="loading loading-spinner loading-sm" />}*/}
+                {/*  </a>*/}
+                {/*</li>*/}
+                {/*<li>*/}
+                {/*  <a>List on Marketspace</a>*/}
+                {/*</li>*/}
+              </ul>
+            </div>
+          </div>
+          <div className="text-wrap whitespace-normal break-all">
+            <span className="text-warning">{warningNewText}</span>
+          </div>
+          <div className="flex flex-row flex-wrap mt-2">
+            <div>
+              {newCfxsItems.map((c, i) => (
+                <div className="stats shadow rounded-lg m-2 border" key={i}>
+                  <div className="stat px-3 py-2">
+                    <div className="stat-desc text-xs">#{c.id}</div>
+                    <div className="flex items-center">
+                      <div className="stat-value mt-1 font-normal text-lg">
+                        <span>{c.amount}</span>
+                        <span className="font-light text-base"> cfxs</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              <div>
+                {newCfxsTotalCount > newCfxsItems.length && (
+                  <button className="btn btn-info ml-2" onClick={() => loadMoreNewData()}>
+                    Load More
+                    {loadingNewData && <span className="loading loading-spinner loading-sm" />}
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {activeTab === 1 && (
+        <div className="px-4 py-4 text-lg">
           <div className="pt-2">
-            Old Sum:{" "}
-            {loadingOldData ? (
-              <span className="loading loading-spinner loading-xs" />
-            ) : (
-              <span className="text-primary">{oldBalance}</span>
-            )}{" "}
-            Claimable:{" "}
-            {loadingOldData ? (
-              <span className="loading loading-spinner loading-xs" />
-            ) : (
-              <span className="text-primary">{oldCfxsTotalCount}</span>
-            )}{" "}
+            Old Sum: {loadingOldData ? <span className="loading loading-spinner loading-xs" /> : <span className="text-primary">{oldBalance}</span>} Claimable:{" "}
+            {loadingOldData ? <span className="loading loading-spinner loading-xs" /> : <span className="text-primary">{oldCfxsTotalCount}</span>}{" "}
             <span className="text-warning ml-2">{warningOldText}</span>
-            <button
-              className="btn btn-info btn-xs ml-2"
-              onClick={getOldCfxsBalance}
-            >
+            <button className="btn btn-info btn-xs ml-2" onClick={getOldCfxsBalance}>
               Refresh Data
-              {loadingOldData && (
-                <span className="loading loading-spinner loading-sm" />
-              )}
+              {loadingOldData && <span className="loading loading-spinner loading-sm" />}
             </button>
           </div>
           <div className="flex flex-row flex-wrap mt-2">
@@ -290,96 +383,9 @@ export default function Page() {
               ))}
               <div>
                 {oldCfxsTotalCount > oldCfxsItems.length && (
-                  <button
-                    className="btn btn-info ml-2"
-                    onClick={() => loadMoreOldData()}
-                  >
+                  <button className="btn btn-info ml-2" onClick={() => loadMoreOldData()}>
                     Load More
-                    {loadingOldData && (
-                      <span className="loading loading-spinner loading-sm" />
-                    )}
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-      {activeTab === 1 && (
-        <div className="px-4 py-4 text-lg">
-          <div className="pt-2 flex justify-between items-center">
-            <div>
-              New Balance:{" "}
-              {loadingNewData ? (
-                <span className="loading loading-spinner loading-xs" />
-              ) : (
-                <span className="text-primary">{newBalance}</span>
-              )}{" "}
-              <span className="text-warning ml-2">{warningNewText}</span>
-              <button
-                className="btn btn-info btn-xs ml-2"
-                onClick={getNewCfxsBalance}
-              >
-                Refresh Data
-                {loadingNewData && (
-                  <span className="loading loading-spinner loading-sm" />
-                )}
-              </button>
-            </div>
-            <div className="dropdown dropdown-end">
-              <div tabIndex={0} role="button" className="btn btn-primary">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  className="inline-block w-5 h-5 stroke-current"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-                  />
-                </svg>
-              </div>
-              <ul
-                tabIndex={0}
-                className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
-              >
-                <li>
-                  <a>Coming Soon</a>
-                </li>
-                {/*<li>*/}
-                {/*  <a>List on Marketspace</a>*/}
-                {/*</li>*/}
-              </ul>
-            </div>
-          </div>
-          <div className="flex flex-row flex-wrap mt-2">
-            <div>
-              {newCfxsItems.map((c, i) => (
-                <div className="stats shadow rounded-lg m-2 border" key={i}>
-                  <div className="stat px-3 py-2">
-                    <div className="stat-desc text-xs">#{c.id}</div>
-                    <div className="flex items-center">
-                      <div className="stat-value mt-1 font-normal text-lg">
-                        <span>{c.amount}</span>
-                        <span className="font-light text-base"> cfxs</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-              <div>
-                {newCfxsTotalCount > newCfxsItems.length && (
-                  <button
-                    className="btn btn-info ml-2"
-                    onClick={() => loadMoreNewData()}
-                  >
-                    Load More
-                    {loadingNewData && (
-                      <span className="loading loading-spinner loading-sm" />
-                    )}
+                    {loadingOldData && <span className="loading loading-spinner loading-sm" />}
                   </button>
                 )}
               </div>

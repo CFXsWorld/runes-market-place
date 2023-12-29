@@ -5,14 +5,7 @@ import * as DefaultWallet from "@cfxjs/use-wallet-react/ethereum";
 import * as FluentWallet from "@cfxjs/use-wallet-react/ethereum/Fluent";
 import * as MetaMask from "@cfxjs/use-wallet-react/ethereum/MetaMask";
 import * as OKXWallet from "@cfxjs/use-wallet-react/ethereum/OKX";
-import {
-  bridgeContractAddress,
-  isCorrectChainId,
-  maxSelectedItemsCount,
-  newContractAddress,
-  oldContractAddress,
-  pageItemCount,
-} from "@/app/utils";
+import { bridgeContractAddress, isCorrectChainId, isTest, maxSelectedItemsCount, newContractAddress, oldContractAddress, pageItemCount } from "@/app/utils";
 import { BrowserProvider, Contract, getAddress } from "ethers";
 import React, { useState } from "react";
 import { abi as oldCfxsContractAbi } from "@/app/contracts/oldCfxsContractAbi.json";
@@ -45,11 +38,7 @@ export default function Claim() {
   const [cfxsItems, setCfxsItems] = React.useState([]);
   const [warningText, setWarningText] = React.useState("");
 
-  const account = () =>
-    defaultWalletAccount ||
-    fluentWalletAccount ||
-    metaMaskWalletAccount ||
-    okxWalletAccount;
+  const account = () => defaultWalletAccount || fluentWalletAccount || metaMaskWalletAccount || okxWalletAccount;
 
   const _isCorrectChainId = () =>
     isCorrectChainId(
@@ -74,16 +63,8 @@ export default function Claim() {
     : globalThis.ethereum;
 
   const provider = new BrowserProvider(browserProvier);
-  const contract = new Contract(
-    oldContractAddress,
-    oldCfxsContractAbi,
-    provider
-  );
-  const bridgeContract = new Contract(
-    bridgeContractAddress,
-    bridgeContractAbi,
-    provider
-  );
+  const contract = new Contract(oldContractAddress, oldCfxsContractAbi, provider);
+  const bridgeContract = new Contract(bridgeContractAddress, bridgeContractAbi, provider);
 
   const loadMoreData = (isReset) => {
     if (account()) {
@@ -94,9 +75,7 @@ export default function Claim() {
         setCfxsStartIndex(() => 0);
       }
       return fetch(
-        `/getCfxsList?owner=${getAddress(account())}&startIndex=${
-          isReset ? 0 : cfxsStartIndex
-        }&size=${pageItemCount}`
+        `/${isTest ? "getCfxsListTest" : "getCfxsList"}?owner=${getAddress(account())}&startIndex=${isReset ? 0 : cfxsStartIndex}&size=${pageItemCount}`
       )
         .then((response) => response.json())
         .then((data) => {
@@ -104,19 +83,15 @@ export default function Claim() {
           setCfxsTotalCount(data.count);
           if (data.rows.length > 0 && Array.isArray(data.rows)) {
             setCfxsItems(
-              (isReset ? data.rows : cfxsItems.concat(data.rows)).map(
-                (c, i) => {
-                  return {
-                    id: c.id,
-                    amount: 1,
-                    checked: i < maxSelectedItemsCount,
-                  };
-                }
-              )
+              (isReset ? data.rows : cfxsItems.concat(data.rows)).map((c, i) => {
+                return {
+                  id: c.id,
+                  amount: 1,
+                  checked: i < maxSelectedItemsCount,
+                };
+              })
             );
-            setCfxsStartIndex(
-              (isReset ? 0 : cfxsStartIndex) + data.rows.length
-            );
+            setCfxsStartIndex((isReset ? 0 : cfxsStartIndex) + data.rows.length);
           }
         })
         .catch((err) => {
@@ -168,9 +143,7 @@ export default function Claim() {
           .then((tx) => {
             console.log(tx);
 
-            setWarningText(
-              "Please wait for the transaction and do not close the window."
-            );
+            setWarningText("Please wait for the transaction and do not close the window.");
             // remove claimed cfxs
             console.log(checkedCfxsItems);
             const delData = new URLSearchParams();
@@ -209,10 +182,7 @@ export default function Claim() {
                 // remove claimed cfxs
                 console.log(checkedCfxsItems);
                 const delData = new URLSearchParams();
-                delData.append(
-                  "id",
-                  `[${ids.map((id) => `"${id}"`).join(",")}]`
-                );
+                delData.append("id", `[${ids.map((id) => `"${id}"`).join(",")}]`);
                 delData.append("owner", getAddress(account()));
                 fetch(`/del`, {
                   method: "POST",
@@ -228,8 +198,7 @@ export default function Claim() {
                       if (jsonData && jsonData.state) {
                         for (let i = 0; i < jsonData.state.length; i++) {
                           const jsonDatum = jsonData[i];
-                          if (!jsonDatum.ok)
-                            throw new Error(jsonDatum.id + " Error");
+                          if (!jsonDatum.ok) throw new Error(jsonDatum.id + " Error");
                         }
                       }
                     } catch (err) {
@@ -275,8 +244,7 @@ export default function Claim() {
         cfxsItems.map((c, i) => {
           return {
             ...c,
-            checked:
-              i < (isHalf ? maxSelectedItemsCount / 2 : maxSelectedItemsCount),
+            checked: i < (isHalf ? maxSelectedItemsCount / 2 : maxSelectedItemsCount),
           };
         })
       );
@@ -332,16 +300,8 @@ export default function Claim() {
 
   return (
     <>
-      <div
-        role="alert"
-        className="alert alert-error bg-red-100 mt-4 text-error border-none shadow-lg"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="stroke-current shrink-0 h-10 w-10 ml-2"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
+      <div role="alert" className="alert alert-error bg-red-100 mt-4 text-error border-none shadow-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-10 w-10 ml-2" fill="none" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -354,34 +314,18 @@ export default function Claim() {
           <h3 className="mx-2 font-bold">Attention:</h3>
           <p className="mx-2 text-wrap whitespace-normal break-all">
             Please claim the cfxs from the test contract(
-            <a
-              className="no-underline text-primary hover:underline"
-              href={"https://evm.confluxscan.io/address/" + oldContractAddress}
-              target="_blank"
-            >
+            <a className="no-underline text-primary hover:underline" href={"https://evm.confluxscan.io/address/" + oldContractAddress} target="_blank">
               {oldContractAddress}
             </a>
             ) to the new contract(
-            <a
-              className="no-underline text-primary hover:underline"
-              href={"https://evm.confluxscan.io/address/" + newContractAddress}
-              target="_blank"
-            >
+            <a className="no-underline text-primary hover:underline" href={"https://evm.confluxscan.io/address/" + newContractAddress} target="_blank">
               {newContractAddress}
             </a>
             )
           </p>
           <div className="mx-2 pt-2">
-            <button
-              className="btn btn-error text-white"
-              onClick={handleOpenClaimModal}
-              disabled={!account() || !_isCorrectChainId()}
-            >
-              {account()
-                ? _isCorrectChainId()
-                  ? "Claim Cfxs"
-                  : "Wrong Network"
-                : "Please connect wallet"}
+            <button className="btn btn-error text-white" onClick={handleOpenClaimModal} disabled={!account() || !_isCorrectChainId()}>
+              {account() ? (_isCorrectChainId() ? "Claim Cfxs" : "Wrong Network") : "Please connect wallet"}
             </button>
           </div>
         </div>

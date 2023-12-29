@@ -2,29 +2,35 @@
 const nextConfig = {
   async rewrites() {
     return [
-      {
-        source: "/getCfxsListTest",
-        destination: "http://test.conins.io/test",
-      },
+      // mainnet
       {
         source: "/getCfxsList",
-        destination: "http://test.conins.io/",
+        destination: "https://api.conins.io/main/",
       },
       {
         source: "/getCfxsNewList",
-        destination: "http://test.conins.io/newlist",
+        destination: "https://api.conins.io/main/newlist",
       },
       {
         source: "/del",
-        destination: "http://test.conins.io/del",
+        destination: "https://api.conins.io/main/del",
       },
       {
         source: "/delPre",
-        destination: "http://test.conins.io/del/pre",
+        destination: "https://api.conins.io/main/del/pre",
       },
       {
         source: "/sync",
-        destination: "http://test.conins.io/sync",
+        destination: "https://api.conins.io/main/sync",
+      },
+      // testnet
+      {
+        source: "/getCfxsNewListTest",
+        destination: "https://api.conins.io/test/newlist",
+      },
+      {
+        source: "/getCfxsListTest",
+        destination: "https://api.conins.io/test/",
       },
     ];
   },
