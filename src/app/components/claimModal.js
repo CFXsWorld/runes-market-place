@@ -48,7 +48,7 @@ export default function ClaimModal({
             Old Sum: {loadingData ? <span className="loading loading-spinner loading-xs" /> : <span className="text-primary">{balance}</span>} Claimable:{" "}
             {loadingData ? <span className="loading loading-spinner loading-xs" /> : <span className="text-primary">{cfxsTotalCount}</span>}{" "}
             <span className="text-xs">(Claim up to {maxSelectedItemsCount} each time)</span>
-            <button className="btn btn-primary btn-xs ml-4" onClick={handleQuickSelected}>
+            <button className="btn btn-primary btn-xs ml-4" onClick={() => handleQuickSelected()}>
               Select top {maxSelectedItemsCount}
             </button>
             <button className="btn btn-primary btn-xs ml-2" onClick={() => handleQuickSelected(true)}>

@@ -5,7 +5,7 @@ import * as DefaultWallet from "@cfxjs/use-wallet-react/ethereum";
 import * as FluentWallet from "@cfxjs/use-wallet-react/ethereum/Fluent";
 import * as MetaMask from "@cfxjs/use-wallet-react/ethereum/MetaMask";
 import * as OKXWallet from "@cfxjs/use-wallet-react/ethereum/OKX";
-import { isCorrectChainId, maxSelectedItemsCount, pageItemCount } from "@/app/utils";
+import { isCorrectChainId, maxTransferSelectedItemsCount, pageItemCount } from "@/app/utils";
 import { BrowserProvider, Contract, getAddress, isAddress } from "ethers";
 import { abi as oldCfxsContractAbi } from "@/app/contracts/oldCfxsContractAbi.json";
 import { abi as newCfxsContractAbi } from "@/app/contracts/newCfxsContractAbi.json";
@@ -40,6 +40,7 @@ export default function Page() {
   const [warningOldText, setWarningOldText] = React.useState("");
   const [warningNewText, setWarningNewText] = React.useState("");
   const [loadingTransfer, setLoadingTransfer] = React.useState(false);
+  const [transferToAddress, setTransferToAddress] = React.useState("");
 
   const account = () => defaultWalletAccount || fluentWalletAccount || metaMaskWalletAccount || okxWalletAccount;
 
@@ -119,7 +120,15 @@ export default function Page() {
           console.log(data);
           setNewCfxsTotalCount(data.count);
           if (data.rows.length > 0 && Array.isArray(data.rows)) {
-            setNewCfxsItems(isReset ? data.rows : newCfxsItems.concat(data.rows));
+            setNewCfxsItems(
+              (isReset ? data.rows : newCfxsItems.concat(data.rows)).map((c, i) => {
+                return {
+                  id: c.id,
+                  amount: 1,
+                  checked: false,
+                };
+              })
+            );
             setNewCfxsStartIndex((isReset ? 0 : newCfxsStartIndex) + data.rows.length);
           }
         })
@@ -200,7 +209,7 @@ export default function Page() {
         newCfxsItems.map((c, i) => {
           return {
             ...c,
-            checked: i < (isHalf ? maxSelectedItemsCount / 2 : maxSelectedItemsCount),
+            checked: i < (isHalf ? maxTransferSelectedItemsCount / 2 : maxTransferSelectedItemsCount),
           };
         })
       );
@@ -214,62 +223,79 @@ export default function Page() {
     );
   };
 
-  const handleTransfer = () => {
-    const getToAddress = prompt("Please enter transfer destination address:");
+  const openTransferModal = () => {
     const checkedCfxsItems = newCfxsItems.filter((c) => c.checked);
     if (checkedCfxsItems.length > 0) {
-      if (getToAddress && isAddress(getToAddress)) {
-        const ids = checkedCfxsItems.map((c) => c.id);
-        setLoadingTransfer(true);
-        provider.getSigner().then((signer) => {
-          const contractWithSigner = newContract.connect(signer);
-          contractWithSigner
-            .transfer(ids)
-            .then((tx) => {
-              console.log(tx);
-
-              setWarningNewText("Please wait for the transaction and do not close the window.");
-
-              // remove claimed cfxs from UI
-              const oldNewCfxsItems = [...newCfxsItems];
-              setNewCfxsItems(
-                newCfxsItems
-                  .filter((c) => !ids.includes(c.id))
-                  .map((c, i) => {
-                    return {
-                      ...c,
-                      checked: i < maxSelectedItemsCount,
-                    };
-                  })
-              );
-
-              tx.wait(2)
-                .then((txReceipt) => {
-                  console.log(txReceipt);
-                  toast("Success: " + txReceipt.hash, {
-                    type: "success",
-                  });
-                })
-                .catch((err) => {
-                  console.error(err);
-                  setNewCfxsItems(oldNewCfxsItems);
-                  toast(err ? err.message : "Unknown Error", { type: "error" });
-                })
-                .finally(() => {
-                  setLoadingTransfer(false);
-                  setWarningNewText("");
-                });
-            })
-            .catch((err) => {
-              console.error(err);
-              toast(err ? err.message : "Unknown Error", { type: "error" });
-              setLoadingTransfer(false);
-            });
-        });
-      } else {
-        toast("Invalid Address", { type: "error" });
-      }
+      document.getElementById("transferModal").showModal();
+    } else {
+      toast("No cfxs have been selected", { type: "error" });
     }
+  };
+
+  const handleTransfer = () => {
+    if (transferToAddress && isAddress(transferToAddress)) {
+      document.getElementById("transferModal").close();
+      const checkedCfxsItems = newCfxsItems.filter((c) => c.checked);
+      const ids = checkedCfxsItems.map((c) => c.id);
+      setLoadingTransfer(true);
+      provider.getSigner().then((signer) => {
+        const contractWithSigner = newContract.connect(signer);
+        contractWithSigner["transfer(uint256[], address)"](ids, transferToAddress)
+          .then((tx) => {
+            console.log(tx);
+
+            setWarningNewText("Please wait for the transaction and do not close the window.");
+
+            // remove claimed cfxs from UI
+            const oldNewCfxsItems = [...newCfxsItems];
+            const _newCfxsTotalCount = newCfxsTotalCount;
+            setNewCfxsItems(
+              newCfxsItems
+                .filter((c) => !ids.includes(c.id))
+                .map((c, i) => {
+                  return {
+                    ...c,
+                    checked: false,
+                  };
+                })
+            );
+            setNewCfxsTotalCount(_newCfxsTotalCount - ids.length);
+
+            tx.wait(2)
+              .then((txReceipt) => {
+                console.log(txReceipt);
+                toast("Success: " + txReceipt.hash, {
+                  type: "success",
+                });
+              })
+              .catch((err) => {
+                console.error(err);
+                setNewCfxsItems(oldNewCfxsItems);
+                setNewCfxsTotalCount(_newCfxsTotalCount);
+                toast(err ? err.message : "Unknown Error", { type: "error" });
+              })
+              .finally(() => {
+                setLoadingTransfer(false);
+                setWarningNewText("");
+              });
+          })
+          .catch((err) => {
+            console.error(err);
+            toast(err ? err.message : "Unknown Error", { type: "error" });
+            setLoadingTransfer(false);
+          });
+      });
+    } else {
+      toast("Invalid Address", { type: "error" });
+    }
+  };
+
+  const onNewCfxsCheck = (id) => {
+    setNewCfxsItems(
+      newCfxsItems.map((c) => {
+        return c.id === id ? { ...c, checked: !c.checked } : c;
+      })
+    );
   };
 
   return (
@@ -288,6 +314,7 @@ export default function Page() {
           <div className="pt-2 flex justify-between items-center max-w-full">
             <div className="flex justify-between items-center">
               Balance: {loadingNewData ? <span className="loading loading-spinner loading-xs" /> : <span className="text-primary">{newBalance}</span>}{" "}
+              {loadingTransfer && <span className="loading loading-spinner loading-sm ml-2" />}
             </div>
             <div className="dropdown dropdown-end">
               <div tabIndex={0} role="button" className="btn btn-primary btn-sm md:btn-md">
@@ -301,28 +328,31 @@ export default function Page() {
                 </svg>
               </div>
               <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                {/*<li>*/}
-                {/*  <a onClick={handleQuickSelected}>Select top {maxSelectedItemsCount}</a>*/}
-                {/*</li>*/}
-                {/*<li>*/}
-                {/*  <a onClick={() => handleQuickSelected(true)}>Select top {maxSelectedItemsCount / 2}</a>*/}
-                {/*</li>*/}
-                {/*<li>*/}
-                {/*  <a onClick={handleClearSelected}>Clear Selected</a>*/}
-                {/*</li>*/}
+                <li>
+                  <a onClick={() => handleQuickSelected()}>Select top {maxTransferSelectedItemsCount}</a>
+                </li>
+                <li>
+                  <a onClick={() => handleQuickSelected(true)}>Select top {maxTransferSelectedItemsCount / 2}</a>
+                </li>
+                <li>
+                  <a onClick={handleClearSelected}>Clear Selected</a>
+                </li>
                 <li>
                   <a onClick={getNewCfxsBalance}>
                     Refresh Data
                     {loadingNewData && <span className="loading loading-spinner loading-sm" />}
                   </a>
                 </li>
+                <li>
+                  <a className="font-bold" onClick={openTransferModal}>
+                    Transfer {loadingTransfer && <span className="loading loading-spinner loading-sm" />}
+                  </a>
+                </li>
                 {/*<li>*/}
-                {/*  <a className="font-bold" onClick={handleTransfer}>*/}
-                {/*    Transfer {loadingTransfer && <span className="loading loading-spinner loading-sm" />}*/}
+                {/*  <a className="flex flex-col items-start">*/}
+                {/*    <span>List on Marketspace</span>*/}
+                {/*    <span className="text-xs">(coming soon)</span>*/}
                 {/*  </a>*/}
-                {/*</li>*/}
-                {/*<li>*/}
-                {/*  <a>List on Marketspace</a>*/}
                 {/*</li>*/}
               </ul>
             </div>
@@ -341,6 +371,7 @@ export default function Page() {
                         <span>{c.amount}</span>
                         <span className="font-light text-base"> cfxs</span>
                       </div>
+                      <input type="checkbox" checked={c.checked} onChange={() => onNewCfxsCheck(c.id)} className="checkbox checkbox-sm checkbox-primary ml-3" />
                     </div>
                   </div>
                 </div>
@@ -395,6 +426,28 @@ export default function Page() {
           </div>
         </div>
       )}
+      <dialog id="transferModal" className="modal">
+        <div className="modal-box">
+          <form method="dialog">
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+          </form>
+          <h3 className="font-bold text-lg">Transfer Cfxs</h3>
+          <p className="py-4">Please enter transfer destination address:</p>
+          <input
+            type="text"
+            placeholder="To Address 0x..."
+            className="input input-bordered w-full"
+            value={transferToAddress}
+            onChange={(e) => setTransferToAddress(e.target.value)}
+          />
+          <div className="modal-action">
+            <button className="btn btn-primary" onClick={handleTransfer}>
+              Transfer
+            </button>
+          </div>
+        </div>
+      </dialog>
+      <ToastContainer style={{ width: "800px", maxWidth: "98%" }} position="top-right" />
     </div>
   );
 }

@@ -26,6 +26,7 @@
 // // export const isTest = true;
 
 export const maxSelectedItemsCount = 32;
+export const maxTransferSelectedItemsCount = 24;
 export const pageItemCount = 128;
 
 export const addressFormat = (defaultWalletAccount, fluentWalletAccount, metaMaskWalletAccount, okxWalletAccount) => {
