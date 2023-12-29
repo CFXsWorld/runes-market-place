@@ -315,7 +315,7 @@ export default function Claim() {
         <div>
           <h3 className="mx-2 font-bold">Attention:</h3>
           <p className="mx-2 text-wrap whitespace-normal break-all">
-            Please claim the cfxs from the test contract(
+            Please claim the CFXs from the test contract(
             <a
               className="no-underline text-primary hover:underline"
               href={"https://evm.confluxscan.io/address/" + process.env.NEXT_PUBLIC_OldContractAddress}
@@ -335,7 +335,7 @@ export default function Claim() {
           </p>
           <div className="mx-2 pt-2">
             <button className="btn btn-error text-white" onClick={handleOpenClaimModal} disabled={!account() || !_isCorrectChainId()}>
-              {account() ? (_isCorrectChainId() ? "Claim Cfxs" : "Wrong Network") : "Please connect wallet"}
+              {account() ? (_isCorrectChainId() ? "Claim CFXs" : "Wrong Network") : "Please connect wallet"}
             </button>
           </div>
         </div>

@@ -228,7 +228,7 @@ export default function Page() {
     if (checkedCfxsItems.length > 0) {
       document.getElementById("transferModal").showModal();
     } else {
-      toast("No cfxs have been selected", { type: "error" });
+      toast("No CFXs have been selected", { type: "error" });
     }
   };
 
@@ -303,21 +303,32 @@ export default function Page() {
       <h1 className="text-2xl ml-2">My Assets</h1>
       <div className="flex overflow-x-auto overflow-y-hidden border-b border-gray-300 whitespace-nowrap px-4 pt-4">
         <button className={tabTitleClassName(0)} onClick={() => setActiveTab(0)}>
-          New Cfxs
+          New CFXs
         </button>
         <button className={tabTitleClassName(1)} onClick={() => setActiveTab(1)}>
-          Old Cfxs
+          Old CFXs
         </button>
       </div>
       {activeTab === 0 && (
         <div className="px-4 py-4 text-lg">
+          <div className="text-wrap whitespace-normal break-all">
+            <span className="text-warning">{warningNewText}</span>
+          </div>
           <div className="pt-2 flex justify-between items-center max-w-full">
-            <div className="flex justify-between items-center">
-              Balance: {loadingNewData ? <span className="loading loading-spinner loading-xs" /> : <span className="text-primary">{newBalance}</span>}{" "}
-              {loadingTransfer && <span className="loading loading-spinner loading-sm ml-2" />}
+            <div className="flex flex-col justify-between items-start md:flex-row">
+              <div>
+                Balance: {loadingNewData ? <span className="loading loading-spinner loading-xs" /> : <span className="text-primary">{newBalance}</span>}{" "}
+                {loadingTransfer && <span className="loading loading-spinner loading-sm ml-2" />}
+              </div>
+              <div>
+                <button className="btn btn-info btn-xs md:ml-2" onClick={getNewCfxsBalance}>
+                  Refresh Data
+                  {loadingNewData && <span className="loading loading-spinner loading-sm" />}
+                </button>
+              </div>
             </div>
             <div className="dropdown dropdown-end">
-              <div tabIndex={0} role="button" className="btn btn-primary btn-sm md:btn-md">
+              <div tabIndex={0} role="button" className="btn btn-primary btn-md">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-5 h-5 stroke-current">
                   <path
                     strokeLinecap="round"
@@ -338,12 +349,6 @@ export default function Page() {
                   <a onClick={handleClearSelected}>Clear Selected</a>
                 </li>
                 <li>
-                  <a onClick={getNewCfxsBalance}>
-                    Refresh Data
-                    {loadingNewData && <span className="loading loading-spinner loading-sm" />}
-                  </a>
-                </li>
-                <li>
                   <a className="font-bold" onClick={openTransferModal}>
                     Transfer {loadingTransfer && <span className="loading loading-spinner loading-sm" />}
                   </a>
@@ -357,19 +362,16 @@ export default function Page() {
               </ul>
             </div>
           </div>
-          <div className="text-wrap whitespace-normal break-all">
-            <span className="text-warning">{warningNewText}</span>
-          </div>
           <div className="flex flex-row flex-wrap mt-2">
             <div>
               {newCfxsItems.map((c, i) => (
-                <div className="stats shadow rounded-lg m-2 border" key={i}>
-                  <div className="stat px-3 py-2">
+                <div className="stats shadow rounded-lg m-1 border md:m-2" key={i}>
+                  <div className="stat px-2 py-2">
                     <div className="stat-desc text-xs">#{c.id}</div>
                     <div className="flex items-center">
                       <div className="stat-value mt-1 font-normal text-lg">
                         <span>{c.amount}</span>
-                        <span className="font-light text-base"> cfxs</span>
+                        <span className="font-light text-base"> CFXs</span>
                       </div>
                       <input type="checkbox" checked={c.checked} onChange={() => onNewCfxsCheck(c.id)} className="checkbox checkbox-sm checkbox-primary ml-3" />
                     </div>
@@ -408,7 +410,7 @@ export default function Page() {
                     <div className="flex items-center">
                       <div className="stat-value mt-1 font-normal text-lg">
                         <span>{c.amount}</span>
-                        <span className="font-light text-base"> cfxs</span>
+                        <span className="font-light text-base"> CFXs</span>
                       </div>
                     </div>
                   </div>
@@ -431,7 +433,7 @@ export default function Page() {
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
           </form>
-          <h3 className="font-bold text-lg">Transfer Cfxs</h3>
+          <h3 className="font-bold text-lg">Transfer CFXs</h3>
           <p className="py-4">Please enter transfer destination address:</p>
           <input
             type="text"

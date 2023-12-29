@@ -43,7 +43,7 @@ export default function ClaimModal({
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
           </form>
-          <h3 className="font-bold text-lg">Claim Cfxs</h3>
+          <h3 className="font-bold text-lg">Claim CFXs</h3>
           <div className="pt-4">
             Old Sum: {loadingData ? <span className="loading loading-spinner loading-xs" /> : <span className="text-primary">{balance}</span>} Claimable:{" "}
             {loadingData ? <span className="loading loading-spinner loading-xs" /> : <span className="text-primary">{cfxsTotalCount}</span>}{" "}
@@ -64,7 +64,7 @@ export default function ClaimModal({
           </div>
           <div className="py-4">
             <button className="btn btn-primary" onClick={handleClaim} disabled={!isChecked || loadingClaim}>
-              {isChecked ? "Claim Cfxs" : "Please check some cfxs"}
+              {isChecked ? "Claim CFXs" : "Please check some CFXs"}
               {loadingClaim && <span className="loading loading-spinner" />}
             </button>
             <span className="text-warning ml-2">{warningText}</span>
@@ -84,7 +84,7 @@ export default function ClaimModal({
                     <div className="flex items-center">
                       <div className="stat-value mt-1 font-normal text-lg">
                         <span>{c.amount}</span>
-                        <span className="font-light text-base"> cfxs</span>
+                        <span className="font-light text-base"> CFXs</span>
                       </div>
                       <input type="checkbox" checked={c.checked} onChange={() => onCheck(c.id)} className="checkbox checkbox-sm checkbox-primary ml-3" />
                     </div>
