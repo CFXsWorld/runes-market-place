@@ -5,7 +5,7 @@ import * as DefaultWallet from "@cfxjs/use-wallet-react/ethereum";
 import * as FluentWallet from "@cfxjs/use-wallet-react/ethereum/Fluent";
 import * as MetaMask from "@cfxjs/use-wallet-react/ethereum/MetaMask";
 import * as OKXWallet from "@cfxjs/use-wallet-react/ethereum/OKX";
-import { bridgeContractAddress, isCorrectChainId, isTest, maxSelectedItemsCount, newContractAddress, oldContractAddress, pageItemCount } from "@/app/utils";
+import { isCorrectChainId, maxSelectedItemsCount, pageItemCount } from "@/app/utils";
 import { BrowserProvider, Contract, getAddress } from "ethers";
 import React, { useState } from "react";
 import { abi as oldCfxsContractAbi } from "@/app/contracts/oldCfxsContractAbi.json";
@@ -63,8 +63,8 @@ export default function Claim() {
     : globalThis.ethereum;
 
   const provider = new BrowserProvider(browserProvier);
-  const contract = new Contract(oldContractAddress, oldCfxsContractAbi, provider);
-  const bridgeContract = new Contract(bridgeContractAddress, bridgeContractAbi, provider);
+  const contract = new Contract(process.env.NEXT_PUBLIC_OldContractAddress, oldCfxsContractAbi, provider);
+  const bridgeContract = new Contract(process.env.NEXT_PUBLIC_BridgeContractAddress, bridgeContractAbi, provider);
 
   const loadMoreData = (isReset) => {
     if (account()) {
@@ -75,7 +75,9 @@ export default function Claim() {
         setCfxsStartIndex(() => 0);
       }
       return fetch(
-        `/${isTest ? "getCfxsListTest" : "getCfxsList"}?owner=${getAddress(account())}&startIndex=${isReset ? 0 : cfxsStartIndex}&size=${pageItemCount}`
+        `/${process.env.NEXT_PUBLIC_IsTest === "true" ? "getCfxsListTest" : "getCfxsList"}?owner=${getAddress(account())}&startIndex=${
+          isReset ? 0 : cfxsStartIndex
+        }&size=${pageItemCount}`
       )
         .then((response) => response.json())
         .then((data) => {
@@ -314,12 +316,20 @@ export default function Claim() {
           <h3 className="mx-2 font-bold">Attention:</h3>
           <p className="mx-2 text-wrap whitespace-normal break-all">
             Please claim the cfxs from the test contract(
-            <a className="no-underline text-primary hover:underline" href={"https://evm.confluxscan.io/address/" + oldContractAddress} target="_blank">
-              {oldContractAddress}
+            <a
+              className="no-underline text-primary hover:underline"
+              href={"https://evm.confluxscan.io/address/" + process.env.NEXT_PUBLIC_OldContractAddress}
+              target="_blank"
+            >
+              {process.env.NEXT_PUBLIC_OldContractAddress}
             </a>
             ) to the new contract(
-            <a className="no-underline text-primary hover:underline" href={"https://evm.confluxscan.io/address/" + newContractAddress} target="_blank">
-              {newContractAddress}
+            <a
+              className="no-underline text-primary hover:underline"
+              href={"https://evm.confluxscan.io/address/" + process.env.NEXT_PUBLIC_NewContractAddress}
+              target="_blank"
+            >
+              {process.env.NEXT_PUBLIC_NewContractAddress}
             </a>
             )
           </p>

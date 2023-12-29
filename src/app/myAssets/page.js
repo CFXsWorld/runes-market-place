@@ -5,7 +5,7 @@ import * as DefaultWallet from "@cfxjs/use-wallet-react/ethereum";
 import * as FluentWallet from "@cfxjs/use-wallet-react/ethereum/Fluent";
 import * as MetaMask from "@cfxjs/use-wallet-react/ethereum/MetaMask";
 import * as OKXWallet from "@cfxjs/use-wallet-react/ethereum/OKX";
-import { bridgeContractAddress, isCorrectChainId, isTest, maxSelectedItemsCount, newContractAddress, oldContractAddress, pageItemCount } from "@/app/utils";
+import { isCorrectChainId, maxSelectedItemsCount, pageItemCount } from "@/app/utils";
 import { BrowserProvider, Contract, getAddress, isAddress } from "ethers";
 import { abi as oldCfxsContractAbi } from "@/app/contracts/oldCfxsContractAbi.json";
 import { abi as newCfxsContractAbi } from "@/app/contracts/newCfxsContractAbi.json";
@@ -66,9 +66,9 @@ export default function Page() {
     : globalThis.ethereum;
 
   const provider = new BrowserProvider(browserProvier);
-  const oldContract = new Contract(oldContractAddress, oldCfxsContractAbi, provider);
-  const newContract = new Contract(newContractAddress, newCfxsContractAbi, provider);
-  const bridgeContract = new Contract(bridgeContractAddress, bridgeContractAbi, provider);
+  const oldContract = new Contract(process.env.NEXT_PUBLIC_OldContractAddress, oldCfxsContractAbi, provider);
+  const newContract = new Contract(process.env.NEXT_PUBLIC_NewContractAddress, newCfxsContractAbi, provider);
+  const bridgeContract = new Contract(process.env.NEXT_PUBLIC_BridgeContractAddress, bridgeContractAbi, provider);
 
   const loadMoreOldData = (isReset) => {
     if (account()) {
@@ -79,7 +79,9 @@ export default function Page() {
         setOldCfxsStartIndex(() => 0);
       }
       return fetch(
-        `/${isTest ? "getCfxsListTest" : "getCfxsList"}?owner=${getAddress(account())}&startIndex=${isReset ? 0 : oldCfxsStartIndex}&size=${pageItemCount}`
+        `/${process.env.NEXT_PUBLIC_IsTest === "true" ? "getCfxsListTest" : "getCfxsList"}?owner=${getAddress(account())}&startIndex=${
+          isReset ? 0 : oldCfxsStartIndex
+        }&size=${pageItemCount}`
       )
         .then((response) => response.json())
         .then((data) => {
@@ -108,7 +110,7 @@ export default function Page() {
         setNewCfxsStartIndex(() => 0);
       }
       fetch(
-        `/${isTest ? "getCfxsNewListTest" : "getCfxsNewList"}?owner=${getAddress(account())}&startIndex=${
+        `/${process.env.NEXT_PUBLIC_IsTest === "true" ? "getCfxsNewListTest" : "getCfxsNewList"}?owner=${getAddress(account())}&startIndex=${
           isReset ? 0 : newCfxsStartIndex
         }&size=${pageItemCount}`
       )
