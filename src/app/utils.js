@@ -27,7 +27,8 @@
 
 export const maxSelectedItemsCount = 32;
 export const maxTransferSelectedItemsCount = 24;
-export const pageItemCount = 128;
+export const pageItemCount = 10;
+export const defaultLockHours = 1;
 
 export const addressFormat = (defaultWalletAccount, fluentWalletAccount, metaMaskWalletAccount, okxWalletAccount) => {
   let address = defaultWalletAccount || fluentWalletAccount || metaMaskWalletAccount || okxWalletAccount;

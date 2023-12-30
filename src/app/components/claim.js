@@ -302,7 +302,7 @@ export default function Claim() {
 
   return (
     <>
-      <div role="alert" className="alert alert-error bg-red-100 mt-4 text-error border-none shadow-lg">
+      <div role="alert" className="alert alert-error bg-red-100 mt-4 text-error border-none">
         <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-10 w-10 ml-2" fill="none" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
@@ -340,6 +340,7 @@ export default function Claim() {
           </div>
         </div>
       </div>
+
       <ClaimModal
         balance={balance}
         loadingData={loadingData}
