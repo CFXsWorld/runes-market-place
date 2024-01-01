@@ -870,7 +870,7 @@ export default function Page() {
           <p className="py-4">Please select currency and enter sales amount</p>
           <div className="flex flex-wrap">
             {toBeListedCfxsItems.map((c, i) => (
-              <div className="card card-side border mt-2 mr-1 md:mr-2">
+              <div className="card card-side border mt-2 mr-1 md:mr-2" key={i}>
                 <div className="card-body p-3">
                   <div className="stat-desc text-xs">#{c.id}</div>
                   <div className="flex items-center text-xs">

@@ -58,10 +58,6 @@ export default function Marketspace() {
   const bridgeContract = new Contract(process.env.NEXT_PUBLIC_BridgeContractAddress, bridgeContractAbi, provider);
   const usdtContract = new Contract(process.env.NEXT_PUBLIC_USDTContractAddress, usdtAbi, provider);
 
-  useEffect(() => {
-    getListedItems();
-  }, [defaultWalletAccount, fluentWalletAccount, metaMaskWalletAccount, okxWalletAccount]);
-
   const getListedItems = (currentPage, isReset) => {
     if (account()) {
       setLoadingListedData(true);
@@ -267,6 +263,10 @@ export default function Marketspace() {
       toast("Invalid Address", { type: "error" });
     }
   };
+
+  useEffect(() => {
+    getListedItems();
+  }, [defaultWalletAccount, fluentWalletAccount, metaMaskWalletAccount, okxWalletAccount]);
 
   return (
     <div className="mt-4">
