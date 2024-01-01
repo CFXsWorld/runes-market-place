@@ -265,7 +265,7 @@ export default function Marketspace() {
   };
 
   useEffect(() => {
-    getListedItems();
+    getListedItems(1, true);
   }, [defaultWalletAccount, fluentWalletAccount, metaMaskWalletAccount, okxWalletAccount]);
 
   return (
