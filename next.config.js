@@ -23,6 +23,14 @@ const nextConfig = {
         source: "/sync",
         destination: "https://api.conins.io/main/sync",
       },
+      {
+        source: "/getMarketspaceCfxs",
+        destination: "https://api.conins.io/main/shop/goods",
+      },
+      {
+        source: "/getMyListedCfxs",
+        destination: "https://api.conins.io/main/shop/my/",
+      },
       // testnet
       {
         source: "/getCfxsNewListTest",
@@ -31,6 +39,14 @@ const nextConfig = {
       {
         source: "/getCfxsListTest",
         destination: "https://api.conins.io/test/",
+      },
+      {
+        source: "/getMarketspaceCfxsTest",
+        destination: "https://api.conins.io/test/shop/goods",
+      },
+      {
+        source: "/getMyListedCfxsTest",
+        destination: "https://api.conins.io/test/shop/my/",
       },
     ];
   },

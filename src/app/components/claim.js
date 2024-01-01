@@ -9,8 +9,7 @@ import { isCorrectChainId, maxSelectedItemsCount, pageItemCount } from "@/app/ut
 import { BrowserProvider, Contract, getAddress } from "ethers";
 import React, { useState } from "react";
 import { abi as oldCfxsContractAbi } from "@/app/contracts/oldCfxsContractAbi.json";
-// import { abi as bridgeContractAbi } from "@/app/contracts/bridgeContractTestnet.json"; //FIXME test
-import { abi as bridgeContractAbi } from "@/app/contracts/bridgeContractMainnet.json"; //prod
+import { abi as bridgeContractAbi } from "@/app/contracts/bridgeContractMainnet.json";
 import { toast, ToastContainer } from "react-toastify";
 
 const globalThis = typeof window !== "undefined" ? window : {};
@@ -178,7 +177,7 @@ export default function Claim() {
                 })
             );
 
-            tx.wait(2)
+            tx.wait()
               .then((txReceipt) => {
                 console.log(txReceipt);
                 // remove claimed cfxs
@@ -302,7 +301,7 @@ export default function Claim() {
 
   return (
     <>
-      <div role="alert" className="alert alert-error bg-red-100 mt-4 text-error border-none">
+      <div role="alert" className="alert alert-error bg-red-100 mt-3 text-error border-none">
         <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-10 w-10 ml-2" fill="none" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"

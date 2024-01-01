@@ -1,17 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import * as DefaultWallet from "@cfxjs/use-wallet-react/ethereum";
 import * as FluentWallet from "@cfxjs/use-wallet-react/ethereum/Fluent";
 import * as MetaMask from "@cfxjs/use-wallet-react/ethereum/MetaMask";
 import * as OKXWallet from "@cfxjs/use-wallet-react/ethereum/OKX";
-import { defaultLockHours, isCorrectChainId, maxTransferSelectedItemsCount, pageItemCount } from "@/app/utils";
-import { BrowserProvider, Contract, getAddress, isAddress } from "ethers";
+import { addressFormat, defaultLockHours, isCorrectChainId, maxTransferSelectedItemsCount, pageItemCount, usdtDecimal } from "@/app/utils";
+import { BrowserProvider, Contract, getAddress, isAddress, formatUnits, parseUnits } from "ethers";
 import { abi as oldCfxsContractAbi } from "@/app/contracts/oldCfxsContractAbi.json";
 import { abi as newCfxsContractAbi } from "@/app/contracts/newCfxsContractAbi.json";
-import { abi as bridgeContractAbi } from "@/app/contracts/bridgeContractMainnet.json"; //prod
+import { abi as bridgeContractAbi } from "@/app/contracts/bridgeContractMainnet.json";
+import { abiMulticall as usdtAbi } from "@/app/contracts/usdt.json";
 import { toast, ToastContainer } from "react-toastify";
+import dayjs from "dayjs";
 
 export default function Marketspace() {
   const defaultWalletStatus = DefaultWallet.useStatus();
@@ -31,8 +33,12 @@ export default function Marketspace() {
   const [listedCfxsTotalCount, setListedCfxsTotalCount] = React.useState(0);
   const [listedCfxCurrentPage, setListedCfxsCurrentPage] = React.useState(1);
   const [listedCfxsItems, setListedCfxsItems] = React.useState([]);
+  const [listedUSDTAmount, setListedUSDTAmount] = React.useState(0);
   const [warningListedText, setWarningListedText] = React.useState("");
   const [loadingList, setLoadingList] = React.useState(false);
+  const [isUSDTApproved, setIsUSDTApproved] = React.useState(false);
+  const [orderTotalAmount, setOrderTotalAmount] = React.useState(0);
+  const [loadingApprove, setLoadingApprove] = React.useState(false);
 
   const account = () => defaultWalletAccount || fluentWalletAccount || metaMaskWalletAccount || okxWalletAccount;
 
@@ -50,33 +56,40 @@ export default function Marketspace() {
   const oldContract = new Contract(process.env.NEXT_PUBLIC_OldContractAddress, oldCfxsContractAbi, provider);
   const newContract = new Contract(process.env.NEXT_PUBLIC_NewContractAddress, newCfxsContractAbi, provider);
   const bridgeContract = new Contract(process.env.NEXT_PUBLIC_BridgeContractAddress, bridgeContractAbi, provider);
+  const usdtContract = new Contract(process.env.NEXT_PUBLIC_USDTContractAddress, usdtAbi, provider);
+
+  useEffect(() => {
+    getListedItems();
+  }, [defaultWalletAccount, fluentWalletAccount, metaMaskWalletAccount, okxWalletAccount]);
 
   const getListedItems = (currentPage, isReset) => {
     if (account()) {
       setLoadingListedData(true);
+      getTotalVolume();
       if (isReset) {
         setListedCfxsItems(() => []);
         setListedCfxsTotalCount(() => 0);
         setListedCfxsCurrentPage(() => 1);
       }
-      // TODO
       fetch(
-        `/${process.env.NEXT_PUBLIC_IsTest === "true" ? "getCfxsNewListTest" : "getCfxsNewList"}?owner=${getAddress(account())}&startIndex=${
+        `/${process.env.NEXT_PUBLIC_IsTest === "true" ? "getMarketspaceCfxsTest" : "getMarketspaceCfxs"}?startIndex=${
           isReset ? 0 : (currentPage - 1) * pageItemCount
         }&size=${pageItemCount}`
       )
         .then((response) => response.json())
         .then((data) => {
           console.log(data);
-          setListedCfxsTotalCount(data.count);
-          if (data.rows.length > 0 && Array.isArray(data.rows)) {
+          setListedCfxsTotalCount(data.count || 0);
+          if (data.rows && data.rows.length > 0 && Array.isArray(data.rows)) {
             setListedCfxsItems(
               data.rows.map((c, i) => {
                 return {
                   id: c.id,
-                  // TODO
-                  amount: 1,
+                  amount: c.amount,
                   checked: false,
+                  locktime: c.locktime,
+                  seller: c.chainto,
+                  isMine: c.chainto.toLowerCase() === account().toLowerCase(),
                 };
               })
             );
@@ -88,6 +101,21 @@ export default function Marketspace() {
         })
         .finally(() => {
           setLoadingListedData(false);
+        });
+    }
+  };
+
+  const getTotalVolume = () => {
+    if (account()) {
+      newContract
+        .sumOfUSD(0)
+        .then((amount) => {
+          console.log("sumOfUSD", amount);
+          setListedUSDTAmount(Math.ceil(formatUnits(amount, usdtDecimal)));
+        })
+        .catch((err) => {
+          console.error(err);
+          toast(err ? err.message : "Unknown Error", { type: "error" });
         });
     }
   };
@@ -121,7 +149,124 @@ export default function Marketspace() {
     );
   };
 
-  const handleBuy = () => {};
+  const handleBuy = () => {
+    if (account()) {
+      // should USDT Approved
+      usdtContract
+        .allowance(account(), process.env.NEXT_PUBLIC_NewContractAddress)
+        .then((value) => {
+          const checkedCfxsItems = listedCfxsItems.filter((c) => c.checked);
+          const ids = checkedCfxsItems.map((c) => c.id);
+          const tokenTypes = checkedCfxsItems.map((c) => 0);
+          const amounts = checkedCfxsItems.map((c) => parseUnits(c.amount, 18));
+          const totalAmount = amounts.reduce((a, b) => BigInt(a) + BigInt(b));
+          console.log("totalAmount", totalAmount);
+          setOrderTotalAmount(totalAmount);
+          if (!value || BigInt(value) < BigInt(totalAmount)) {
+            document.getElementById("approveModal").showModal();
+            return;
+          }
+
+          setLoadingBuy(true);
+          setWarningListedText("");
+          provider.getSigner().then((signer) => {
+            const contractWithSigner = newContract.connect(signer);
+            contractWithSigner
+              .UnlockingScriptbatch(ids, tokenTypes, amounts)
+              .then((tx) => {
+                console.log(tx);
+
+                setWarningListedText("Please wait for the transaction and do not close the window.");
+
+                tx.wait()
+                  .then((txReceipt) => {
+                    console.log(txReceipt);
+                    toast("Success: " + txReceipt.hash, {
+                      type: "success",
+                    });
+                    getListedItems(1, true);
+                  })
+                  .catch((err) => {
+                    console.error(err);
+                    toast(err ? err.message : "Unknown Error", { type: "error" });
+                  })
+                  .finally(() => {
+                    setLoadingBuy(false);
+                    setWarningListedText("");
+                  });
+              })
+              .catch((err) => {
+                console.error(err);
+                toast(err ? err.message : "Unknown Error", { type: "error" });
+                setLoadingBuy(false);
+                setWarningListedText("");
+              });
+          });
+        })
+        .catch((err) => {
+          console.error(err);
+          toast(err ? err.message : "Unknown Error", { type: "error" });
+        });
+    } else {
+      toast("Invalid Address", { type: "error" });
+    }
+  };
+
+  const handleApprove = (isMax) => {
+    if (account()) {
+      setLoadingApprove(true);
+      setWarningListedText("");
+      usdtContract.balanceOf(account()).then((balance) => {
+        if (!balance || BigInt(balance) < BigInt(orderTotalAmount)) {
+          document.getElementById("approveModal").close();
+          toast("Insufficient USDT Balance", { type: "error" });
+          setLoadingApprove(false);
+        } else {
+          provider
+            .getSigner()
+            .then((signer) => {
+              const contractWithSigner = usdtContract.connect(signer);
+              contractWithSigner
+                .approve(process.env.NEXT_PUBLIC_NewContractAddress, isMax === true ? balance : orderTotalAmount)
+                .then((tx) => {
+                  console.log(tx);
+
+                  setWarningListedText("Please wait for the transaction and do not close the window.");
+
+                  tx.wait()
+                    .then((txReceipt) => {
+                      console.log(txReceipt);
+                      toast("Success: " + txReceipt.hash, {
+                        type: "success",
+                      });
+                      document.getElementById("approveModal").close();
+                    })
+                    .catch((err) => {
+                      console.error(err);
+                      toast(err ? err.message : "Unknown Error", { type: "error" });
+                    })
+                    .finally(() => {
+                      setLoadingApprove(false);
+                      setWarningListedText("");
+                    });
+                })
+                .catch((err) => {
+                  console.error(err);
+                  toast(err ? err.message : "Unknown Error", { type: "error" });
+                  setLoadingApprove(false);
+                });
+            })
+            .catch((err) => {
+              console.error(err);
+              toast(err ? err.message : "Unknown Error", { type: "error" });
+              setLoadingApprove(false);
+            });
+        }
+      });
+    } else {
+      toast("Invalid Address", { type: "error" });
+    }
+  };
 
   return (
     <div className="mt-4">
@@ -138,21 +283,31 @@ export default function Marketspace() {
       </div>
 
       <div className="px-4 py-6 text-lg">
-        <div className="text-wrap whitespace-normal break-all">
-          <span className="text-warning">{warningListedText}</span>
+        <div>
+          <div className="stats shadow">
+            <div className="stat place-items-center">
+              <div className="stat-title">Listed</div>
+              <div className="stat-value text-primary">{loadingListedData ? <span className="loading loading-spinner" /> : listedCfxsTotalCount}</div>
+              <div className="stat-desc">CFXs</div>
+            </div>
+
+            <div className="stat place-items-center">
+              <div className="stat-title">Total Volume</div>
+              <div className="stat-value text-primary">{listedUSDTAmount}</div>
+              <div className="stat-desc">USDT</div>
+            </div>
+          </div>
         </div>
-        <div className="pt-2 flex justify-between items-center max-w-full">
-          <div className="flex flex-col justify-between items-center md:flex-row">
-            <div>
-              Listed CFXs:{" "}
-              {loadingListedData ? <span className="loading loading-spinner loading-xs" /> : <span className="text-primary">{listedCfxsTotalCount}</span>}
-            </div>
-            <div>
-              <button className="btn btn-info btn-sm md:ml-2" onClick={() => getListedItems(1, true)}>
-                Refresh Data
-                {loadingListedData && <span className="loading loading-spinner loading-sm" />}
-              </button>
-            </div>
+        <div className="text-wrap whitespace-normal break-all mt-2">
+          <span className="text-warning">{warningListedText}</span>
+          {loadingBuy && <span className="loading loading-spinner loading-sm ml-2" />}
+        </div>
+        <div className="pt-2 mt-2 flex justify-between items-center max-w-full">
+          <div>
+            <button className="btn btn-info btn-sm md:ml-2" onClick={() => getListedItems(1, true)}>
+              Refresh Data
+              {loadingListedData && <span className="loading loading-spinner loading-sm" />}
+            </button>
           </div>
           <div className="dropdown dropdown-end">
             <div tabIndex={0} role="button" className="btn btn-primary btn-sm ">
@@ -166,6 +321,12 @@ export default function Marketspace() {
               </svg>
             </div>
             <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+              {/*<li>*/}
+              {/*  <a onClick={() => handleClearSelected("listed")}>Price Asc</a>*/}
+              {/*</li>*/}
+              {/*<li>*/}
+              {/*  <a onClick={() => handleClearSelected("listed")}>Price Desc</a>*/}
+              {/*</li>*/}
               <li>
                 <a onClick={() => handleQuickSelected(false, "listed")}>Select top {maxTransferSelectedItemsCount}</a>
               </li>
@@ -186,13 +347,13 @@ export default function Marketspace() {
         <div className="flex flex-row flex-wrap mt-4">
           <div>
             {listedCfxsItems.map((c, i) => (
-              <div className="stats shadow rounded-lg m-1 border md:m-2" key={i}>
+              <div className="stats shadow rounded-lg m-1 w-36 border md:m-2 md:w-44" key={i}>
                 <div className="stat px-2 py-2">
                   <div className="stat-desc text-xs">#{c.id}</div>
-                  <div className="flex items-center">
+                  <div className="flex items-center justify-between">
                     <div className="stat-value mt-1 font-normal text-lg">
                       <span>{c.amount}</span>
-                      <span className="font-light text-base"> CFXs</span>
+                      <span className="font-light text-sm"> USDT</span>
                     </div>
                     <input
                       type="checkbox"
@@ -201,6 +362,8 @@ export default function Marketspace() {
                       className="checkbox checkbox-sm checkbox-primary ml-3"
                     />
                   </div>
+                  <div className="stat-desc text-xs mt-1">Lock to: {c.locktime ? dayjs.unix(c.locktime).format("MM-DD HH:mm") : ""}</div>
+                  <div className={`stat-desc text-xs mt-1 ${c.isMine ? "text-success" : ""}`}>Listed by {c.isMine ? "me" : addressFormat(c.seller)}</div>
                 </div>
               </div>
             ))}
@@ -230,6 +393,26 @@ export default function Marketspace() {
           )}
         </div>
       </div>
+      <dialog id="approveModal" className="modal">
+        <div className="modal-box">
+          <form method="dialog">
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+          </form>
+          <h3 className="font-bold text-lg">USDT Approve</h3>
+          <p className="py-4">Please approve USDT before buying CFXs.</p>
+          <div className="modal-action">
+            <button className="btn btn-primary" disabled={loadingApprove} onClick={() => handleApprove(false)}>
+              Approve this Order
+              {loadingApprove && <span className="loading loading-spinner ml-2" />}
+            </button>
+            <button className="btn btn-primary ml-2" disabled={loadingApprove} onClick={() => handleApprove(true)}>
+              Approve Max
+              {loadingApprove && <span className="loading loading-spinner ml-2" />}
+            </button>
+          </div>
+        </div>
+      </dialog>
+      <ToastContainer style={{ width: "800px", maxWidth: "98%" }} position="top-right" />
     </div>
   );
 }

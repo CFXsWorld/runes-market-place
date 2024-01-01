@@ -1,4 +1,4 @@
-// FIXME test env
+// test env
 // export const correctChainId = "71"; //"1030";
 // export const correctChainIdHex = "0x47"; //"0x406";
 // export const eSpaceRpc = "https://evmtestnet.confluxrpc.org"; // "https://emain-rpc.nftrainbow.cn/VKdPKZBdjg";
@@ -25,14 +25,17 @@
 // // export const bridgeContractAddress = "0x344889aa53995929a62ba826fbabf37d427b7748";
 // // export const isTest = true;
 
+import { getAddress } from "ethers";
+
 export const maxSelectedItemsCount = 32;
 export const maxTransferSelectedItemsCount = 24;
-export const pageItemCount = 10;
-export const defaultLockHours = 1;
+export const pageItemCount = 60;
+export const defaultLockHours = 48;
+export const usdtDecimal = 18;
 
 export const addressFormat = (defaultWalletAccount, fluentWalletAccount, metaMaskWalletAccount, okxWalletAccount) => {
   let address = defaultWalletAccount || fluentWalletAccount || metaMaskWalletAccount || okxWalletAccount;
-  return address ? `${address.substr(0, 6)}...${address.substr(address.length - 4, 4)}` : "";
+  return address ? `${getAddress(address).substr(0, 6)}...${getAddress(address).substr(address.length - 4, 4)}` : "";
 };
 
 export const isCorrectChainId = (

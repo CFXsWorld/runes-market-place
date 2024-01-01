@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@cfxjs/use-wallet-react": "^0.0.2-3",
+    "dayjs": "^1.11.10",
     "decimal.js": "^10.4.3",
     "ethers": "^6.9.1",
     "js-conflux-sdk": "^2.3.0",
