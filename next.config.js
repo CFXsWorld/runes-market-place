@@ -25,11 +25,11 @@ const nextConfig = {
       },
       {
         source: "/getMarketspaceCfxs",
-        destination: "https://api.conins.io/main/shop/goods",
+        destination: "https://api.conins.io/shop/goods",
       },
       {
         source: "/getMyListedCfxs",
-        destination: "https://api.conins.io/main/shop/my/",
+        destination: "https://api.conins.io/shop/my/",
       },
       // testnet
       {
