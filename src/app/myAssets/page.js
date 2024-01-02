@@ -225,7 +225,7 @@ export default function Page() {
     }
   };
 
-  const getNewCfxsBalance = () => {
+  const getNewCfxsBalance = (currentPage, isReset) => {
     if (account()) {
       setLoadingNewData(true);
       setWarningNewText("");
@@ -236,14 +236,14 @@ export default function Page() {
           setNewBalance(balance + "");
           if (balance > 0) {
             console.log("get new items");
-            loadMoreNewData(1, true);
+            loadMoreNewData(currentPage, isReset);
           } else {
             setLoadingNewData(false);
           }
         })
         .catch((err) => {
           console.error(err);
-          toast(err ? err.message : "Unknown Error", { type: "error" });
+          // toast(err ? err.message : "Unknown Error", { type: "error" });
           setWarningNewText("Failed to get balance, please retry.");
           setLoadingNewData(false);
         });
@@ -294,7 +294,7 @@ export default function Page() {
 
   useEffect(() => {
     // getOldCfxsBalance();
-    getNewCfxsBalance();
+    getNewCfxsBalance(1, true);
     // getListedItems();
   }, [defaultWalletAccount, fluentWalletAccount, metaMaskWalletAccount, okxWalletAccount]);
 
@@ -591,8 +591,8 @@ export default function Page() {
     <div className="mt-4">
       <h1 className="text-2xl ml-2 font-bold flex justify-between items-center">
         My Assets
-        <Link href="/" className="text-base font-light text-primary  hover:underline">
-          Go to Marketspace
+        <Link href="/" className="btn btn-primary btn-sm text-md">
+          View Marketspace
         </Link>
       </h1>
       <div className="flex overflow-x-auto overflow-y-hidden border-b border-gray-300 whitespace-nowrap px-4 pt-4">
@@ -613,26 +613,37 @@ export default function Page() {
             {(loadingList || loadingTransfer) && <span className="loading loading-spinner loading-sm ml-2" />}
           </div>
           <div className="pt-2 flex justify-between items-center max-w-full">
-            <div className="flex flex-col justify-between items-center md:flex-row">
+            <div className="flex justify-between items-center">
               <div>
                 Balance: {loadingNewData ? <span className="loading loading-spinner loading-xs" /> : <span className="text-primary">{newBalance}</span>}{" "}
                 {loadingTransfer && <span className="loading loading-spinner loading-sm ml-2" />}
               </div>
               <div>
-                <button className="btn btn-info btn-sm md:ml-2" onClick={getNewCfxsBalance}>
-                  Refresh Data
-                  {loadingNewData && <span className="loading loading-spinner loading-sm" />}
-                </button>
+                <div className="tooltip" data-tip="Refresh current page data">
+                  <button className="btn btn-info btn-sm ml-2" onClick={() => getNewCfxsBalance(newCfxsCurrentPage, false)}>
+                    Refresh
+                    {loadingNewData && <span className="loading loading-spinner loading-sm" />}
+                  </button>
+                </div>
+                <div className="tooltip" data-tip="Reload the data">
+                  <button className="btn btn-info btn-sm ml-2" onClick={() => getNewCfxsBalance(1, true)}>
+                    Reload
+                    {loadingNewData && <span className="loading loading-spinner loading-sm" />}
+                  </button>
+                </div>
               </div>
             </div>
-            <div className="dropdown dropdown-end">
+            <div className="dropdown dropdown-end dropdown-top fixDropdown md:dropdown-bottom">
               <div tabIndex={0} role="button" className="btn btn-primary btn-sm ">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-5 h-5 stroke-current">
+                Menu
+                <svg className="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5073" width="20" height="20">
+                  <path d="M170.666667 213.333333m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" fill="#ffffff" p-id="5074" />
+                  <path d="M170.666667 512m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" fill="#ffffff" p-id="5075" />
+                  <path d="M170.666667 810.666667m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" fill="#ffffff" p-id="5076" />
                   <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+                    d="M896 778.666667H362.666667c-17.066667 0-32 14.933333-32 32s14.933333 32 32 32h533.333333c17.066667 0 32-14.933333 32-32s-14.933333-32-32-32zM362.666667 245.333333h533.333333c17.066667 0 32-14.933333 32-32s-14.933333-32-32-32H362.666667c-17.066667 0-32 14.933333-32 32s14.933333 32 32 32zM896 480H362.666667c-17.066667 0-32 14.933333-32 32s14.933333 32 32 32h533.333333c17.066667 0 32-14.933333 32-32s-14.933333-32-32-32z"
+                    fill="#ffffff"
+                    p-id="5077"
                   />
                 </svg>
               </div>
@@ -722,21 +733,30 @@ export default function Page() {
                 {loadingListedData ? <span className="loading loading-spinner loading-xs" /> : <span className="text-primary">{listedCfxsTotalCount}</span>}{" "}
                 {loadingUnLock && <span className="loading loading-spinner loading-sm ml-2" />}
               </div>
-              <div>
-                <button className="btn btn-info btn-sm md:ml-2" onClick={() => getListedItems(1, true)}>
-                  Refresh Data
+              <div className="tooltip" data-tip="Refresh current page data">
+                <button className="btn btn-info btn-sm ml-2" onClick={() => getListedItems(listedCfxCurrentPage, false)}>
+                  Refresh
+                  {loadingListedData && <span className="loading loading-spinner loading-sm" />}
+                </button>
+              </div>
+              <div className="tooltip" data-tip="Reload the data">
+                <button className="btn btn-info btn-sm ml-2" onClick={() => getListedItems(1, true)}>
+                  Reload
                   {loadingListedData && <span className="loading loading-spinner loading-sm" />}
                 </button>
               </div>
             </div>
-            <div className="dropdown dropdown-end">
+            <div className="dropdown dropdown-end dropdown-top fixDropdown md:dropdown-bottom">
               <div tabIndex={0} role="button" className="btn btn-primary btn-sm ">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-5 h-5 stroke-current">
+                Menu
+                <svg className="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5073" width="20" height="20">
+                  <path d="M170.666667 213.333333m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" fill="#ffffff" p-id="5074" />
+                  <path d="M170.666667 512m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" fill="#ffffff" p-id="5075" />
+                  <path d="M170.666667 810.666667m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" fill="#ffffff" p-id="5076" />
                   <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+                    d="M896 778.666667H362.666667c-17.066667 0-32 14.933333-32 32s14.933333 32 32 32h533.333333c17.066667 0 32-14.933333 32-32s-14.933333-32-32-32zM362.666667 245.333333h533.333333c17.066667 0 32-14.933333 32-32s-14.933333-32-32-32H362.666667c-17.066667 0-32 14.933333-32 32s14.933333 32 32 32zM896 480H362.666667c-17.066667 0-32 14.933333-32 32s14.933333 32 32 32h533.333333c17.066667 0 32-14.933333 32-32s-14.933333-32-32-32z"
+                    fill="#ffffff"
+                    p-id="5077"
                   />
                 </svg>
               </div>

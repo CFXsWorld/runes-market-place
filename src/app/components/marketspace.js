@@ -15,6 +15,8 @@ import { abiMulticall as usdtAbi } from "@/app/contracts/usdt.json";
 import { toast, ToastContainer } from "react-toastify";
 import dayjs from "dayjs";
 
+const globalThis = typeof window !== "undefined" ? window : {};
+
 export default function Marketspace() {
   const defaultWalletStatus = DefaultWallet.useStatus();
   const defaultWalletAccount = DefaultWallet.useAccount();
@@ -39,6 +41,12 @@ export default function Marketspace() {
   const [isUSDTApproved, setIsUSDTApproved] = React.useState(false);
   const [orderTotalAmount, setOrderTotalAmount] = React.useState(0);
   const [loadingApprove, setLoadingApprove] = React.useState(false);
+  const [usdtBalance, setUsdtBalance] = React.useState(0);
+
+  // filter and order
+  const [amountOrder, setAmountOrder] = React.useState(0); // 0 asc  1 desc
+  const [amountRangeStart, setAmountRangeStart] = React.useState("0");
+  const [amountRangeEnd, setAmountRangeEnd] = React.useState("");
 
   const account = () => defaultWalletAccount || fluentWalletAccount || metaMaskWalletAccount || okxWalletAccount;
 
@@ -58,19 +66,21 @@ export default function Marketspace() {
   const bridgeContract = new Contract(process.env.NEXT_PUBLIC_BridgeContractAddress, bridgeContractAbi, provider);
   const usdtContract = new Contract(process.env.NEXT_PUBLIC_USDTContractAddress, usdtAbi, provider);
 
-  const getListedItems = (currentPage, isReset) => {
+  const getListedItems = (currentPage, isReset, params) => {
     if (account()) {
       setLoadingListedData(true);
       getTotalVolume();
+      getUsdtBalance();
       if (isReset) {
         setListedCfxsItems(() => []);
         setListedCfxsTotalCount(() => 0);
         setListedCfxsCurrentPage(() => 1);
       }
+
       fetch(
         `/${process.env.NEXT_PUBLIC_IsTest === "true" ? "getMarketspaceCfxsTest" : "getMarketspaceCfxs"}?startIndex=${
           isReset ? 0 : (currentPage - 1) * pageItemCount
-        }&size=${pageItemCount}`
+        }&size=${pageItemCount}&ao=${amountOrder}&amountRangeStart=${amountRangeStart}&amountRangeEnd=${amountRangeEnd}`
       )
         .then((response) => response.json())
         .then((data) => {
@@ -111,7 +121,22 @@ export default function Marketspace() {
         })
         .catch((err) => {
           console.error(err);
-          toast(err ? err.message : "Unknown Error", { type: "error" });
+          // toast(err ? err.message : "Unknown Error", { type: "error" });
+        });
+    }
+  };
+
+  const getUsdtBalance = () => {
+    if (account()) {
+      usdtContract
+        .balanceOf(account())
+        .then((amount) => {
+          console.log("USDT Balance", amount);
+          setUsdtBalance(Math.ceil(formatUnits(amount, usdtDecimal)));
+        })
+        .catch((err) => {
+          console.error(err);
+          // toast(err ? err.message : "Unknown Error", { type: "error" });
         });
     }
   };
@@ -180,7 +205,7 @@ export default function Marketspace() {
                     toast("Success: " + txReceipt.hash, {
                       type: "success",
                     });
-                    getListedItems(1, true);
+                    getListedItems(listedCfxCurrentPage, false);
                   })
                   .catch((err) => {
                     console.error(err);
@@ -268,12 +293,42 @@ export default function Marketspace() {
     getListedItems(1, true);
   }, [defaultWalletAccount, fluentWalletAccount, metaMaskWalletAccount, okxWalletAccount]);
 
+  const refreshWithOrder = () => {
+    getListedItems(listedCfxCurrentPage, false);
+  };
+
+  const Pagination = () => (
+    <div>
+      {Math.ceil(listedCfxsTotalCount / pageItemCount) > 1 && (
+        <div className="join mt-4">
+          {[...Array(Math.ceil(listedCfxsTotalCount / pageItemCount))].map((c, i) =>
+            i < 2 || i > Math.ceil(listedCfxsTotalCount / pageItemCount) - 3 || Math.abs(listedCfxCurrentPage - i - 1) < 3 ? (
+              <button
+                className={`join-item btn btn-sm ${listedCfxCurrentPage === i + 1 ? "btn-active" : ""}`}
+                key={i}
+                onClick={() => (listedCfxCurrentPage === i + 1 ? "" : getListedItems(i + 1))}
+              >
+                {i + 1}
+              </button>
+            ) : Math.abs(listedCfxCurrentPage - i - 1) === 3 ? (
+              <button className="join-item btn btn-sm btn-disabled" key={i}>
+                ...
+              </button>
+            ) : (
+              ""
+            )
+          )}
+        </div>
+      )}
+    </div>
+  );
+
   return (
     <div className="mt-4">
       <h1 className="text-2xl ml-2 font-bold flex justify-between items-center">
         Marketspace
-        <Link href="/myAssets" className="text-base font-light text-primary  hover:underline">
-          Go to My Assets
+        <Link href="/myAssets" className="btn btn-primary btn-sm text-md">
+          View My Assets
         </Link>
       </h1>
       <div className="flex overflow-x-auto overflow-y-hidden border-b border-gray-300 whitespace-nowrap px-4 pt-4">
@@ -304,19 +359,33 @@ export default function Marketspace() {
         </div>
         <div className="pt-2 mt-2 flex justify-between items-center max-w-full">
           <div>
-            <button className="btn btn-info btn-sm md:ml-2" onClick={() => getListedItems(1, true)}>
-              Refresh Data
-              {loadingListedData && <span className="loading loading-spinner loading-sm" />}
-            </button>
+            <div className="tooltip" data-tip="Refresh current page data">
+              <button className="btn btn-info btn-sm" onClick={() => getListedItems(listedCfxCurrentPage, false)}>
+                Refresh
+                {loadingListedData && <span className="loading loading-spinner loading-sm" />}
+              </button>
+            </div>
+            <div className="tooltip" data-tip="Reload the data">
+              <button className="btn btn-info btn-sm ml-1 md:ml-2" onClick={() => getListedItems(1, true)}>
+                Reload
+                {loadingListedData && <span className="loading loading-spinner loading-sm" />}
+              </button>
+            </div>
+            <span className="ml-1 md:ml-2 text-xs">
+              My USDT Balance: <span className="text-primary">{usdtBalance}</span>
+            </span>
           </div>
-          <div className="dropdown dropdown-end">
+          <div className="dropdown dropdown-end dropdown-top fixDropdown md:dropdown-bottom">
             <div tabIndex={0} role="button" className="btn btn-primary btn-sm ">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-5 h-5 stroke-current">
+              Menu
+              <svg className="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5073" width="20" height="20">
+                <path d="M170.666667 213.333333m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" fill="#ffffff" p-id="5074" />
+                <path d="M170.666667 512m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" fill="#ffffff" p-id="5075" />
+                <path d="M170.666667 810.666667m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" fill="#ffffff" p-id="5076" />
                 <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+                  d="M896 778.666667H362.666667c-17.066667 0-32 14.933333-32 32s14.933333 32 32 32h533.333333c17.066667 0 32-14.933333 32-32s-14.933333-32-32-32zM362.666667 245.333333h533.333333c17.066667 0 32-14.933333 32-32s-14.933333-32-32-32H362.666667c-17.066667 0-32 14.933333-32 32s14.933333 32 32 32zM896 480H362.666667c-17.066667 0-32 14.933333-32 32s14.933333 32 32 32h533.333333c17.066667 0 32-14.933333 32-32s-14.933333-32-32-32z"
+                  fill="#ffffff"
+                  p-id="5077"
                 />
               </svg>
             </div>
@@ -344,6 +413,34 @@ export default function Marketspace() {
             </ul>
           </div>
         </div>
+        <div className="pt-2 mt-2 flex justify-start items-center text-sm max-w-full md:ml-2">
+          <span>Price</span>
+          <button className={`btn btn-xs ml-1 ${amountOrder === 0 ? "btn-active" : ""}`} onClick={() => setAmountOrder(0)}>
+            Asc
+          </button>
+          <button className={`btn btn-xs ml-1 ${amountOrder === 1 ? "btn-active" : ""}`} onClick={() => setAmountOrder(1)}>
+            Desc
+          </button>
+          <input
+            type="text"
+            placeholder="Min"
+            className="input input-bordered input-sm ml-1 w-14"
+            value={amountRangeStart}
+            onChange={(e) => setAmountRangeStart(e.target.value)}
+          />
+          <span> ~ </span>
+          <input
+            type="text"
+            placeholder="Max"
+            className="input input-bordered input-sm w-14"
+            value={amountRangeEnd}
+            onChange={(e) => setAmountRangeEnd(e.target.value)}
+          />
+          <button className={`btn btn-info btn-xs ml-1 ${amountOrder === 1 ? "btn-active" : ""}`} onClick={refreshWithOrder}>
+            Go
+            {loadingListedData && <span className="loading loading-spinner loading-xs" />}
+          </button>
+        </div>
         <div className="flex flex-row flex-wrap mt-4">
           <div>
             {listedCfxsItems.map((c, i) => (
@@ -368,29 +465,7 @@ export default function Marketspace() {
               </div>
             ))}
           </div>
-        </div>
-        <div>
-          {Math.ceil(listedCfxsTotalCount / pageItemCount) > 1 && (
-            <div className="join mt-4">
-              {[...Array(Math.ceil(listedCfxsTotalCount / pageItemCount))].map((c, i) =>
-                i < 2 || i > Math.ceil(listedCfxsTotalCount / pageItemCount) - 3 || Math.abs(listedCfxCurrentPage - i - 1) < 3 ? (
-                  <button
-                    className={`join-item btn btn-sm ${listedCfxCurrentPage === i + 1 ? "btn-active" : ""}`}
-                    key={i}
-                    onClick={() => (listedCfxCurrentPage === i + 1 ? "" : getListedItems(i + 1))}
-                  >
-                    {i + 1}
-                  </button>
-                ) : Math.abs(listedCfxCurrentPage - i - 1) === 3 ? (
-                  <button className="join-item btn btn-sm btn-disabled" key={i}>
-                    ...
-                  </button>
-                ) : (
-                  ""
-                )
-              )}
-            </div>
-          )}
+          <Pagination />
         </div>
       </div>
       <dialog id="approveModal" className="modal">

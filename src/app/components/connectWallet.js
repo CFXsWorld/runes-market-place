@@ -114,7 +114,7 @@ export default function ConnectWallet() {
   return (
     <div>
       <button onClick={handleHeaderConnectWallet} className="btn btn-primary">
-        {_addressFormat() ? `${_isCorrectChainId() ? "My Assets" : "Wrong Network"} (${_addressFormat()})` : "Connect Wallet"}
+        {_addressFormat() ? `${_isCorrectChainId() ? `${_addressFormat()}` : `Wrong Network (${_addressFormat()})`} ` : "Connect Wallet"}
       </button>
 
       <dialog id="walletModal" className="modal">
