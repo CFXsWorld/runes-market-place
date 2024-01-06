@@ -103,7 +103,7 @@ export default function ConnectWallet() {
       } else {
         // My Assets
         console.log("assets");
-        router.push("/myAssets");
+        // router.push("/myAssets");
       }
     } else {
       document.getElementById("walletModal").showModal();

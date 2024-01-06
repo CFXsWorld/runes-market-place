@@ -1,14 +1,57 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/pages/**/*.{js,ts,jsx,tsx,mdx}", "./src/components/**/*.{js,ts,jsx,tsx,mdx}", "./src/app/**/*.{js,ts,jsx,tsx,mdx}"],
+  // darkMode: ['class', '[data-theme="dark"]'],
+  content: ['./src/pages/**/*.{js,ts,jsx,tsx,mdx}', './src/components/**/*.{js,ts,jsx,tsx,mdx}', './src/app/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
+    screens: {
+      sm: '480px',
+      md: '960px',
+    },
     extend: {
-      // backgroundImage: {
-      //   'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-      //   'gradient-conic':
-      //     'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-      // },
+      colors:{
+        theme: {
+          DEFAULT: 'var(--cfxs-theme)',
+        },
+        tc:{
+          DEFAULT: 'var(--cfxs-color-theme)',
+          primary: 'var(--cfxs-tc-primary)',
+          secondary: 'var(--cfxs-tc-secondary)',
+          tertiary: 'var( --cfxs-tc-tertiary)',
+          'on-button': 'var(--cfxs-tc-on-button)',
+        },
+        fill: {
+          DEFAULT: 'var(--cfxs-theme)',
+          primary: 'var(--cfxs-bg-primary)',
+          'e-primary': 'var(--cfxs-bg-e-primary)',
+          secondary: 'var(--cfxs-bg-secondary)',
+          'e-secondary': 'var(--cfxs-bg-e-secondary)',
+          toast: 'var(--cfxs-toast)',
+          separator: 'var(--cfxs-separator-opaque)',
+          'non-separator': 'var(--cfxs-separator-non-opaque)',
+          component: 'var(--cfxs-fill-primary)',
+        },
+        status: {
+          info: 'var(--cfxs-color-info)',
+          error: 'var(--cfxs-color-error)',
+          warning: 'var(--cfxs-color-warning)',
+          success: 'var(--cfxs-color-success)',
+          'info-non-opaque': 'var(--cfxs-color-info-non-opaque)',
+          'warning-non-opaque': 'var(--cfxs-color-warning-non-opaque)',
+          'error-non-opaque': 'var(--cfxs-color-error-non-opaque)',
+        },
+      },
+      keyframes:{
+        spin: {
+          from: {
+            transform: 'rotate(0deg)',
+          },
+          to: { transform: 'rotate(360deg)' },
+        },
+      },
+      animation:{
+        spin: 'spin 1s linear infinite',
+      }
     },
   },
-  plugins: [require("daisyui")],
+  plugins: [require('daisyui'),require('tailwindcss-animate'), require('@tailwindcss/line-clamp')],
 };

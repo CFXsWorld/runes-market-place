@@ -1,0 +1,36 @@
+@tailwind base;
+
+@layer base {
+  :root {
+    --cfxs-theme: #AD8D65;
+
+    --cfxs-tc-primary: #ffffff;
+    --cfxs-tc-secondary: #898da3;
+    --cfxs-tc-tertiary: #676a7a;
+    --cfxs-tc-theme: #eb54e6;
+    --cfxs-tc-on-button: #ffffff;
+
+    --cfxs-color-info: #0a84ff;
+    --cfxs-color-info-non-opaque: rgba(10, 132, 255, 0.12);
+    --cfxs-color-warning: #ff9f0a;
+    --cfxs-color-warning-non-opaque: rgba(255, 157, 10, 0.12);
+    --cfxs-color-error: #f54f45;
+    --cfxs-color-error-non-opaque: rgba(245, 79, 69, 0.08);
+    --cfxs-color-success: #39cc56;
+
+    --cfxs-bg-primary: #090909;
+    --cfxs-bg-secondary: #181818;
+    --cfxs-bg-e-primary: #0f1229;
+    --cfxs-bg-e-secondary: #2a2c3d;
+
+    --cfxs-fill-primary: rgba(126, 126, 143, 0.24);
+    --cfxs-fill-secondary: rgba(126, 126, 143, 0.16);
+
+    --cfxs-separator-opaque: #2a2a3d;
+    --cfxs-separator-non-opaque: rgba(126, 126, 143, 0.24);
+  }
+
+  [data-theme='dark'] {
+  /*  later */
+  }
+}

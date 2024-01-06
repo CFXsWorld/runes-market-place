@@ -1,5 +1,25 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: false,
+  distDir: "dist",
+  swcMinify: false,
+  webpack(config) {
+    config.module.rules.push({
+      test: /\.svg$/i,
+      issuer: /\.[jt]sx?$/,
+      use: ['@svgr/webpack'],
+    });
+    return config;
+  },
+  async redirects() {
+    return [
+      {
+        source:'/',
+        destination:'/market',
+        permanent: true,
+      },
+    ]
+  },
   async rewrites() {
     return [
       // mainnet
@@ -49,9 +69,7 @@ const nextConfig = {
         destination: "https://api.conins.io/test/shop/my/",
       },
     ];
-  },
-  distDir: "dist",
-  swcMinify: false,
+  }
 };
 
 module.exports = nextConfig;
