@@ -1,13 +1,12 @@
-import Marketspace from "@/app/components/marketspace";
+import CFXsInfo from '@/app/(order)/market/_components/CFXsInfo';
+import PriceList from '@/app/(order)/market/_components/PriceList';
 
 export default function Home() {
   return (
-    <>
-      <div className="text-xs mt-2 text-center text-pink-600">
-        Due to asynchronous data indexing, there may be instances where the list data is not updated in time after the transaction is completed. Please be
-        patient and wait for the update.
-      </div>
-      <Marketspace />
-    </>
+    <div className="pt-[40px]">
+      <CFXsInfo />
+      <PriceList />
+      {/*<Marketspace />*/}
+    </div>
   );
 }
