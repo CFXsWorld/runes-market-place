@@ -487,7 +487,7 @@ export default function Marketspace() {
           </div>
         </div>
       </dialog>
-      <ToastContainer style={{ width: "800px", maxWidth: "98%" }} position="top-right" />
+      {/*<ToastContainer style={{ width: "800px", maxWidth: "98%" }} position="top-right" />*/}
     </div>
   );
 }

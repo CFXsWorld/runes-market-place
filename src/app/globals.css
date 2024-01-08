@@ -2,7 +2,6 @@
 @import url('./styles/components.css');
 @import url('./styles/utilities.css');
 
-
 body {
   font-family: 'Inter', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial',
   'SF Pro SC', 'PingFang SC', 'Microsoft YaHei', '微软雅黑', sans-serif;

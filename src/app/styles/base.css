@@ -20,11 +20,11 @@
 
     --cfxs-bg-primary: #090909;
     --cfxs-bg-secondary: #181818;
-    --cfxs-bg-e-primary: #0f1229;
-    --cfxs-bg-e-secondary: #2a2c3d;
+    --cfxs-bg-e-primary: #282828;
+    --cfxs-bg-e-secondary: #202020;
 
     --cfxs-fill-primary: rgba(126, 126, 143, 0.24);
-    --cfxs-fill-secondary: rgba(126, 126, 143, 0.16);
+    --cfxs-fill-secondary: #202020;
 
     --cfxs-separator-opaque: #2a2a3d;
     --cfxs-separator-non-opaque: rgba(126, 126, 143, 0.24);

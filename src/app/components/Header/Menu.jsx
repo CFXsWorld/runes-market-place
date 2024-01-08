@@ -9,18 +9,18 @@ const Menu = () => {
 
   console.log(pathname)
   return (
-    <div className="flex-center">
+    <div className="flex-center text-[16px]">
       <Link
-        className={cn('border border-transparent mr-[20px] px-[32px] py-[6px]', {
-          'border-theme rounded-[8px]': pathname === '/market',
+        className={cn('border border-transparent mr-[32px] px-[20px] py-[6px]', {
+          'text-theme': pathname === '/market',
         })}
         href="/market"
       >
         MARKET
       </Link>
       <Link
-        className={cn(' border border-transparent px-[32px] py-[6px]', {
-          'border-theme rounded-[8px]': pathname === '/myAssets',
+        className={cn(' border border-transparent px-[20px] py-[6px]', {
+          'text-theme': pathname === '/myAssets',
         })}
         href="/myAssets"
       >

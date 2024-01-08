@@ -1,18 +1,35 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   // darkMode: ['class', '[data-theme="dark"]'],
-  content: ['./src/pages/**/*.{js,ts,jsx,tsx,mdx}', './src/components/**/*.{js,ts,jsx,tsx,mdx}', './src/app/**/*.{js,ts,jsx,tsx,mdx}'],
+  content: [
+    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+  ],
+  daisyui: {
+    themes: [
+      {
+        dark: {
+          ...require('daisyui/src/theming/themes')['dark'],
+          primary: '#AD8D65',
+          '.modal-box': {
+            background: 'var(--cfxs-bg-e-secondary)',
+          },
+        },
+      },
+    ],
+  },
   theme: {
     screens: {
       sm: '480px',
       md: '960px',
     },
     extend: {
-      colors:{
+      colors: {
         theme: {
           DEFAULT: 'var(--cfxs-theme)',
         },
-        tc:{
+        tc: {
           DEFAULT: 'var(--cfxs-color-theme)',
           primary: 'var(--cfxs-tc-primary)',
           secondary: 'var(--cfxs-tc-secondary)',
@@ -40,18 +57,37 @@ module.exports = {
           'error-non-opaque': 'var(--cfxs-color-error-non-opaque)',
         },
       },
-      keyframes:{
+      keyframes: {
         spin: {
           from: {
             transform: 'rotate(0deg)',
           },
           to: { transform: 'rotate(360deg)' },
         },
+        wave: {
+          '0%': {
+            transform: 'scale(0)',
+            opacity: '1',
+          },
+          '50%': {
+            transform: 'scale(1)',
+            opacity: '0',
+          },
+          '100%': {
+            transform: 'scale(0)',
+            opacity: '1',
+          },
+        },
       },
-      animation:{
+      animation: {
         spin: 'spin 1s linear infinite',
-      }
+        wave: 'wave 2s ease-in-out infinite;',
+      },
     },
   },
-  plugins: [require('daisyui'),require('tailwindcss-animate'), require('@tailwindcss/line-clamp')],
+  plugins: [
+    require('daisyui'),
+    require('tailwindcss-animate'),
+    require('@tailwindcss/line-clamp'),
+  ],
 };

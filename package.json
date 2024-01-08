@@ -10,11 +10,15 @@
   },
   "dependencies": {
     "@cfxjs/use-wallet-react": "^0.0.2-3",
+    "@fluent-wallet/detect-provider": "^1.0.0",
     "@tailwindcss/line-clamp": "^0.4.4",
+    "@tanstack/react-query": "^5.17.7",
+    "@wagmi/core": "^2.0.2",
     "clsx": "^2.1.0",
     "dayjs": "^1.11.10",
     "decimal.js": "^10.4.3",
     "ethers": "^6.9.1",
+    "immer": "^10.0.3",
     "js-conflux-sdk": "^2.3.0",
     "next": "14.0.4",
     "react": "^18",
@@ -24,6 +28,8 @@
     "swr": "^2.2.4",
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",
+    "viem": "^2.0.2",
+    "wagmi": "^2.0.3",
     "zustand": "^4.4.7"
   },
   "devDependencies": {

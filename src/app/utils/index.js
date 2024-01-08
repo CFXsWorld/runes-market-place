@@ -38,6 +38,7 @@ export const addressFormat = (defaultWalletAccount, fluentWalletAccount, metaMas
   return address ? `${getAddress(address).substr(0, 6)}...${getAddress(address).substr(address.length - 4, 4)}` : "";
 };
 
+
 export const isCorrectChainId = (
   defaultWalletAccount,
   fluentWalletAccount,
