@@ -1,7 +1,6 @@
 'use client';
 
 import Header from '@/app/components/Header/index';
-import 'react-toastify/dist/ReactToastify.css';
 
 export default function PageLayout({ children }) {
   return (

@@ -1,3 +1,5 @@
+import { cn } from '@/app/utils/classnames';
+
 import LogoSvg from './svgs/logo.svg';
 import WalletSvg from './svgs/wallet.svg';
 import ESpaceSvg from './svgs/eSpace.svg';
@@ -19,6 +21,8 @@ import SearchSvg from './svgs/search.svg';
 import Usdt from './svgs/usdt.svg';
 import Flag from './svgs/flag.svg';
 import Split from './svgs/split.svg';
+import Loading from './svgs/loading.svg';
+import Empty from './svgs/empty.svg';
 
 export const Icon = ({ className, style, children, ...props }) => {
   return (
@@ -30,6 +34,11 @@ export const Icon = ({ className, style, children, ...props }) => {
 export const ArrowDownIcon = (props) => (
   <Icon {...props}>
     <ArrowDown />
+  </Icon>
+);
+export const EmptyIcon = (props) => (
+  <Icon {...props}>
+    <Empty />
   </Icon>
 );
 export const AscIcon = (props) => (
@@ -137,5 +146,10 @@ export const FlagIcon = (props) => (
 export const SplitIcon = (props) => (
   <Icon {...props}>
     <Split />
+  </Icon>
+);
+export const LoadingIcon = ({ className, ...props }) => (
+  <Icon {...props} className={cn('animate-spin', className)}>
+    <Loading />
   </Icon>
 );

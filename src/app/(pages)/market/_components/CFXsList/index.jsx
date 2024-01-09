@@ -5,9 +5,11 @@ import Card from './Card';
 import { Waypoint } from 'react-waypoint';
 import useList from './useList';
 import MultiHandleBar from '@/app/(pages)/market/_components/CFXsList/MultiHandleBar';
+import LoadMore from '@/app/components/LoadMore';
 
 export default function CFXsList() {
-  const { dataSource, loadMore, count, selected,clearAll, onSelect, onBuy } = useList();
+  const { dataSource, loadMore, count, selected, clearAll, onSelect, onBuy } =
+    useList();
 
   return (
     <div className="w-full pt-[32px] pb-[96px]">
@@ -34,9 +36,13 @@ export default function CFXsList() {
         scrollableAncestor={typeof window !== 'undefined' ? window : null}
         onEnter={loadMore}
       >
-        <div className="w-full h-[60px] flex-center">load more</div>
+        <div className='w-full'>
+          <LoadMore loading={true} />
+        </div>
       </Waypoint>
-      {selected.length > 0 && <MultiHandleBar selected={selected} clearAll={clearAll}/>}
+      {selected.length > 0 && (
+        <MultiHandleBar selected={selected} clearAll={clearAll} />
+      )}
     </div>
   );
 }
