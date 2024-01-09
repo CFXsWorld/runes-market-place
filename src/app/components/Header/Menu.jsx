@@ -9,7 +9,7 @@ const Menu = () => {
 
   console.log(pathname)
   return (
-    <div className="flex-center text-[16px] font-[500]">
+    <div className="flex-center text-[16px] font-[500] text-tc-secondary">
       <Link
         className={cn('border border-transparent mr-[32px] px-[20px] py-[6px]', {
           'text-theme': pathname === '/market',
