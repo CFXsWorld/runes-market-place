@@ -16,6 +16,7 @@ import EndingSvg from './svgs/ending.svg';
 import Merge from './svgs/merge.svg';
 import FragmentSvg from './svgs/fragment.svg';
 import TimeSvg from './svgs/time.svg';
+import SearchSvg from './svgs/search.svg';
 
 export const Icon = ({ className, style, children, ...props }) => {
   return (
@@ -112,5 +113,11 @@ export const CFXsIcon = (props) => (
 export const RefreshIcon = (props) => (
   <Icon {...props}>
     <RefreshSvg />
+  </Icon>
+);
+
+export const SearchIcon = (props) => (
+  <Icon {...props}>
+    <SearchSvg />
   </Icon>
 );

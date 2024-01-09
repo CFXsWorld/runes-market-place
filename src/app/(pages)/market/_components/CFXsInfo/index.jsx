@@ -22,7 +22,7 @@ const Index = () => {
           </Link>
         </div>
         <div className="text-tc-secondary text-[16px] mt-[8px] mb-[20px]">
-          CFXs is not just a Rune; it is a new paradigm of decentralized BTC
+          CFXs is not just a Rune. It is a new paradigm of decentralized BTC
           consensus, integrating the advantages of both UTXO and account models.
         </div>
         <div className="w-[400px] h-[8px] bg-theme rounded-[4px]" />

@@ -8,7 +8,7 @@ import { useWalletStore } from '@/app/store/wallet';
 import { addressFormat } from '@/app/utils';
 import useEnv from '@/app/hooks/useEnv';
 import { cn } from '@/app/utils/classnames';
-import { toast } from "react-toastify";
+import { toast } from 'react-toastify';
 
 const getText = (status, address) => {
   if (status === 'in-detecting') {
@@ -73,14 +73,16 @@ const WalletButton = ({
   const account = useAccount();
   const balance = useBalance();
 
-  console.log(status, chainId, account, balance);
   useEffect(() => {
     console.log('account!!', account);
   }, [account]);
   return (
     <div className="flex-center">
       <ChainInfo status={status} chainId={chainId} switchChain={switchChain} />
-      <button onClick={onClick} className="btn btn-primary flex-center-between">
+      <button
+        onClick={onClick}
+        className="btn btn-primary flex-center-between rounded-[4px]"
+      >
         <WalletIcon className="text-[20px]" />
         {getText(status, account)}
       </button>
@@ -92,8 +94,6 @@ export default function ConnectWallet() {
   const walletProvider = useWalletStore((state) => state.walletProvider);
   const modal = useRef();
   const wallets = useCFXsWallet();
-
-  console.log(walletProvider);
 
   const currentWallet = wallets[walletProvider];
 

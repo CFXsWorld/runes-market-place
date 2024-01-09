@@ -11,7 +11,7 @@ const Selector = ({ onChange, value, options, className }) => {
       renderTrigger={() => (
         <div
           className={cn(
-            'btn bg-transparent border border-fill-e-primary group',
+            'btn bg-transparent border border-fill-e-primary group font-medium text-[16px]',
             'rounded-[4px] hover:bg-transparent flex items-center justify-between px-[16px]',
             className
           )}
