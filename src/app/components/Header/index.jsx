@@ -10,10 +10,7 @@ const Header = () => {
       <div className="md:max-w-[1368px] w-full flex-center-between">
         <div className="flex-center">
           <div className="flex-center mr-[85px]">
-            <LogoIcon className="text-[40px] text-theme" />
-            <span className="pl-[10px] font-bold text-[20px] text-theme">
-              CFXs World
-            </span>
+            <LogoIcon  />
           </div>
           <Menu />
         </div>
