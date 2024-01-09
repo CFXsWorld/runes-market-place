@@ -4,9 +4,8 @@ import { cn } from '@/app/utils/classnames';
 import Card from './Card';
 import { Waypoint } from 'react-waypoint';
 import useList from './useList';
-import MultiHandleBar from '@/app/(pages)/market/_components/CFXsList/MultiHandleBar';
 
-export default function CFXsList() {
+export default function MyOrderList() {
   const { dataSource, loadMore, count, selected,clearAll, onSelect, onBuy } = useList();
 
   return (
@@ -24,8 +23,6 @@ export default function CFXsList() {
           <Card
             key={item.id}
             item={item}
-            onSelect={onSelect}
-            selected={selected}
             onBuy={onBuy}
           />
         ))}
@@ -36,7 +33,6 @@ export default function CFXsList() {
       >
         <div className="w-full h-[60px] flex-center">load more</div>
       </Waypoint>
-      {selected.length > 0 && <MultiHandleBar selected={selected} clearAll={clearAll}/>}
     </div>
   );
 }

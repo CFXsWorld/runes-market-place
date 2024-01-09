@@ -10,7 +10,7 @@ module.exports = {
     themes: [
       {
         dark: {
-          ...require('daisyui/src/theming/themes')['dark'],
+          ...require('daisyui/src/theming/themes')['black'],
           primary: '#AD8D65',
           '.modal-box': {
             background: 'var(--cfxs-bg-e-secondary)',

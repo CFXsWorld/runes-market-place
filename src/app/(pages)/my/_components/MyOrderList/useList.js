@@ -4,7 +4,6 @@ import useResponsive from '@/app/hooks/useResponsive';
 const sleep = () => new Promise((resolve) => setTimeout(resolve, 1000));
 
 const useList = () => {
-  const [selected, setSelected] = useState([]);
   const [dataSource, setDataSource] = useState([]);
 
   const mounted = useMounted();
@@ -40,25 +39,11 @@ const useList = () => {
     });
   }, []);
   const onBuy = () => {};
-  const clearAll = () => {
-    setSelected([]);
-  };
-  const onSelect = (id) => {
-    setSelected((prev) => {
-      if (prev.includes(id)) {
-        return prev.filter((record) => record !== id);
-      }
-      return [...prev, id];
-    });
-  };
   return {
-    selected,
-    onSelect,
     onBuy,
     loadMore,
     dataSource,
     count,
-    clearAll,
   };
 };
 

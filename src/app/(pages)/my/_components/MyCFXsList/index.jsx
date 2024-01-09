@@ -1,10 +1,9 @@
 'use client';
 
-import { cn } from '@/app/utils/classnames';
 import Card from './Card';
 import { Waypoint } from 'react-waypoint';
 import useList from './useList';
-import MultiHandleBar from '@/app/(pages)/market/_components/CFXsList/MultiHandleBar';
+import MultiHandleBar from './MultiHandleBar';
 
 export default function MyCFXsList() {
   const { dataSource, loadMore, count, selected,clearAll, onSelect, onBuy } = useList();

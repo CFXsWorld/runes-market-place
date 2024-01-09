@@ -9,18 +9,14 @@ import {
 } from '@/app/components/icons';
 import { addressFormat } from '@/app/utils';
 
-const CFXsCard = ({ item, selected, onSelect, onBuy }) => {
+const CFXsCard = ({ item, onBuy }) => {
   return (
     <div
       className={cn(
-        'min-w-[200px] max-w-[300px] flex flex-col cursor-pointer overflow-hidden',
+        'min-w-[200px] max-w-[300px] flex flex-col overflow-hidden',
         'bg-fill-secondary h-[276px] border-[2px] border-fill-e-secondary',
-        'rounded-[8px]',
-        { 'border-theme': selected.includes(item.id) }
+        'rounded-[8px]'
       )}
-      onClick={() => {
-        onSelect(item.id);
-      }}
     >
       <div className="p-[16px]">
         <div className="flex-center-between">
@@ -56,16 +52,13 @@ const CFXsCard = ({ item, selected, onSelect, onBuy }) => {
           <span className="text-[16px] font-medium">${item.totalAmount}</span>
         </div>
         <div className="flex items-center justify-between mt-[15px]">
-          <span className="text-tc-secondary text-[12px]">
-            {addressFormat(item.owner)}
-          </span>
           <button
-            className="btn btn-outline btn-primary h-[30px] min-h-[30px] px-[8px] text-[14px] font-normal"
+            className="btn btn-outline btn-primary h-[30px] min-h-[30px] px-[8px] text-[14px] font-normal flex-1"
             onClick={() => {
               onBuy(item);
             }}
           >
-            Buy Now
+            Cancel listing
           </button>
         </div>
       </div>
