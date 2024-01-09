@@ -14,8 +14,8 @@
     --cfxs-color-info-non-opaque: rgba(10, 132, 255, 0.12);
     --cfxs-color-warning: #ff9f0a;
     --cfxs-color-warning-non-opaque: rgba(255, 157, 10, 0.12);
-    --cfxs-color-error: #f54f45;
-    --cfxs-color-error-non-opaque: rgba(245, 79, 69, 0.08);
+    --cfxs-color-error: #B44D4D;
+    --cfxs-color-error-non-opaque: #281E1E;
     --cfxs-color-success: #39cc56;
 
     --cfxs-bg-primary: #090909;

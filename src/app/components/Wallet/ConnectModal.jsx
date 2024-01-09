@@ -2,7 +2,7 @@
 
 import { useWalletStore } from '@/app/store/wallet';
 import useCFXsWallet from '@/app/components/Wallet/useCFXsWallet';
-import Modal from '@/app/components/Modal';
+import Modal from '@/app/components/ui/Modal';
 import { forwardRef } from 'react';
 import { cn } from '@/app/utils/classnames';
 import { FluentIcon, MetamaskIcon } from '@/app/components/icons';

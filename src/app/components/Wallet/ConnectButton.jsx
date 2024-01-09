@@ -42,7 +42,7 @@ const ChainInfo = ({ chainId, status, switchChain }) => {
       <div
         className={cn(
           'h-[48px] flex-center py-[12px] px-[20px] mr-[20px] rounded-[4px] bg-fill-e-secondary',
-          !isCorrectChain && 'cursor-pointer'
+          !isCorrectChain && 'cursor-pointer bg-status-error-non-opaque'
         )}
         onClick={switchNetwork}
       >
@@ -52,7 +52,7 @@ const ChainInfo = ({ chainId, status, switchChain }) => {
             eSpace
           </>
         ) : (
-          <span className="text-red-500 text-[14px]">WRONG NETWORK</span>
+          <span className="text-status-error text-[14px]">Switch NetWork</span>
         )}
       </div>
     )

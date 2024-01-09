@@ -70,13 +70,13 @@ const data = {
   listed: 101131,
   marketCap: 91231111,
 };
-const PriceList = () => {
+const Index = () => {
   return (
-    <div className="flex items-center justify-around mt-[32px]">
+    <div className="flex items-center justify-around mt-[24px]">
       {items.map((item) => (
         <div key={item.name} className="flex flex-col items-start">
           <span className='text-tc-secondary mb-[8px]'>{item.label}</span>
-          <span className='text-[24px] font-bold'>
+          <span className='text-[20px] font-bold'>
             {item.symbol}
             {item.format(data[item.name])}
           </span>
@@ -86,4 +86,4 @@ const PriceList = () => {
   );
 };
 
-export default PriceList;
+export default Index;

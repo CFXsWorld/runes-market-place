@@ -1,1 +1,0 @@
-CFXs user analysis chart.

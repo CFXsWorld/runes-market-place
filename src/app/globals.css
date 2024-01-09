@@ -1,11 +1,13 @@
 @import url('./styles/base.css');
 @import url('./styles/components.css');
 @import url('./styles/utilities.css');
+@import url('./styles/reset.css');
 
 body {
   font-family: 'Inter', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial',
   'SF Pro SC', 'PingFang SC', 'Microsoft YaHei', '微软雅黑', sans-serif;
   font-size: 16px;
+  color: white;
   @apply bg-fill-primary text-tc-primary;
 }
 /*:root {*/

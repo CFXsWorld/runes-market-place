@@ -9,7 +9,7 @@ const Menu = () => {
 
   console.log(pathname)
   return (
-    <div className="flex-center text-[16px]">
+    <div className="flex-center text-[16px] font-[500]">
       <Link
         className={cn('border border-transparent mr-[32px] px-[20px] py-[6px]', {
           'text-theme': pathname === '/market',
@@ -20,9 +20,9 @@ const Menu = () => {
       </Link>
       <Link
         className={cn(' border border-transparent px-[20px] py-[6px]', {
-          'text-theme': pathname === '/myAssets',
+          'text-theme': pathname === '/my',
         })}
-        href="/myAssets"
+        href="/my"
       >
         MY
       </Link>

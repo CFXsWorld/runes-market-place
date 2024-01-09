@@ -8,7 +8,7 @@ export default function PageLayout({ children }) {
     <div className="min-h-screen">
       <Header />
       <div className="w-full px-[60px]">
-        <div className="md:max-w-[1600px] w-full mx-auto pt-[80px]">{children}</div>
+        <div className="md:max-w-[1368px] w-full mx-auto pt-[80px]">{children}</div>
       </div>
     </div>
   );
