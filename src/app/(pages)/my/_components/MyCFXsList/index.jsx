@@ -6,12 +6,12 @@ import { Waypoint } from 'react-waypoint';
 import useList from './useList';
 import MultiHandleBar from '@/app/(pages)/market/_components/CFXsList/MultiHandleBar';
 
-export default function CFXsList() {
+export default function MyCFXsList() {
   const { dataSource, loadMore, count, selected,clearAll, onSelect, onBuy } = useList();
 
   return (
     <div className="w-full pt-[32px] pb-[96px]">
-      <div id="market-sentinel" className="w-full" />
+      <div id="my-cfxs-sentinel" className="w-full" />
       <div
         className="w-full"
         style={{

@@ -1,11 +1,11 @@
 'use client';
 
 import { RefreshIcon } from '@/app/components/icons';
-import ReorderSelector from '@/app/(pages)/market/_components/Filter/ReorderSelector';
+import ReorderSelector from './ReorderSelector';
 import Input from '@/app/components/ui/Input';
-import Search from '@/app/(pages)/market/_components/Filter/Search';
+import Search from '@/app/components/ui/Input/Search';
 
-const Filters = ({ total, reload }) => {
+const Filter = ({ total, reload }) => {
   return (
     <div className="text-tc-secondary flex items-center justify-between ">
       <div className="flex-center">
@@ -25,4 +25,4 @@ const Filters = ({ total, reload }) => {
   );
 };
 
-export default Filters;
+export default Filter;

@@ -8,7 +8,6 @@ import XSvg from './svgs/X.svg';
 import TelegramSvg from './svgs/telegram.svg';
 import ListSvg from './svgs/list.svg';
 import RefreshSvg from './svgs/refresh.svg';
-
 import ArrowDown from './svgs/arrowDown.svg';
 import Asc from './svgs/asc.svg';
 import Desc from './svgs/desc.svg';
@@ -19,6 +18,7 @@ import TimeSvg from './svgs/time.svg';
 import SearchSvg from './svgs/search.svg';
 import Usdt from './svgs/usdt.svg';
 import Flag from './svgs/flag.svg';
+import Split from './svgs/split.svg';
 
 export const Icon = ({ className, style, children, ...props }) => {
   return (
@@ -132,5 +132,10 @@ export const UsdtIcon = (props) => (
 export const FlagIcon = (props) => (
   <Icon {...props}>
     <Flag />
+  </Icon>
+);
+export const SplitIcon = (props) => (
+  <Icon {...props}>
+    <Split />
   </Icon>
 );
