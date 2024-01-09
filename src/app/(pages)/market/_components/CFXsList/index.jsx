@@ -51,7 +51,7 @@ export default function CFXsList() {
         className="w-full"
         style={{
           display: 'grid',
-          gap: '1rem',
+          gap: '24px',
           gridTemplateColumns: `repeat(${count},1fr)`,
         }}
       >

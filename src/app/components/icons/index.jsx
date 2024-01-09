@@ -17,6 +17,7 @@ import Merge from './svgs/merge.svg';
 import FragmentSvg from './svgs/fragment.svg';
 import TimeSvg from './svgs/time.svg';
 import SearchSvg from './svgs/search.svg';
+import Usdt from './svgs/usdt.svg';
 
 export const Icon = ({ className, style, children, ...props }) => {
   return (
@@ -119,5 +120,11 @@ export const RefreshIcon = (props) => (
 export const SearchIcon = (props) => (
   <Icon {...props}>
     <SearchSvg />
+  </Icon>
+);
+
+export const UsdtIcon = (props) => (
+  <Icon {...props}>
+    <Usdt />
   </Icon>
 );
