@@ -19,6 +19,11 @@ const nextConfig = {
         destination: '/market',
         permanent: true,
       },
+      {
+        source: '/my',
+        destination: '/my/cfxs',
+        permanent: true,
+      },
     ];
   },
   async rewrites() {

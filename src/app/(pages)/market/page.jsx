@@ -9,7 +9,7 @@ import CFXsList from '@/app/(pages)/market/_components/CFXsList';
 export default function Market() {
 
   return (
-    <div className="pt-[40px] w-full">
+    <div className="pt-[24px] w-full">
       <CFXsInfo />
       <PriceList />
       <div className="mt-[24px] mb-[18px] text-theme test-[24px] flex items-center">

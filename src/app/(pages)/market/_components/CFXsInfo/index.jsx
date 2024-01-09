@@ -3,7 +3,7 @@
 import { CFXsIcon, XIcon, TelegramIcon } from '@/app/components/icons';
 import Link from 'next/link';
 
-const Index = () => {
+const Menu = () => {
   return (
     <div className="flex items-center justify-start">
       <CFXsIcon />
@@ -35,4 +35,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Menu;
