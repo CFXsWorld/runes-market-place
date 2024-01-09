@@ -5,83 +5,13 @@ import Card from '../Card';
 import { Waypoint } from 'react-waypoint';
 import useResponsive from '@/app/hooks/useResponsive';
 import useMounted from '@/app/hooks/useMounted';
+import { useEffect, useState } from 'react';
 
-const dataSource = [
-  {
-    id: '200001',
-    symbol: 'CFXs',
-    count: 1,
-    unitPrice: 0.009,
-    totalAmount: 0.009,
-    expiredDate: '2024-01-06',
-    owner: '0xfe97e85d13abd9c1c33384e796f10b73905637ce',
-  },
-  {
-    id: '200002',
-    symbol: 'CFXs',
-    count: 1000,
-    unitPrice: 0.009,
-    totalAmount: 900,
-    expiredDate: '2024-01-06',
-    owner: '0xfe97e85d13abd9c1c33384e796f10b73905637ce',
-  },
-  {
-    id: '200003',
-    symbol: 'CFXs',
-    count: 1000,
-    unitPrice: 0.009,
-    totalAmount: 900,
-    expiredDate: '2024-01-06',
-    owner: '0xfe97e85d13abd9c1c33384e796f10b73905637ce',
-  },
-  {
-    id: '200004',
-    symbol: 'CFXs',
-    count: 1000,
-    unitPrice: 0.009,
-    totalAmount: 900,
-    expiredDate: '2024-01-06',
-    owner: '0xfe97e85d13abd9c1c33384e796f10b73905637ce',
-  },
-  {
-    id: '200005',
-    symbol: 'CFXs',
-    count: 1000,
-    unitPrice: 0.009,
-    totalAmount: 900,
-    expiredDate: '2024-01-06',
-    owner: '0xfe97e85d13abd9c1c33384e796f10b73905637ce',
-  },
-  {
-    id: '200006',
-    symbol: 'CFXs',
-    count: 1000,
-    unitPrice: 0.009,
-    totalAmount: 900,
-    expiredDate: '2024-01-06',
-    owner: '0xfe97e85d13abd9c1c33384e796f10b73905637ce',
-  },
-  {
-    id: '200007',
-    symbol: 'CFXs',
-    count: 1000,
-    unitPrice: 0.009,
-    totalAmount: 900,
-    expiredDate: '2024-01-06',
-    owner: '0xfe97e85d13abd9c1c33384e796f10b73905637ce',
-  },
-  {
-    id: '200008',
-    symbol: 'CFXs',
-    count: 1000,
-    unitPrice: 0.009,
-    totalAmount: 900,
-    expiredDate: '2024-01-06',
-    owner: '0xfe97e85d13abd9c1c33384e796f10b73905637ce',
-  },
-];
+const sleep = () => new Promise((resolve) => setTimeout(resolve, 1000));
 
 export default function CFXsList() {
+  const [dataSource, setDataSource] = useState([]);
+
   const mounted = useMounted();
   const { count } = useResponsive(
     { min: 200, max: 300 },
@@ -90,12 +20,32 @@ export default function CFXsList() {
       : null
   );
 
-  console.log(count);
-  const loadMore = () => {
-    console.log('123123');
+  const getData = async () => {
+    await sleep();
+    return [...new Array(30)].map(() => ({
+      id: Math.floor(Math.random() * 1000000),
+      symbol: 'CFXs',
+      count: 1000,
+      unitPrice: 0.009,
+      totalAmount: 900,
+      expiredDate: '2024-01-06',
+      owner: '0xfe97e85d13abd9c1c33384e796f10b73905637ce',
+    }));
   };
+
+  const loadMore = async () => {
+    console.log('load more');
+    const data = await getData();
+    setDataSource((prev) => [...prev, ...data]);
+  };
+
+  useEffect(() => {
+    getData().then((res) => {
+      setDataSource(res);
+    });
+  }, []);
   return (
-    <div className="w-full">
+    <div className="w-full pt-[32px] pb-[96px]">
       <div id="market-sentinel" className="w-full" />
       <div
         className="w-full"
@@ -113,7 +63,7 @@ export default function CFXsList() {
         scrollableAncestor={typeof window !== 'undefined' ? window : null}
         onEnter={loadMore}
       >
-        <div>load more</div>
+        <div className="w-full h-[60px] flex-center">load more</div>
       </Waypoint>
     </div>
   );
