@@ -18,6 +18,7 @@ import FragmentSvg from './svgs/fragment.svg';
 import TimeSvg from './svgs/time.svg';
 import SearchSvg from './svgs/search.svg';
 import Usdt from './svgs/usdt.svg';
+import Flag from './svgs/flag.svg';
 
 export const Icon = ({ className, style, children, ...props }) => {
   return (
@@ -126,5 +127,10 @@ export const SearchIcon = (props) => (
 export const UsdtIcon = (props) => (
   <Icon {...props}>
     <Usdt />
+  </Icon>
+);
+export const FlagIcon = (props) => (
+  <Icon {...props}>
+    <Flag />
   </Icon>
 );

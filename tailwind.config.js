@@ -28,6 +28,7 @@ module.exports = {
       colors: {
         theme: {
           DEFAULT: 'var(--cfxs-theme)',
+          'non-opaque': 'var(--cfxs-theme-non-opaque)',
         },
         tc: {
           DEFAULT: 'var(--cfxs-color-theme)',

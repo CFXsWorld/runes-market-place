@@ -2,7 +2,8 @@
 
 @layer base {
   :root {
-    --cfxs-theme: #AD8D65;
+    --cfxs-theme: #ad8d65;
+    --cfxs-theme-non-opaque: rgba(173, 141, 101, 0.3);
 
     --cfxs-tc-primary: #ffffff;
     --cfxs-tc-secondary: #aaa;
@@ -14,8 +15,8 @@
     --cfxs-color-info-non-opaque: rgba(10, 132, 255, 0.12);
     --cfxs-color-warning: #ff9f0a;
     --cfxs-color-warning-non-opaque: rgba(255, 157, 10, 0.12);
-    --cfxs-color-error: #B44D4D;
-    --cfxs-color-error-non-opaque: #281E1E;
+    --cfxs-color-error: #b44d4d;
+    --cfxs-color-error-non-opaque: #281e1e;
     --cfxs-color-success: #39cc56;
 
     --cfxs-bg-primary: #090909;
@@ -31,6 +32,6 @@
   }
 
   [data-theme='dark'] {
-  /*  later */
+    /*  later */
   }
 }
