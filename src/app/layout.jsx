@@ -3,9 +3,10 @@
 import { Inter } from 'next/font/google';
 import PageLayout from '@/app/components/PageLayout';
 import { useEffect } from 'react';
-import './globals.css';
 import { useWalletStore } from '@/app/store/wallet';
 import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 

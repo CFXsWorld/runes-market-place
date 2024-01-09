@@ -23,6 +23,9 @@ import Flag from './svgs/flag.svg';
 import Split from './svgs/split.svg';
 import Loading from './svgs/loading.svg';
 import Empty from './svgs/empty.svg';
+import Menu from './svgs/menu.svg';
+import Close from './svgs/close.svg';
+import LogoMDSvg from './svgs/logo-md.svg';
 
 export const Icon = ({ className, style, children, ...props }) => {
   return (
@@ -75,6 +78,12 @@ export const TimeIcon = (props) => (
 export const LogoIcon = (props) => (
   <Icon {...props}>
     <LogoSvg />
+  </Icon>
+);
+
+export const LogoMDIcon = (props) => (
+  <Icon {...props}>
+    <LogoMDSvg />
   </Icon>
 );
 export const ListIcon = (props) => (
@@ -151,5 +160,16 @@ export const SplitIcon = (props) => (
 export const LoadingIcon = ({ className, ...props }) => (
   <Icon {...props} className={cn('animate-spin', className)}>
     <Loading />
+  </Icon>
+);
+
+export const MenuIcon = (props) => (
+  <Icon {...props}>
+    <Menu />
+  </Icon>
+);
+export const CloseIcon = (props) => (
+  <Icon {...props}>
+    <Close />
   </Icon>
 );

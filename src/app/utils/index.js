@@ -90,3 +90,9 @@ export function formatNumber(number, precision = 2) {
 
   return `${format(number, precision)}${abbreviations[abbreviationIndex]}`;
 }
+
+export const addressFormatShort = (address) => {
+  return `${getAddress(address).substr(0, 3)}...${getAddress(
+    address
+  ).substr(address.length - 2, 2)}`;
+};

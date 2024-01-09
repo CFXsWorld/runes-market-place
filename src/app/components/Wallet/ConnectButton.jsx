@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useCFXsWallet } from '@/app/components/Wallet/index';
 import { ESpaceIcon, WalletIcon } from '@/app/components/icons';
 import { useWalletStore } from '@/app/store/wallet';
-import { addressFormat } from '@/app/utils';
+import { addressFormat, addressFormatShort } from "@/app/utils";
 import useEnv from '@/app/hooks/useEnv';
 import { cn } from '@/app/utils/classnames';
 import { toast } from 'react-toastify';
@@ -41,18 +41,20 @@ const ChainInfo = ({ chainId, status, switchChain }) => {
     isActive && (
       <div
         className={cn(
-          'h-[48px] flex-center py-[12px] px-[20px] mr-[20px] rounded-[4px] bg-fill-e-secondary',
-          !isCorrectChain && 'cursor-pointer bg-status-error-non-opaque'
+          'md:h-[48px] flex-center md:py-[12px] md:px-[20px] md:mr-[20px] md:rounded-[4px] md:bg-fill-e-secondary max-md:mr-[5px]',
+          !isCorrectChain && 'cursor-pointer md:bg-status-error-non-opaque'
         )}
         onClick={switchNetwork}
       >
         {isCorrectChain ? (
           <>
             <ESpaceIcon className="mr-[5px]" />
-            eSpace
+            <span className="max-md:hidden">eSpace</span>
           </>
         ) : (
-          <span className="text-status-error text-[14px]">Switch NetWork</span>
+          <span className="text-status-error text-[14px]">
+            Switch <span className="max-md:hidden">NetWork</span>
+          </span>
         )}
       </div>
     )
@@ -73,15 +75,35 @@ const WalletButton = ({
   const account = useAccount();
   const balance = useBalance();
 
-  useEffect(() => {
-    console.log('account!!', account);
-  }, [account]);
+  const { correctChainId } = useEnv();
+
+  const isActive = status === 'active';
+  const isCorrectChain = correctChainId === chainId;
+
+  useEffect(() => {}, [account]);
   return (
     <div className="flex-center">
       <ChainInfo status={status} chainId={chainId} switchChain={switchChain} />
+      <div className="md:hidden">
+        {!isActive ? (
+          <WalletIcon
+            className="text-[20px] cursor-pointer"
+            onClick={onClick}
+          />
+        ) : isCorrectChain ? (
+          <span
+            className="text-[14px] text-tc-secondary cursor-pointer"
+            onClick={onClick}
+          >
+            {addressFormatShort(account)}
+          </span>
+        ) : (
+          <WalletIcon className="text-[20px] cursor-pointer" onClick={onClick} />
+        )}
+      </div>
       <button
         onClick={onClick}
-        className="btn btn-primary flex-center-between rounded-[4px]"
+        className="btn btn-primary flex-center-between rounded-[4px] max-md:hidden"
       >
         <WalletIcon className="text-[20px]" />
         {getText(status, account)}
@@ -98,7 +120,7 @@ export default function ConnectWallet() {
   const currentWallet = wallets[walletProvider];
 
   return (
-    <div className="flex-center">
+    <div className="flex-center max-md:absolute max-md:right-[24px]">
       {currentWallet && (
         <WalletButton
           {...currentWallet}
