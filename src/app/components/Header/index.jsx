@@ -7,7 +7,7 @@ import Drawer from '@/app/components/Header/Drawer';
 
 const Header = () => {
   return (
-    <div className="bg-fill-secondary h-[56px] w-full fixed left-0 ring-0 top-0 md:px-[60px] md:h-[80px] md:flex-center max-md:px-[20px] z-[99]">
+    <div className="bg-fill-secondary h-[56px] w-full fixed left-0 ring-0 top-0 md:px-[24px] max-md:px-[16px] md:h-[80px] md:flex-center  z-[99]">
       <div className=" flex h-full flex-center w-full md:hidden">
         <div className='w-[46px] absolute left-[16px] '>
           <Drawer />

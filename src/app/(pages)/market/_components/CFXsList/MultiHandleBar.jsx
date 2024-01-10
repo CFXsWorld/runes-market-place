@@ -39,12 +39,12 @@ const MultiHandleBar = ({ selected = [], clearAll }) => {
   return (
     <div
       className={cn(
-        'fixed right-0 left-0 bottom-0 flex-center',
+        'fixed right-0 left-0 bottom-0 flex-center  max-md:px-[16px] md:px-[24px]',
         'h-[78px] border border-fill-e-secondary',
         'bg-[rgba(24,24,24,0.9)] backdrop-filter-[50px]'
       )}
     >
-      <div className="md:hidden w-full flex items-center justify-between px-[16px]">
+      <div className="md:hidden w-full flex items-center justify-between">
         <div className="flex items-start justify-start flex-col">
           <div className="flex items-center">
             <CheckBox />
