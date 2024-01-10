@@ -14,10 +14,8 @@ export default function MyOrderList() {
     <div className="w-full pt-[32px] pb-[96px]">
       <div id="market-sentinel" className="w-full" />
       <div
-        className="w-full"
+        className="grid w-full gap-[24px] max-md:gap-[8px]"
         style={{
-          display: 'grid',
-          gap: '24px',
           gridTemplateColumns: `repeat(${count},1fr)`,
         }}
       >
