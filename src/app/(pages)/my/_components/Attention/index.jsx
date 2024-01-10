@@ -26,7 +26,7 @@ const Attention = () => {
           <span className="text-theme"> test contract </span> to the
           <span className="text-theme"> new contract </span> (only supported
           eSpace). If your CFXs are in Core Space,
-          <span className="text-theme">click here.</span>
+          <span className="text-theme"> click here.</span>
         </div>
         <button className="btn btn-primary  rounded-[4px] md:hidden mt-[16px]">
           CHECK ON eSPACE

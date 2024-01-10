@@ -7,8 +7,8 @@ const CFXsCard = ({ item, selected, onSelect, onBuy }) => {
   return (
     <div
       className={cn(
-        'min-w-[200px] max-w-[300px] flex flex-col cursor-pointer overflow-hidden',
-        'bg-fill-secondary h-[165px] border-[2px] border-fill-e-secondary',
+        'min-w-[200px] max-w-[300px]  max-sm:min-w-[160px]  max-sm:max-w-full flex flex-col cursor-pointer overflow-hidden',
+        'bg-fill-secondary h-[165px] max-sm:h-[150px] border-[2px] border-fill-e-secondary',
         'rounded-[8px]',
         { 'border-theme': selected.includes(item.id) }
       )}
@@ -16,17 +16,17 @@ const CFXsCard = ({ item, selected, onSelect, onBuy }) => {
         onSelect(item.id);
       }}
     >
-      <div className="p-[16px]">
+      <div className="p-[16px] max-sm:p-[10px]">
         <div className="flex-center-between">
           <div className="text-theme flex items-center">
-            <span className="text-[24px] mr-[8px]">
+          <span className="text-[24px] mr-[8px] max-sm:text-[14px]">
               {item.count > 0 ? <MergeIcon /> : <FragmentIcon />}
             </span>
-            <span>{item.symbol}</span>
+            <span className='max-sm:text-[12px]'>{item.symbol}</span>
           </div>
           <span className="text-tc-secondary">#{item.id}</span>
         </div>
-        <div className="my-[16px] flex flex-col justify-center items-center">
+        <div className="my-[16px] flex flex-col justify-center items-center max-sm:my-[12px]">
           <span className="text-[24px] font-[500]">{item.count}</span>
         </div>
         <div className="flex-center">
