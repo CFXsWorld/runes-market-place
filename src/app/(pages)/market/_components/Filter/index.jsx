@@ -22,7 +22,7 @@ const Filter = ({ total, reload }) => {
           <Refresh />
           <FilterForm />
         </div>
-        <div className="flex items-center justify-end w-full">
+        <div className="flex items-center justify-end flex-1">
           <Search
             className="w-full  max-w-[300px] max-md:max-w-[280px]"
             placeholder="Search by ID or owner address"

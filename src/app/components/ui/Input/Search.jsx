@@ -10,7 +10,7 @@ const Search = forwardRef(
         <div
           className={cn(
             'left-0 top-0 absolute flex-center ',
-            'overflow-hidden text-tc-secondary  w-[48px] h-[40px]'
+            'overflow-hidden text-tc-secondary  w-[48px] h-[46px]'
           )}
         >
           <SearchIcon className="text-[20px]" />
