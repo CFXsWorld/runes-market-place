@@ -4,7 +4,7 @@ import { cn } from '@/app/utils/classnames';
 import usePriceList from '@/app/(pages)/market/_components/PriceList/usePriceList';
 
 const PriceList = () => {
-  const { count, data, items, style } = usePriceList();
+  const { count, isPC, data, items, style } = usePriceList();
   return (
     <div className="w-full">
       <div id="price-list-sentinel" className="w-full md:hidden" />
@@ -12,7 +12,7 @@ const PriceList = () => {
         className="flex items-center justify-around mt-[24px] max-md:flex-wrap max-md:justify-start"
         style={style}
       >
-        {count > 1 &&
+        {(count > 1 || isPC) &&
           items.map((item) => (
             <div
               key={item.name}

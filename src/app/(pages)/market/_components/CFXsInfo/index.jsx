@@ -8,7 +8,7 @@ import { formatNumberWithCommas } from '@/app/utils';
 const CFXsInfo = () => {
   const { totalSupply, maxCount } = useCFXsContract();
 
-  const rate = Number(totalSupply) / Number(maxCount) * 100;
+  const rate = (Number(totalSupply) / Number(maxCount)) * 100;
   return (
     <div className="flex flex-col">
       <div className="flex items-center justify-start">
@@ -42,7 +42,8 @@ const CFXsInfo = () => {
           <div className="text-tc-secondary text-[12px] mt-[8px]">
             Total Supply:
             <span className="text-tc-primary ml-[5px] ">
-              {formatNumberWithCommas(Number(totalSupply))} ({rate.toFixed(2)}%)
+              {formatNumberWithCommas(Number(totalSupply))} (
+              {(rate || 0).toFixed(2)}%)
             </span>
           </div>
         </div>
