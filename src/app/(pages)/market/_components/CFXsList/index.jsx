@@ -10,15 +10,12 @@ import LoadMore from '@/app/components/LoadMore';
 export default function CFXsList() {
   const { dataSource, loadMore, count, selected, clearAll, onSelect, onBuy } =
     useList();
-
   return (
     <div className="w-full pt-[32px] pb-[96px]">
       <div id="market-sentinel" className="w-full" />
       <div
-        className="w-full"
+        className="grid w-full gap-[24px] max-md:gap-[8px]"
         style={{
-          display: 'grid',
-          gap: '24px',
           gridTemplateColumns: `repeat(${count},1fr)`,
         }}
       >
@@ -36,7 +33,7 @@ export default function CFXsList() {
         scrollableAncestor={typeof window !== 'undefined' ? window : null}
         onEnter={loadMore}
       >
-        <div className='w-full'>
+        <div className="w-full">
           <LoadMore loading={true} />
         </div>
       </Waypoint>

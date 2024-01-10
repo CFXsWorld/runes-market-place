@@ -9,16 +9,14 @@ const useResponsive = (width, container) => {
   const [count, setCount] = useState(1);
   const [maxCount, setMaxCount] = useState(1);
 
+  const { H5Min, max, gap, min } = width;
+
   useEffect(() => {
     if (container && typeof window !== 'undefined') {
-      if (isIpad) {
-        setCount(3);
-      }
-      if (isMobile) {
-        setCount(1);
-      }
-      setCount(Math.floor(rect.width / (width.min + width.gap || 8)));
-      setMaxCount(Math.floor(rect.width / (width.max + width.gap || 8)));
+      const calcMin = isMobile ? H5Min || min : min;
+      const calcGap = isMobile ? 8 : gap || 8;
+      setCount(Math.floor(rect.width / (calcMin + calcGap)));
+      setMaxCount(Math.floor(rect.width / (max + calcGap)));
     }
   }, [container, rect, isIpad, isMobile]);
 
