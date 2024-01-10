@@ -12,24 +12,25 @@ const PriceList = () => {
         className="flex items-center justify-around mt-[24px] max-md:flex-wrap max-md:justify-start"
         style={style}
       >
-        {items.map((item) => (
-          <div
-            key={item.name}
-            className={cn(
-              'flex flex-col items-start',
-              'max-md:bg-fill-secondary max-md:min-w-[100px] max-md:max-w-[140px] max-md:h-[60px] ',
-              'max-md:p-[8px] max-md:rounded-[4px]'
-            )}
-          >
-            <span className="text-tc-secondary mb-[8px]  max-md:text-[12px] max-md:mb-[4px]">
-              {item.label}
-            </span>
-            <span className="text-[20px] font-bold max-md:text-[16px]">
-              {item.symbol}
-              {item.format(data[item.name])}
-            </span>
-          </div>
-        ))}
+        {count > 1 &&
+          items.map((item) => (
+            <div
+              key={item.name}
+              className={cn(
+                'flex flex-col items-start',
+                'max-md:bg-fill-secondary max-md:min-w-[100px] max-md:max-w-[140px] max-md:h-[60px] ',
+                'max-md:p-[8px] max-md:rounded-[4px]'
+              )}
+            >
+              <span className="text-tc-secondary mb-[8px]  max-md:text-[12px] max-md:mb-[4px]">
+                {item.label}
+              </span>
+              <span className="text-[20px] font-bold max-md:text-[16px]">
+                {item.symbol}
+                {item.format(data[item.name])}
+              </span>
+            </div>
+          ))}
       </div>
     </div>
   );

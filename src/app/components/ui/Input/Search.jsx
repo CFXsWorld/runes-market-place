@@ -6,7 +6,7 @@ import { SearchIcon } from '@/app/components/icons';
 const Search = forwardRef(
   ({ className, type, value, onChange, ...props }, ref) => {
     return (
-      <div className="relative">
+      <div className={cn('relative w-full', className)}>
         <div
           className={cn(
             'left-0 top-0 absolute flex-center ',

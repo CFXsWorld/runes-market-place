@@ -26,6 +26,7 @@ import Empty from './svgs/empty.svg';
 import Menu from './svgs/menu.svg';
 import Close from './svgs/close.svg';
 import LogoMDSvg from './svgs/logo-md.svg';
+import FilterSvg from './svgs/filter.svg';
 
 export const Icon = ({ className, style, children, ...props }) => {
   return (
@@ -171,5 +172,10 @@ export const MenuIcon = (props) => (
 export const CloseIcon = (props) => (
   <Icon {...props}>
     <Close />
+  </Icon>
+);
+export const FilterIcon = (props) => (
+  <Icon {...props}>
+    <FilterSvg />
   </Icon>
 );
