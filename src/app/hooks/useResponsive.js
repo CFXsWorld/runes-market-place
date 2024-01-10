@@ -4,7 +4,7 @@ import useResize from './useResize';
 
 const useResponsive = (width, container) => {
   const { rect } = useRect(container);
-  const { isIpad, isMobile } = useResize();
+  const { isIpad, isMobile, isPC } = useResize();
 
   const [count, setCount] = useState(1);
   const [maxCount, setMaxCount] = useState(1);
@@ -22,7 +22,7 @@ const useResponsive = (width, container) => {
     }
   }, [container, rect, isIpad, isMobile]);
 
-  return { count: count || 1, maxCount };
+  return { count: count || 1, maxCount, isPC };
 };
 
 export default useResponsive;

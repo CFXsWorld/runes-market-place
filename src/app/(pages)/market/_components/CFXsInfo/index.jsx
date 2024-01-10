@@ -8,7 +8,7 @@ const Menu = () => {
     <div className='flex flex-col'>
       <div className="flex items-center justify-start">
         <CFXsIcon className="md:text-[148px] max-md:text-[90px]" />
-        <div className="ml-[32px] max-md:ml-[12px]">
+        <div className="ml-[32px] max-md:ml-[12px] max-md:flex-1">
           <div className="flex items-center justify-start max-md:mb-[12px]">
             <span className="font-bold text-[40px] mr-[24px] max-md:text-[24px]">CFXs</span>
             <Link
