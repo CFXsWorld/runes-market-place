@@ -7,8 +7,6 @@ import { cn } from '@/app/utils/classnames';
 const Tabs = () => {
   const pathname = usePathname();
 
-  console.log(pathname);
-
   return (
     <div className="flex items-center text-[18px] font-[500] text-tc-secondary border-[2px] border-transparent border-b-fill-e-primary">
       <Link

@@ -27,7 +27,7 @@ const Search = forwardRef(
       invalid:ring-offset-2
     `,
             className,
-            'pl-[48px]'
+            'pl-[48px] h-[48px]'
           )}
           ref={ref}
           value={value === undefined ? '' : value}
