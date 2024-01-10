@@ -2,6 +2,39 @@
 
 import { cn } from '@/app/utils/classnames';
 
+const Total = () => {
+  return (
+    <div className="mr-[32px] text-[20px] max-md:text-[12px] max-md:mt-[5px] ">
+      <span className="text-tc-secondary pr-[4px]"> Total:</span>
+      <span className="text-theme font-medium">9800.12 USDT</span>
+    </div>
+  );
+};
+
+const Sweep = () => {
+  return (
+    <div className="flex-center">
+      <button className="btn btn-primary px-[24px]">SWEEP</button>
+    </div>
+  );
+};
+
+const SelectedCount = ({ selected }) => {
+  return (
+    <span className="text-tc-secondary max-md:text-[12px]">
+      {selected.length} Item
+    </span>
+  );
+};
+
+const CheckBox = () => {
+  return (
+    <span className="md:mx-[32px] text-tc-secondary max-md:text-[12px] max-md:mr-[16px]">
+      Select All
+    </span>
+  );
+};
+
 const MultiHandleBar = ({ selected = [], clearAll }) => {
   return (
     <div
@@ -11,21 +44,27 @@ const MultiHandleBar = ({ selected = [], clearAll }) => {
         'bg-[rgba(24,24,24,0.9)] backdrop-filter-[50px]'
       )}
     >
-      <div className="md:max-w-[1368px] w-full flex-center-between">
+      <div className="md:hidden w-full flex items-center justify-between px-[16px]">
+        <div className="flex items-start justify-start flex-col">
+          <div className="flex items-center">
+            <CheckBox />
+            <SelectedCount selected={selected} />
+          </div>
+          <Total />
+        </div>
+        <Sweep />
+      </div>
+      <div className="md:max-w-[1368px] w-full flex-center-between max-md:hidden">
         <div className="flex-center text-tc-secondary">
-          <span>{selected.length} Item</span>
-          <span className="mx-[32px]">Select All</span>
+          <SelectedCount selected={selected} />
+          <CheckBox />
           <span className="text-theme cursor-pointer" onClick={clearAll}>
             Clear
           </span>
         </div>
-
         <div className="flex-center">
-          <div className="mr-[32px] text-[20px]">
-            <span className="text-tc-secondary pr-[4px]"> Total:</span>
-            <span className="text-theme font-medium">9800.12 USDT</span>
-          </div>
-          <button className="btn btn-primary">SWEEP</button>
+          <Total />
+          <Sweep />
         </div>
       </div>
     </div>

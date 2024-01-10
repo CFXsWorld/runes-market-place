@@ -120,7 +120,7 @@ export default function ConnectWallet() {
   const currentWallet = wallets[walletProvider];
 
   return (
-    <div className="flex-center max-md:absolute max-md:right-[20px]">
+    <div className="flex-center max-md:absolute max-md:right-[16px]">
       {currentWallet && (
         <WalletButton
           {...currentWallet}
