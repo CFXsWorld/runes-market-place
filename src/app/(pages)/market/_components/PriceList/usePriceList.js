@@ -72,7 +72,7 @@ const data = {
 const usePriceList = () => {
   const mounted = useMounted();
   const { count, isPC } = useResponsive(
-    { min: 100, max: 200 },
+    { min: 100, max: 140, gap: 8 },
     mounted && typeof document !== 'undefined'
       ? document.querySelector('#price-list-sentinel')
       : null

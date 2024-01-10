@@ -12,10 +12,6 @@ export default function Market() {
     <div className="pt-[24px] w-full">
       <CFXsInfo />
       <PriceList />
-      <div className="mt-[24px] mb-[18px] text-theme test-[24px] flex items-center">
-        <ListIcon />
-        <span className="font-bold pl-[12px]">Listings</span>
-      </div>
       <Filter />
       <CFXsList />
     </div>

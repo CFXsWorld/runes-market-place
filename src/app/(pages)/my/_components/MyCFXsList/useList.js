@@ -9,7 +9,7 @@ const useList = () => {
 
   const mounted = useMounted();
   const { count } = useResponsive(
-    { min: 200, max: 300 },
+    { min: 200, max: 300, gap: 24 },
     mounted && typeof document !== 'undefined'
       ? document.querySelector('#my-cfxs-sentinel')
       : null

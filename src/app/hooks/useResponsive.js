@@ -17,8 +17,8 @@ const useResponsive = (width, container) => {
       if (isMobile) {
         setCount(1);
       }
-      setCount(Math.floor(rect.width / width.min));
-      setMaxCount(Math.floor(rect.width / width.max));
+      setCount(Math.floor(rect.width / (width.min + width.gap || 8)));
+      setMaxCount(Math.floor(rect.width / (width.max + width.gap || 8)));
     }
   }, [container, rect, isIpad, isMobile]);
 
