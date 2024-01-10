@@ -1,14 +1,17 @@
 'use client';
 
-import { LogoIcon, LogoMDIcon, MenuIcon } from "@/app/components/icons";
+import { LogoIcon, LogoMDIcon, MenuIcon } from '@/app/components/icons';
 import Menu from '@/app/components/Header/Menu';
 import { ConnectButton } from '@/app/components/Wallet';
+import Drawer from '@/app/components/Header/Drawer';
 
 const Header = () => {
   return (
-    <div className="bg-fill-secondary h-[56px] w-full fixed left-0 ring-0 top-0 md:px-[60px] md:h-[80px] md:flex-center max-md:px-[24px]">
+    <div className="bg-fill-secondary h-[56px] w-full fixed left-0 ring-0 top-0 md:px-[60px] md:h-[80px] md:flex-center max-md:px-[24px] z-[99]">
       <div className=" flex h-full flex-center w-full md:hidden">
-        <MenuIcon className='absolute left-[24px] cursor-pointer'/>
+        <div className='w-[46px] absolute left-[24px] '>
+          <Drawer />
+        </div>
         <LogoMDIcon />
         <ConnectButton />
       </div>
