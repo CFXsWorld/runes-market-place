@@ -1,7 +1,6 @@
 'use client';
 
 import Selector from '@/app/components/ui/Selector';
-import { useState } from 'react';
 import {
   AscIcon,
   DescIcon,
@@ -12,21 +11,15 @@ import {
 } from '@/app/components/icons';
 
 const options = [
-  { label: 'Price low to high', value: 1, icon: <AscIcon /> },
-  { label: 'Price high to low', value: 2, icon: <DescIcon /> },
-  { label: 'Recently listed', value: 3, icon: <TimeIcon /> },
-  { label: 'Ending soon', value: 4, icon: <EndingIcon /> },
-  { label: 'Only merged', value: 5, icon: <MergeIcon /> },
-  { label: 'Only fragments', value: 6, icon: <FragmentIcon /> },
+  { label: 'Price low to high', value: 'ASC', icon: <AscIcon /> },
+  { label: 'Price high to low', value: 'DESC', icon: <DescIcon /> },
+  { label: 'Recently listed', value: 'RECENTLY', icon: <TimeIcon /> },
+  { label: 'Ending soon', value: 'ENDING', icon: <EndingIcon /> },
+  { label: 'Only merged', value: 'MERGED', icon: <MergeIcon /> },
+  { label: 'Only fragments', value: 'FRAGMENT', icon: <FragmentIcon /> },
 ];
 
-const ReorderSelector = () => {
-  const [value, setValue] = useState(1);
-  const onChange = (type) => {
-    console.log(type);
-    setValue(type);
-  };
-
+const ReorderSelector = ({ value, onChange }) => {
   return (
     <Selector
       options={options}

@@ -5,12 +5,11 @@ import { Waypoint } from 'react-waypoint';
 import useList from './useList';
 import MultiHandleBar from '@/app/(pages)/market/_components/CFXsList/MultiHandleBar';
 import LoadMore from '@/app/components/LoadMore';
-import Empty from '@/app/components/Empty';
 import Filter from '@/app/(pages)/market/_components/Filter';
 
 export default function CFXsList() {
   const {
-    dataSource,
+    source,
     isMutating,
     loadMore,
     count,
@@ -19,11 +18,18 @@ export default function CFXsList() {
     onSelect,
     onBuy,
     totalResult,
-    refresh
+    refresh,
+    filter,
+    setFilter,
   } = useList();
   return (
     <div>
-      <Filter total={totalResult} reload={refresh}/>
+      <Filter
+        total={totalResult}
+        reload={refresh}
+        filter={filter}
+        setFilter={setFilter}
+      />
       <div className="w-full pt-[32px] pb-[96px]">
         <div id="market-sentinel" className="w-full" />
         <div
@@ -32,25 +38,22 @@ export default function CFXsList() {
             gridTemplateColumns: `repeat(${count},1fr)`,
           }}
         >
-          {dataSource &&
-            dataSource.length > 0 &&
-            dataSource.map((item) => (
-              <Card
-                key={item.id}
-                item={item}
-                onSelect={onSelect}
-                selected={selected}
-                onBuy={onBuy}
-              />
-            ))}
-          {dataSource && dataSource.length === 0 && <Empty />}
+          {(source || []).map((item) => (
+            <Card
+              key={item.id}
+              item={item}
+              onSelect={onSelect}
+              selected={selected}
+              onBuy={onBuy}
+            />
+          ))}
         </div>
         <Waypoint
           scrollableAncestor={typeof window !== 'undefined' ? window : null}
           onEnter={loadMore}
         >
           <div className="w-full">
-            <LoadMore loading={isMutating} />
+            <LoadMore loading={isMutating} data={source} />
           </div>
         </Waypoint>
         {selected.length > 0 && (

@@ -5,6 +5,7 @@ import useSWRMutation from 'swr/mutation';
 import { APIs } from '@/app/services/request';
 import { getMarketCFXsList } from '@/app/services';
 import { pageItemCount } from '@/app/utils';
+import { uniqBy } from 'lodash';
 
 const useList = () => {
   const [selected, setSelected] = useState([]);
@@ -22,7 +23,7 @@ const useList = () => {
     startIndex: 0,
     size: pageItemCount,
     ao: 0,
-    amountRangeStart: 0,
+    amountRangeStart: undefined,
     amountRangeEnd: undefined,
     min: undefined,
   });
@@ -33,15 +34,19 @@ const useList = () => {
     trigger: getData,
   } = useSWRMutation(APIs.MARKET_LIST, getMarketCFXsList);
 
-  const refresh = () => {
+  const refresh = (filterData = {}) => {
     setDataSource(null);
+    setCurrentPage(0);
+    getData({ ...filter, ...filterData, startIndex: 0 }).then((res) => {
+      setDataSource({ [0]: res.rows });
+    });
   };
 
   const loadMore = async () => {
-    getData({ ...filter, startIndex: (currentPage + 1) * pageItemCount }).then(
+    getData({ ...filter, startIndex: currentPage * pageItemCount }).then(
       (res) => {
-        setDataSource([...(dataSource || []), ...(res.rows || [])]);
         setCurrentPage(currentPage + 1);
+        setDataSource({ ...(dataSource || {}), [currentPage]: res.rows });
       }
     );
   };
@@ -62,18 +67,32 @@ const useList = () => {
   const totalResult = useMemo(() => {
     return data?.count || 0;
   }, [data]);
+
+  const source = useMemo(() => {
+    if (dataSource) {
+      return uniqBy(
+        Object.keys(dataSource)
+          .sort()
+          .reduce((prev, next) => prev.concat(dataSource[next]), []),
+        (item) => item.id
+      );
+    }
+    return null;
+  }, [dataSource]);
+
   return {
     selected,
     onSelect,
     onBuy,
     loadMore,
-    dataSource,
+    source,
     totalResult,
-    data,
     count,
     clearAll,
     isMutating,
     refresh,
+    setFilter,
+    filter,
   };
 };
 
