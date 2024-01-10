@@ -3,7 +3,6 @@
 import CFXsInfo from './_components/CFXsInfo';
 import PriceList from './_components/PriceList';
 import Filter from './_components/Filter';
-import { ListIcon } from '@/app/components/icons';
 import CFXsList from '@/app/(pages)/market/_components/CFXsList';
 
 export default function Market() {
