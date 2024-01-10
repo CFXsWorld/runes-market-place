@@ -1,12 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import useMounted from '@/app/hooks/useMounted';
 import useResponsive from '@/app/hooks/useResponsive';
-const sleep = () => new Promise((resolve) => setTimeout(resolve, 1000));
+import useSWRMutation from 'swr/mutation';
+import { APIs } from '@/app/services/request';
+import { getMarketCFXsList } from '@/app/services';
+import { pageItemCount } from '@/app/utils';
 
 const useList = () => {
   const [selected, setSelected] = useState([]);
-  const [dataSource, setDataSource] = useState([]);
-
+  const [dataSource, setDataSource] = useState(null);
+  const [currentPage, setCurrentPage] = useState(0);
   const mounted = useMounted();
   const { count } = useResponsive(
     { min: 200, max: 300, gap: 24, H5Min: 160 },
@@ -15,30 +18,34 @@ const useList = () => {
       : null
   );
 
-  const getData = async () => {
-    await sleep();
-    return [...new Array(30)].map(() => ({
-      id: Math.floor(Math.random() * 1000000),
-      symbol: 'CFXs',
-      count: 1000,
-      unitPrice: 0.009,
-      totalAmount: 900,
-      expiredDate: '2024-01-06',
-      owner: '0xfe97e85d13abd9c1c33384e796f10b73905637ce',
-    }));
+  const [filter, setFilter] = useState({
+    startIndex: 0,
+    size: pageItemCount,
+    ao: 0,
+    amountRangeStart: 0,
+    amountRangeEnd: undefined,
+    min: undefined,
+  });
+
+  const {
+    data,
+    isMutating,
+    trigger: getData,
+  } = useSWRMutation(APIs.MARKET_LIST, getMarketCFXsList);
+
+  const refresh = () => {
+    setDataSource(null);
   };
 
   const loadMore = async () => {
-    console.log('load more');
-    const data = await getData();
-    setDataSource((prev) => [...prev, ...data]);
+    getData({ ...filter, startIndex: (currentPage + 1) * pageItemCount }).then(
+      (res) => {
+        setDataSource([...(dataSource || []), ...(res.rows || [])]);
+        setCurrentPage(currentPage + 1);
+      }
+    );
   };
 
-  useEffect(() => {
-    getData().then((res) => {
-      setDataSource(res);
-    });
-  }, []);
   const onBuy = () => {};
   const clearAll = () => {
     setSelected([]);
@@ -51,14 +58,22 @@ const useList = () => {
       return [...prev, id];
     });
   };
+
+  const totalResult = useMemo(() => {
+    return data?.count || 0;
+  }, [data]);
   return {
     selected,
     onSelect,
     onBuy,
     loadMore,
     dataSource,
+    totalResult,
+    data,
     count,
     clearAll,
+    isMutating,
+    refresh,
   };
 };
 

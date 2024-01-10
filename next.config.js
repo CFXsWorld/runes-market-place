@@ -28,6 +28,14 @@ const nextConfig = {
   },
   async rewrites() {
     return [
+      {
+        source: '/api/:path*',
+        destination: 'https://api.conins.io/:path*',
+      },
+      {
+        source: '/test/api/:path*',
+        destination: 'https://api.conins.io/test/:path*',
+      },
       // mainnet
       {
         source: '/getCfxsList',

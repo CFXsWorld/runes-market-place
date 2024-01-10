@@ -8,6 +8,7 @@ import {
   UsdtIcon,
 } from '@/app/components/icons';
 import { addressFormat } from '@/app/utils';
+import dayjs from 'dayjs';
 
 const CFXsCard = ({ item, selected, onSelect, onBuy }) => {
   return (
@@ -26,24 +27,33 @@ const CFXsCard = ({ item, selected, onSelect, onBuy }) => {
         <div className="flex-center-between">
           <div className="text-theme flex items-center">
             <span className="text-[24px] mr-[8px] max-sm:text-[14px]">
-              {item.count > 0 ? <MergeIcon /> : <FragmentIcon />}
+              {item.quantity === '1' ? <FragmentIcon /> : <MergeIcon />}
             </span>
-            <span className='max-sm:text-[12px]'>{item.symbol}</span>
+            <span className="max-sm:text-[12px]">CFXs</span>
           </div>
-          <span className="text-tc-secondary max-sm:text-[12px]">#{item.id}</span>
+          <span className="text-tc-secondary max-sm:text-[12px]">
+            #{item.id}
+          </span>
         </div>
         <div className="my-[16px] flex flex-col justify-center items-center max-sm:my-[12px]">
-          <span className="text-[24px] font-[500]">{item.count}</span>
+          <span className="text-[24px] font-[500]">{item.quantity}</span>
           <div className="mt-[4px] text-[14px] text-tc-secondary">
-            <span className="text-theme">${item.unitPrice}</span>
+            <span className="text-theme">
+              ${Number(item.unitprice).toFixed(4)}
+            </span>
             <span className="px-[4px]">/</span>
-            <span>{item.symbol}</span>
+            <span>CFXs</span>
           </div>
         </div>
         <div className="inline-block text-tc-secondary bg-fill-e-secondary w-auto p-[4px] rounded-[2px]">
           <div className="flex-center">
             <TimeIcon className="text-[12px] mr-[4px]" />
-            <span className="text-[12px]">Expired: {item.expiredDate}</span>
+            <span className="text-[12px]">
+              Expired:{' '}
+              {item.locktime
+                ? dayjs.unix(item.locktime).format('MM-DD HH:mm')
+                : '-'}
+            </span>
           </div>
         </div>
       </div>
@@ -53,11 +63,11 @@ const CFXsCard = ({ item, selected, onSelect, onBuy }) => {
             <UsdtIcon className="text-[16px] mr-[4px] max-sm:text-[12px]" />
             <span className="text-[12px]">USDT</span>
           </div>
-          <span className="text-[16px] font-medium">${item.totalAmount}</span>
+          <span className="text-[16px] font-medium">${item.amount}</span>
         </div>
         <div className="flex items-center justify-between mt-[15px] max-sm:mt-[8px]">
           <span className="text-tc-secondary text-[12px]">
-            {addressFormat(item.owner)}
+            {addressFormat(item.chainto)}
           </span>
           <button
             className="max-sm:text-[12px] btn btn-outline btn-primary max-sm:h-[26px] max-sm:min-h-[26px] h-[30px] min-h-[30px] px-[8px] text-[14px] font-normal"
