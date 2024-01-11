@@ -29,8 +29,7 @@ const useList = () => {
     recently: 0,
     merged: 0,
     orderType: 'ASC',
-    id:undefined,
-
+    id: undefined,
   });
 
   const transformedFilter = useMemo(() => {
@@ -73,40 +72,6 @@ const useList = () => {
     trigger: getData,
   } = useSWRMutation(APIs.MARKET_LIST, getMarketCFXsList);
 
-  const refresh = (filterData = {}) => {
-    setDataSource(null);
-    setCurrentPage(0);
-    getData({ ...transformedFilter, ...filterData, startIndex: 0 }).then((res) => {
-      setDataSource({ [0]: res.rows });
-    });
-  };
-
-  const loadMore = async () => {
-    getData({ ...transformedFilter, startIndex: currentPage * pageItemCount }).then(
-      (res) => {
-        setCurrentPage(currentPage + 1);
-        setDataSource({ ...(dataSource || {}), [currentPage]: res.rows });
-      }
-    );
-  };
-
-  const onBuy = () => {};
-  const clearAll = () => {
-    setSelected([]);
-  };
-  const onSelect = (id) => {
-    setSelected((prev) => {
-      if (prev.includes(id)) {
-        return prev.filter((record) => record !== id);
-      }
-      return [...prev, id];
-    });
-  };
-
-  const totalResult = useMemo(() => {
-    return data?.count || 0;
-  }, [data]);
-
   const source = useMemo(() => {
     if (dataSource) {
       return uniqBy(
@@ -119,10 +84,53 @@ const useList = () => {
     return null;
   }, [dataSource]);
 
+  const refresh = (filterData = {}) => {
+    setDataSource(null);
+    setCurrentPage(0);
+    getData({ ...transformedFilter, ...filterData, startIndex: 0 }).then(
+      (res) => {
+        setDataSource({ [0]: res.rows });
+      }
+    );
+  };
+
+  const loadMore = async () => {
+    getData({
+      ...transformedFilter,
+      startIndex: currentPage * pageItemCount,
+    }).then((res) => {
+      setCurrentPage(currentPage + 1);
+      setDataSource({ ...(dataSource || {}), [currentPage]: res.rows });
+    });
+  };
+
+  const clearAll = () => {
+    setSelected([]);
+  };
+  const onSelect = (item) => {
+    setSelected((prev) => {
+      if (prev.find((re) => re.id === item.id)) {
+        return prev.filter((record) => record.id !== item.id);
+      }
+      return [...prev, item];
+    });
+  };
+
+  const selectAll = (checked) => {
+    if (checked) {
+      setSelected((source || []).slice(0, 24));
+    } else {
+      setSelected([]);
+    }
+  };
+
+  const totalResult = useMemo(() => {
+    return data?.count || 0;
+  }, [data]);
+
   return {
     selected,
     onSelect,
-    onBuy,
     loadMore,
     source,
     totalResult,
@@ -132,6 +140,7 @@ const useList = () => {
     refresh,
     setFilter,
     filter,
+    selectAll,
   };
 };
 

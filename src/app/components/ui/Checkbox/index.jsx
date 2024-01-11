@@ -9,7 +9,9 @@ const Checkbox = ({ children, className, value, onChange }) => {
         <input
           type="checkbox"
           checked={value}
-          onChange={onChange}
+          onChange={(e) => {
+            onChange?.(e.target.checked);
+          }}
           className="checkbox checkbox-primary"
         />
         <span className="label-text pl-[5px]">{children}</span>

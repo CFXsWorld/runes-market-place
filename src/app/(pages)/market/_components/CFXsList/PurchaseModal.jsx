@@ -1,72 +1,63 @@
 'use client';
 
-import { useWalletStore } from '@/app/store/wallet';
-import useCFXsWallet from '@/app/hooks/useCFXsWallet';
 import Modal from '@/app/components/ui/Modal';
-import { forwardRef } from 'react';
-import { cn } from '@/app/utils/classnames';
-import { FluentIcon, MetamaskIcon } from '@/app/components/icons';
+import { forwardRef, useEffect, useMemo } from 'react';
+import usePromiseLoading from '@/app/hooks/usePromiseLoading';
+import { LoadingIcon } from '@/app/components/icons';
+import useSWRMutation from 'swr/mutation';
+import { formatUnits } from 'ethers';
+import { usdtDecimal } from '@/app/utils';
 
-const WalletProvider = {
-  Ethereum: 'Ethereum',
-  OKX: 'OKX',
-  Fluent: 'Fluent',
-  MetaMask: 'MetaMask',
-};
+const PurchaseModal = forwardRef(
+  ({ purchaseOrder, onBuy, getUSDTBalance }, ref) => {
+    const { trigger, loading } = usePromiseLoading(onBuy);
+    const { data = 0, trigger: getBalance } = useSWRMutation('balance', () =>
+      getUSDTBalance()
+    );
 
-const items = [
-  {
-    name: 'Metamask',
-    icon: <MetamaskIcon />,
-    type: WalletProvider.MetaMask,
-  },
-  {
-    name: 'Fluent',
-    icon: <FluentIcon />,
-    type: WalletProvider.Fluent,
-  },
-];
-const PurchaseModal = forwardRef((_, ref) => {
-  const updateWalletProvider = useWalletStore(
-    (state) => state.updateWalletProvider
-  );
-  const wallets = useCFXsWallet();
-  const connect = async (type) => {
-    const wallet = wallets[type];
-    const { connect } = wallet;
-    try {
-      await connect();
-    } catch (e) {
-    } finally {
-      updateWalletProvider(type);
-      localStorage.setItem('walletProvider', type);
-      ref.current.close();
-    }
-  };
+    useEffect(() => {
+      getBalance();
+    }, [purchaseOrder]);
 
-  return (
-    <Modal outside ref={ref}>
-      <div>
+    const USDTAmount = useMemo(() => {
+      return Math.ceil(formatUnits(data, usdtDecimal));
+    }, [data]);
+    return (
+      <Modal ref={ref}>
         <div className="text-[20px]">Purchase</div>
-        <div className="mt-[42px] flex flex-col">
-          {items.map((item) => (
-            <button
-              key={item.type}
-              onClick={() => connect(item.type)}
-              className={cn(
-                'btn w-full h-[60px] mb-[24px] rounded-[4px] bg-fill-e-primary border-none',
-                'hover:bg-theme hover:opacity-80 text-white hover:btn-primary',
-                'flex-center-between'
-              )}
-            >
-              <span>{item.name}</span>
-              {item.icon}
-            </button>
-          ))}
+        <div className="mt-[24px] flex flex-col">
+          <div className="flex-center-between mb-[12px]">
+            <span className="text-tc-secondary">You will pay</span>
+            <span className="text-white font-medium">
+              {purchaseOrder?.amount || 0} USDT
+            </span>
+          </div>
+          <div className="flex-center-between">
+            <span className="text-tc-secondary">For</span>
+            <span className="text-white font-medium">
+              {purchaseOrder?.count || 0} CFXs
+            </span>
+          </div>
+          <div className="text-tc-secondary text-[14px] mt-[32px] mb-[24px] pt-[12px] border border-transparent border-t-fill-e-primary">
+            You will be asked to approve this purchase from your wallet.
+          </div>
+          <button
+            className="btn btn-primary w-full"
+            disabled={!purchaseOrder || loading}
+            onClick={() => {
+              trigger();
+            }}
+          >
+            {loading ? <LoadingIcon /> : 'BUY'}
+          </button>
+          <div className="flex mt-[12px]">
+            <span>Balance:</span>
+            <span className="text-theme pl-[6px]">{USDTAmount} USDT</span>
+          </div>
         </div>
-      </div>
-    </Modal>
-  );
-});
+      </Modal>
+    );
+  }
+);
 
 export default PurchaseModal;

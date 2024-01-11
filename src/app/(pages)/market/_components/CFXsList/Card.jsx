@@ -15,16 +15,17 @@ import usePromiseLoading from '@/app/hooks/usePromiseLoading';
 const CFXsCard = ({ item, selected, onSelect, onBuy }) => {
   const { trigger, loading } = usePromiseLoading(onBuy);
 
+  const isSelected = selected.find((record) => record.id === item.id);
   return (
     <div
       className={cn(
         'min-w-[200px] max-w-[300px]  max-sm:min-w-[160px]  max-sm:max-w-full flex flex-col cursor-pointer overflow-hidden',
         'bg-fill-secondary h-[276px] max-sm:h-[224px] border-[2px] border-fill-e-secondary',
         'rounded-[8px]',
-        { 'border-theme': selected.includes(item.id) }
+        { 'border-theme': isSelected }
       )}
       onClick={() => {
-        onSelect(item.id);
+        onSelect(item);
       }}
     >
       <div className="p-[16px] max-sm:p-[10px]">

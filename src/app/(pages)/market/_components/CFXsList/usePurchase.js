@@ -4,17 +4,37 @@ import useWallet from '@/app/hooks/useWallet';
 import useEnv from '@/app/hooks/useEnv';
 import { parseUnits } from 'ethers';
 import { toast } from 'react-toastify';
+import useCFXsContract from '@/app/hooks/useCFXsContract';
 
 const usePurchase = ({ selected = [], clearAll }) => {
   const [currentOrder, setCurrentOrder] = useState(null);
   const approveModalRef = useRef();
   const purchaseModalRef = useRef();
   const USDTContract = useUSDTContract();
-  const wallet = useWallet();
+  const { contract: CFXsContract } = useCFXsContract();
+  const { useAccount, browserProvider } = useWallet();
   const { newContractAddress } = useEnv();
-  const [loading, setLoading] = useState(false);
+  const account = useAccount();
 
-  const account = wallet.useAccount();
+  const selectedAmount = useMemo(() => {
+    return selected.reduce((a, b) => a + Number(b.amount), 0).toFixed(4);
+  }, [selected]);
+
+  const purchaseOrder = useMemo(() => {
+    if (currentOrder) {
+      return {
+        count: 1,
+        amount: currentOrder.amount,
+        items: [currentOrder],
+      };
+    }
+
+    return {
+      count: selected.length,
+      amount: selectedAmount,
+      items: selected,
+    };
+  }, [currentOrder, selected]);
 
   const USDTAllowance = async (amount) => {
     try {
@@ -26,58 +46,76 @@ const usePurchase = ({ selected = [], clearAll }) => {
   };
 
   const getUSDTBalance = async () => {
-    return usdtContract.balanceOf(account);
+    return USDTContract.balanceOf(account);
   };
   const handlePurchase = async (item) => {
+    setCurrentOrder(item);
+    const approved = await USDTAllowance(item.amount);
+    if (approved) {
+      purchaseModalRef.current.showModal();
+    } else {
+      approveModalRef.current.showModal();
+    }
+  };
+
+  const onBuy = async () => {
     try {
-      setLoading(true);
-      setCurrentOrder(item);
-      const approved = await USDTAllowance(item.amount);
+      const signer = await browserProvider.getSigner();
+      const contractWithSigner = CFXsContract.connect(signer);
+      const ids = purchaseOrder.items.map((item) => item.id);
+      const tokenTypes = purchaseOrder.items.map((c) => 0);
+      const amounts = purchaseOrder.items.map((c) => parseUnits(c.amount, 18));
+      const tx = await contractWithSigner.UnlockingScriptbatch(
+        ids,
+        tokenTypes,
+        amounts
+      );
+      await tx.wait();
+      toast.success('Purchase success !');
+    } catch (e) {
+      toast.error('Purchase failed !');
+    }
+  };
+
+  const handleMultiPurchase = async () => {
+    setCurrentOrder(null);
+    if (selected.length > 0) {
+      const approved = await USDTAllowance(selectedAmount);
       if (approved) {
         purchaseModalRef.current.showModal();
       } else {
         approveModalRef.current.showModal();
       }
-    } finally {
-      setLoading(false);
+      console.log(selected);
     }
-  };
-
-  const handleMultiPurchase = () => {
-    console.log(selected);
   };
 
   const handleApprove = async (amount) => {
-    const balance = await getUSDTBalance();
-    if (!balance || BigInt(balance) < BigInt(amount)) {
-      toast.error('Insufficient USDT Balance!');
-    }else {
-
+    try {
+      const balance = await getUSDTBalance();
+      if (!balance || BigInt(balance) < BigInt(parseUnits(amount, 18))) {
+        toast.error('Insufficient USDT Balance!');
+      } else {
+        const signer = await browserProvider.getSigner();
+        console.log(signer);
+        const contractWithSigner = USDTContract.connect(signer);
+        // TODO MAX? ui not.
+        const tx = await contractWithSigner.approve(
+          newContractAddress,
+          parseUnits(amount, 18)
+        );
+        await tx.wait();
+        toast.success(`Approved ${amount} USDT success !`);
+        approveModalRef.current.close();
+        purchaseModalRef.current.showModal();
+      }
+    } catch (e) {
+      console.log(e);
+      approveModalRef.current.close();
+      toast.error('Approval failed ！');
     }
   };
 
-  // const amounts = checkedCfxsItems.map((c) => parseUnits(c.amount, 18));
-  // const totalAmount = amounts.reduce((a, b) => BigInt(a) + BigInt(b));
-  // console.log("totalAmount", totalAmount);
-  // setOrderTotalAmount(totalAmount);
-  // if (!value || BigInt(value) < BigInt(totalAmount)) {
-  //   document.getElementById("approveModal").showModal();
-  //   return;
-  // }
-
-  const purchaseOrder = useMemo(() => {
-    if (currentOrder) {
-      return {
-        count: 1,
-        amount: currentOrder.amount,
-      };
-    }
-
-    return {
-      count: selected.length,
-      amount: selected.reduce((a, b) => Number(a.amount) + Number(b.amount), 0),
-    };
-  }, [currentOrder, selected]);
 
   return {
     purchaseOrder,
@@ -85,6 +123,9 @@ const usePurchase = ({ selected = [], clearAll }) => {
     handleApprove,
     approveModalRef,
     purchaseModalRef,
+    onBuy,
+    getUSDTBalance,
+    handleMultiPurchase,
   };
 };
 
