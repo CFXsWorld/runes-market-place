@@ -9,6 +9,7 @@ import {
   MergeIcon,
   TimeIcon,
 } from '@/app/components/icons';
+import { cn } from '@/app/utils/classnames';
 
 const options = [
   { label: 'Price low to high', value: 'ASC', icon: <AscIcon /> },
@@ -19,13 +20,13 @@ const options = [
   { label: 'Only fragments', value: 'FRAGMENT', icon: <FragmentIcon /> },
 ];
 
-const ReorderSelector = ({ value, onChange }) => {
+const ReorderSelector = ({ value, onChange, className }) => {
   return (
     <Selector
       options={options}
       value={value}
       onChange={onChange}
-      className="w-[254px]"
+      className={cn('w-[254px]', className)}
     />
   );
 };

@@ -29,7 +29,7 @@ const Selector = ({ onChange, value, options, className }) => {
         </div>
       )}
     >
-      <div className="menu">
+      <div className="menu z-[999]">
         {options.map((option, index) => (
           <div
             key={index}

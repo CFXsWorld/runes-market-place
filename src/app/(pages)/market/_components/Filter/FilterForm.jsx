@@ -4,8 +4,11 @@ import ReorderSelector from '@/app/(pages)/market/_components/Filter/ReorderSele
 import Input from '@/app/components/ui/Input';
 import Search from '@/app/components/ui/Input/Search';
 import { FilterIcon } from '@/app/components/icons';
+import FilterModal from '@/app/(pages)/market/_components/Filter/FilterModal';
+import { useRef } from 'react';
 
 const FilterForm = ({ formValues, onChange, reload }) => {
+  const filterModalRef = useRef();
   return (
     <div className="flex-center">
       <div className="flex-center max-md:hidden">
@@ -35,10 +38,15 @@ const FilterForm = ({ formValues, onChange, reload }) => {
         />
       </div>
       <Search
-        className="w-full  max-w-[300px] max-md:max-w-[280px]"
+        className="md:max-w-[320px] max-md:max-w-[280px]"
         placeholder="Search by ID or owner address"
       />
-      <FilterIcon className="text-[42px] ml-[12px] cursor-pointer md:hidden" />
+      <FilterIcon
+        className="text-[42px] ml-[12px] cursor-pointer md:hidden"
+        onClick={() => {
+          filterModalRef.current.showModal();
+        }}
+      />
       <button
         className="btn btn-primary rounded-[4px] ml-[16px]"
         onClick={() => {
@@ -47,6 +55,11 @@ const FilterForm = ({ formValues, onChange, reload }) => {
       >
         Apply
       </button>
+      <FilterModal
+        ref={filterModalRef}
+        formValues={formValues}
+        onChange={onChange}
+      />
     </div>
   );
 };
