@@ -26,7 +26,7 @@ const items = [
     type: WalletProvider.Fluent,
   },
 ];
-const ConnectModal = forwardRef((_, ref) => {
+const PurchaseModal = forwardRef((_, ref) => {
   const updateWalletProvider = useWalletStore(
     (state) => state.updateWalletProvider
   );
@@ -47,7 +47,7 @@ const ConnectModal = forwardRef((_, ref) => {
   return (
     <Modal outside ref={ref}>
       <div>
-        <div className="text-[20px]">Connect a wallet</div>
+        <div className="text-[20px]">Purchase</div>
         <div className="mt-[42px] flex flex-col">
           {items.map((item) => (
             <button
@@ -69,4 +69,4 @@ const ConnectModal = forwardRef((_, ref) => {
   );
 });
 
-export default ConnectModal;
+export default PurchaseModal;

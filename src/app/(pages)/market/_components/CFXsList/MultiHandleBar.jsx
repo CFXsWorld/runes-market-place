@@ -27,7 +27,7 @@ const Sweep = ({ selected }) => {
 
 const SelectedCount = ({ selected }) => {
   return (
-    <span className="text-tc-secondary max-md:text-[12px]">
+    <span className="text-tc-secondary max-md:text-[12px] min-w-[50px]">
       {selected.length} Item
     </span>
   );

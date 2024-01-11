@@ -1,7 +1,7 @@
-import useOKX from '@/app/components/Wallet/useOKX';
-import useEthereum from '@/app/components/Wallet/useEthereum';
-import useFluent from '@/app/components/Wallet/useFluent';
-import useMetaMask from '@/app/components/Wallet/useMetaMask';
+import useOKX from '@/app/hooks/useOKX';
+import useEthereum from '@/app/hooks/useEthereum';
+import useFluent from '@/app/hooks/useFluent';
+import useMetaMask from '@/app/hooks/useMetaMask';
 
 const WalletProvider = {
   Ethereum: 'Ethereum',

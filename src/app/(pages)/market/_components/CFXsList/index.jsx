@@ -6,6 +6,10 @@ import useList from './useList';
 import MultiHandleBar from '@/app/(pages)/market/_components/CFXsList/MultiHandleBar';
 import LoadMore from '@/app/components/LoadMore';
 import Filter from '@/app/(pages)/market/_components/Filter';
+import ApproveModal from '@/app/(pages)/market/_components/CFXsList/ApproveModal';
+import PurchaseModal from '@/app/(pages)/market/_components/CFXsList/PurchaseModal';
+import usePurchase from '@/app/(pages)/market/_components/CFXsList/usePurchase';
+import purchaseModal from '@/app/(pages)/market/_components/CFXsList/PurchaseModal';
 
 export default function CFXsList() {
   const {
@@ -16,12 +20,20 @@ export default function CFXsList() {
     selected,
     clearAll,
     onSelect,
-    onBuy,
     totalResult,
     refresh,
     filter,
     setFilter,
   } = useList();
+
+  const {
+    approveModalRef,
+    purchaseOrder,
+    purchaseModalRef,
+    handleApprove,
+    handlePurchase,
+  } = usePurchase({ selected, clearAll });
+
   return (
     <div>
       <Filter
@@ -44,7 +56,7 @@ export default function CFXsList() {
               item={item}
               onSelect={onSelect}
               selected={selected}
-              onBuy={onBuy}
+              onBuy={handlePurchase}
             />
           ))}
         </div>
@@ -58,6 +70,12 @@ export default function CFXsList() {
         </Waypoint>
         <MultiHandleBar selected={selected} clearAll={clearAll} />
       </div>
+      <ApproveModal
+        ref={approveModalRef}
+        purchaseOrder={purchaseOrder}
+        handleApprove={handleApprove}
+      />
+      <PurchaseModal ref={purchaseModalRef} purchaseOrder={purchaseOrder} />
     </div>
   );
 }

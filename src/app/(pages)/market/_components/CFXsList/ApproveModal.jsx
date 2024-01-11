@@ -26,7 +26,7 @@ const items = [
     type: WalletProvider.Fluent,
   },
 ];
-const ConnectModal = forwardRef((_, ref) => {
+const ApproveModal = forwardRef(({ purchaseOrder }, ref) => {
   const updateWalletProvider = useWalletStore(
     (state) => state.updateWalletProvider
   );
@@ -46,27 +46,29 @@ const ConnectModal = forwardRef((_, ref) => {
 
   return (
     <Modal outside ref={ref}>
-      <div>
-        <div className="text-[20px]">Connect a wallet</div>
-        <div className="mt-[42px] flex flex-col">
-          {items.map((item) => (
-            <button
-              key={item.type}
-              onClick={() => connect(item.type)}
-              className={cn(
-                'btn w-full h-[60px] mb-[24px] rounded-[4px] bg-fill-e-primary border-none',
-                'hover:bg-theme hover:opacity-80 text-white hover:btn-primary',
-                'flex-center-between'
-              )}
-            >
-              <span>{item.name}</span>
-              {item.icon}
-            </button>
-          ))}
+      <div className="text-[20px]">Approve Purchase</div>
+      <div className="mt-[24px] flex flex-col">
+        <div className="flex-center-between mb-[12px]">
+          <span className="text-tc-secondary">You will pay</span>
+          <span className="text-white font-medium">
+            {purchaseOrder?.amount || 0} USDT
+          </span>
         </div>
+        <div className="flex-center-between">
+          <span className="text-tc-secondary">For</span>
+          <span className="text-white font-medium">
+            {purchaseOrder?.count || 0} CFXs
+          </span>
+        </div>
+        <div className="text-tc-secondary text-[14px] mt-[32px] mb-[24px] pt-[12px] border border-transparent border-t-fill-e-primary">
+          You will be asked to approve this purchase from your wallet.
+        </div>
+        <button className="btn btn-primary w-full" disabled={!purchaseOrder}>
+          APPROVE
+        </button>
       </div>
     </Modal>
   );
 });
 
-export default ConnectModal;
+export default ApproveModal;

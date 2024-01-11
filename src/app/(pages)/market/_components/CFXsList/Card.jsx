@@ -6,11 +6,15 @@ import {
   FragmentIcon,
   TimeIcon,
   UsdtIcon,
+  LoadingIcon,
 } from '@/app/components/icons';
 import { addressFormat } from '@/app/utils';
 import dayjs from 'dayjs';
+import usePromiseLoading from '@/app/hooks/usePromiseLoading';
 
 const CFXsCard = ({ item, selected, onSelect, onBuy }) => {
+  const { trigger, loading } = usePromiseLoading(onBuy);
+
   return (
     <div
       className={cn(
@@ -71,11 +75,13 @@ const CFXsCard = ({ item, selected, onSelect, onBuy }) => {
           </span>
           <button
             className="max-sm:text-[12px] btn btn-outline btn-primary max-sm:h-[26px] max-sm:min-h-[26px] h-[30px] min-h-[30px] px-[8px] text-[14px] font-normal"
-            onClick={() => {
-              onBuy(item);
+            disabled={loading}
+            onClick={(e) => {
+              e.stopPropagation();
+              trigger(item);
             }}
           >
-            Buy Now
+            {loading ? <LoadingIcon /> : '   Buy Now'}
           </button>
         </div>
       </div>
