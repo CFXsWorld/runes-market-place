@@ -86,7 +86,6 @@ const usePurchase = ({ selected = [], clearAll }) => {
       } else {
         approveModalRef.current.showModal();
       }
-      console.log(selected);
     }
   };
 
@@ -97,7 +96,6 @@ const usePurchase = ({ selected = [], clearAll }) => {
         toast.error('Insufficient USDT Balance!');
       } else {
         const signer = await browserProvider.getSigner();
-        console.log(signer);
         const contractWithSigner = USDTContract.connect(signer);
         // TODO MAX? ui not.
         const tx = await contractWithSigner.approve(

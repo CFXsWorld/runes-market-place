@@ -16,22 +16,15 @@ const Filter = ({ total, reload, filter, setFilter }) => {
           <ListIcon />
           <span className="font-bold pl-[12px]">Listings</span>
         </div>
-        <Refresh className="md:hidden" total={total} reload={reload} />
+        <Refresh total={total} reload={reload} />
       </div>
 
       <div className="text-tc-secondary flex items-center justify-between ">
-        <div className="flex-center max-md:hidden">
-          <Refresh total={total} reload={reload} />
-          <FilterForm onChange={onFilterChange} formValues={formValues} reload={reload}/>
-        </div>
-        <div className="flex items-center justify-end flex-1">
-          <Search
-            className="w-full  max-w-[300px] max-md:max-w-[280px]"
-            placeholder="Search by ID or owner address"
-
-          />
-          <FilterIcon className="text-[42px] ml-[12px] cursor-pointer md:hidden" />
-        </div>
+        <FilterForm
+          onChange={onFilterChange}
+          formValues={formValues}
+          reload={reload}
+        />
       </div>
     </div>
   );
