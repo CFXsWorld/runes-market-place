@@ -1,6 +1,10 @@
 import useMounted from '@/app/hooks/useMounted';
 import useResponsive from '@/app/hooks/useResponsive';
 import { formatNumber, formatNumberWithCommas } from '@/app/utils';
+import useSWRMutation from 'swr/mutation';
+import { APIs } from '@/app/services/request';
+import { getMarketStatistics } from '@/app/services';
+import { useEffect } from 'react';
 const items = [
   {
     label: 'Floor',
@@ -71,12 +75,24 @@ const data = {
 };
 const usePriceList = () => {
   const mounted = useMounted();
+  const { isMutating, trigger: getStatistics } = useSWRMutation(
+    APIs.MARKET_STATISTICS,
+    getMarketStatistics,
+    {
+      onSuccess: (res) => {
+        console.log(res);
+      },
+    }
+  );
   const { count, isPC } = useResponsive(
     { min: 100, max: 140, gap: 8 },
     mounted && typeof document !== 'undefined'
       ? document.querySelector('#price-list-sentinel')
       : null
   );
+  useEffect(() => {
+    getStatistics();
+  }, []);
 
   const layoutStyle = {
     display: 'grid',

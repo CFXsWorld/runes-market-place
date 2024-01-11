@@ -56,9 +56,7 @@ export default function CFXsList() {
             <LoadMore loading={isMutating} data={source} />
           </div>
         </Waypoint>
-        {selected.length > 0 && (
-          <MultiHandleBar selected={selected} clearAll={clearAll} />
-        )}
+        <MultiHandleBar selected={selected} clearAll={clearAll} />
       </div>
     </div>
   );

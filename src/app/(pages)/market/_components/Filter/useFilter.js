@@ -3,17 +3,13 @@ import { useMemo, useState } from 'react';
 const useFilter = ({ filter, setFilter }) => {
   const formValues = useMemo(() => {
     return {
-      ao: filter.ao === 0 ? 'ASC' : 'DESC',
+      orderType: filter.orderType,
       amountRangeStart: filter.amountRangeStart,
       amountRangeEnd: filter.amountRangeEnd,
     };
   }, [filter]);
   const onFilterChange = (form) => {
-    if (form.ao) {
-      setFilter({ ...filter, ao: form.ao === 'ASC' ? 0 : 1 });
-    } else {
-      setFilter({ ...filter, ...form });
-    }
+    setFilter({ ...filter, ...form });
   };
 
   return { onFilterChange, formValues };

@@ -7,9 +7,9 @@ const FilterForm = ({ formValues, onChange, reload }) => {
   return (
     <div className="flex-center">
       <ReorderSelector
-        value={formValues.ao}
-        onChange={(ao) => {
-          onChange({ ao });
+        value={formValues.orderType}
+        onChange={(orderType) => {
+          onChange({ orderType });
         }}
       />
       <Input

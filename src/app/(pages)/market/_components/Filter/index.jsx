@@ -28,6 +28,7 @@ const Filter = ({ total, reload, filter, setFilter }) => {
           <Search
             className="w-full  max-w-[300px] max-md:max-w-[280px]"
             placeholder="Search by ID or owner address"
+
           />
           <FilterIcon className="text-[42px] ml-[12px] cursor-pointer md:hidden" />
         </div>

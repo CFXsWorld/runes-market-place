@@ -1,6 +1,7 @@
 'use client';
 
 import { cn } from '@/app/utils/classnames';
+import Checkbox from '@/app/components/ui/Checkbox';
 
 const Total = () => {
   return (
@@ -11,10 +12,15 @@ const Total = () => {
   );
 };
 
-const Sweep = () => {
+const Sweep = ({ selected }) => {
   return (
     <div className="flex-center">
-      <button className="btn btn-primary px-[24px]">SWEEP</button>
+      <button
+        className="btn btn-primary px-[24px]"
+        disabled={selected.length === 0}
+      >
+        SWEEP
+      </button>
     </div>
   );
 };
@@ -29,9 +35,9 @@ const SelectedCount = ({ selected }) => {
 
 const CheckBox = () => {
   return (
-    <span className="md:mx-[32px] text-tc-secondary max-md:text-[12px] max-md:mr-[16px]">
+    <Checkbox className="md:mx-[32px] text-tc-secondary max-md:text-[12px] max-md:mr-[16px]">
       Select All
-    </span>
+    </Checkbox>
   );
 };
 
@@ -52,7 +58,7 @@ const MultiHandleBar = ({ selected = [], clearAll }) => {
           </div>
           <Total />
         </div>
-        <Sweep />
+        <Sweep selected={selected} />
       </div>
       <div className="md:max-w-[1368px] w-full flex-center-between max-md:hidden">
         <div className="flex-center text-tc-secondary">
@@ -64,7 +70,7 @@ const MultiHandleBar = ({ selected = [], clearAll }) => {
         </div>
         <div className="flex-center">
           <Total />
-          <Sweep />
+          <Sweep selected={selected} />
         </div>
       </div>
     </div>

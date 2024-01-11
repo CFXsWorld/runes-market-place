@@ -5,7 +5,7 @@ import useSWRMutation from 'swr/mutation';
 import { APIs } from '@/app/services/request';
 import { getMarketCFXsList } from '@/app/services';
 import { pageItemCount } from '@/app/utils';
-import { uniqBy } from 'lodash';
+import { omit, uniqBy } from 'lodash';
 
 const useList = () => {
   const [selected, setSelected] = useState([]);
@@ -25,8 +25,47 @@ const useList = () => {
     ao: 0,
     amountRangeStart: undefined,
     amountRangeEnd: undefined,
-    min: undefined,
+    min: 0,
+    recently: 0,
+    merged: 0,
+    orderType: 'ASC',
+    id:undefined,
+
   });
+
+  const transformedFilter = useMemo(() => {
+    const order = {
+      recently: 0,
+      merged: 0,
+      ao: 0,
+    };
+    if (filter.orderType) {
+      if (filter.orderType === 'ASC') {
+        order.ao = 0;
+      }
+      if (filter.orderType === 'DESC') {
+        order.ao = 1;
+      }
+
+      if (filter.orderType === 'RECENTLY') {
+        order.recently = 1;
+      }
+
+      if (filter.orderType === 'ENDING') {
+        order.recently = 2;
+      }
+
+      if (filter.orderType === 'MERGED') {
+        order.merged = 2;
+      }
+
+      if (filter.orderType === 'FRAGMENT') {
+        order.merged = 1;
+      }
+    }
+
+    return { ...omit(filter, 'orderType'), ...order };
+  }, [filter]);
 
   const {
     data,
@@ -37,13 +76,13 @@ const useList = () => {
   const refresh = (filterData = {}) => {
     setDataSource(null);
     setCurrentPage(0);
-    getData({ ...filter, ...filterData, startIndex: 0 }).then((res) => {
+    getData({ ...transformedFilter, ...filterData, startIndex: 0 }).then((res) => {
       setDataSource({ [0]: res.rows });
     });
   };
 
   const loadMore = async () => {
-    getData({ ...filter, startIndex: currentPage * pageItemCount }).then(
+    getData({ ...transformedFilter, startIndex: currentPage * pageItemCount }).then(
       (res) => {
         setCurrentPage(currentPage + 1);
         setDataSource({ ...(dataSource || {}), [currentPage]: res.rows });
