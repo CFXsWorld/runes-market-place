@@ -5,6 +5,7 @@ import Search from '@/app/components/ui/Input/Search';
 import Selector from '@/app/components/ui/Selector';
 import { useState } from 'react';
 import Refresh from './Refresh';
+import { Button } from "flowbite-react";
 
 const options = [
   { label: 'All', value: 0, icon: null },
@@ -32,14 +33,15 @@ const Filter = ({ total, reload }) => {
           className="w-[300px] max-md:w-full max-md:flex-1 max-md:max-w-[280px]"
           placeholder="Search by ID"
         />
-        <button
+        <Button
+          color='primary'
           className="btn btn-primary rounded-[4px] ml-[16px]"
           onClick={() => {
             reload();
           }}
         >
           Apply
-        </button>
+        </Button>
       </div>
       <div className=" w-full flex items-center mt-[16px]">
         <Refresh total={total} reload={reload}/>

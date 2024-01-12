@@ -25,6 +25,7 @@ export default function CFXsList() {
     filter,
     setFilter,
     selectAll,
+    noMore,
   } = useList();
 
   const {
@@ -71,7 +72,7 @@ export default function CFXsList() {
           onEnter={loadMore}
         >
           <div className="w-full">
-            <LoadMore loading={isMutating} data={source} />
+            <LoadMore loading={isMutating} data={source} noMore={noMore} />
           </div>
         </Waypoint>
         <MultiHandleBar

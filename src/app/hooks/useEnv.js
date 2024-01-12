@@ -10,6 +10,8 @@ const useEnv = () => {
     bridgeContractAddress: process.env.NEXT_PUBLIC_BridgeContractAddress,
     multiCallContractAddress: process.env.NEXT_PUBLIC_MultiCallContractAddress,
     USDTContractAddress: process.env.NEXT_PUBLIC_USDTContractAddress,
+    eSpaceExplor: process.env.NEXT_PUBLIC_ESpaceExplor,
+
   };
 };
 

@@ -11,6 +11,7 @@ const useList = () => {
   const [selected, setSelected] = useState([]);
   const [dataSource, setDataSource] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
+  const [noMore, setNoMore] = useState(false);
   const mounted = useMounted();
   const { count } = useResponsive(
     { min: 200, max: 300, gap: 24, H5Min: 160 },
@@ -96,6 +97,7 @@ const useList = () => {
   }, [dataSource]);
 
   const refresh = () => {
+    setNoMore(false);
     setDataSource(null);
     setCurrentPage(0);
     getData({ ...transformedFilter, startIndex: 0 }).then((res) => {
@@ -108,8 +110,12 @@ const useList = () => {
       ...transformedFilter,
       startIndex: currentPage * pageItemCount,
     }).then((res) => {
-      setCurrentPage(currentPage + 1);
-      setDataSource({ ...(dataSource || {}), [currentPage]: res.rows });
+      if (res.rows && res.rows.length === 0 && currentPage > 0) {
+        setNoMore(true);
+      } else {
+        setCurrentPage(currentPage + 1);
+        setDataSource({ ...(dataSource || {}), [currentPage]: res.rows });
+      }
     });
   };
 
@@ -150,6 +156,7 @@ const useList = () => {
     setFilter,
     filter,
     selectAll,
+    noMore
   };
 };
 
