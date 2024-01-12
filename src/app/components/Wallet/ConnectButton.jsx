@@ -108,7 +108,7 @@ const WalletButton = ({
       <Button
         onClick={onClick}
         color={isActive ? 'secondary' : 'primary'}
-        className="flex-center"
+        className="flex-center max-md:hidden"
       >
         {isActive ? <ActiveIcon /> : <WalletIcon className="text-[20px]" />}
 
