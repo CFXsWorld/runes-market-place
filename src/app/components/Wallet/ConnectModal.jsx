@@ -46,7 +46,7 @@ const ConnectModal = forwardRef(({ open, onOpen }, ref) => {
   };
 
   return (
-    <Modal show={open} onClose={() => onOpen(false)} ref={ref} position='center'>
+    <Modal show={open} onClose={() => onOpen(false)} ref={ref} dismissible>
       <Modal.Header>Connect a wallet</Modal.Header>
       <Modal.Body>
         <div className="mt-6  px-6 flex flex-col">

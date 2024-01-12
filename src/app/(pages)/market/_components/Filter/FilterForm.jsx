@@ -5,10 +5,11 @@ import Input from '@/app/components/ui/Input';
 import Search from '@/app/components/ui/Input/Search';
 import { FilterIcon } from '@/app/components/icons';
 import FilterModal from '@/app/(pages)/market/_components/Filter/FilterModal';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import { Button } from 'flowbite-react';
 
 const FilterForm = ({ formValues, onChange, reload }) => {
-  const filterModalRef = useRef();
+  const [open, onOpen] = useState(false);
   return (
     <div className="flex-center">
       <div className="flex-center max-md:hidden">
@@ -44,21 +45,24 @@ const FilterForm = ({ formValues, onChange, reload }) => {
       <FilterIcon
         className="text-[42px] ml-[12px] cursor-pointer md:hidden"
         onClick={() => {
-          filterModalRef.current.showModal();
+          onOpen(true);
         }}
       />
-      <button
-        className="btn btn-primary rounded-[4px] ml-[16px]"
+      <Button
+        color="primary"
+        className="rounded-[4px] ml-[16px]"
         onClick={() => {
           reload();
         }}
       >
         Apply
-      </button>
+      </Button>
       <FilterModal
-        ref={filterModalRef}
+        open={open}
+        onOpen={onOpen}
         formValues={formValues}
         onChange={onChange}
+        reload={reload}
       />
     </div>
   );

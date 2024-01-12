@@ -1,61 +1,67 @@
 'use client';
 
-import Modal from '@/app/components/ui/Modal';
+import { Button, Modal } from 'flowbite-react';
 import { forwardRef } from 'react';
 import ReorderSelector from '@/app/(pages)/market/_components/Filter/ReorderSelector';
 import Input from '@/app/components/ui/Input';
 
-const FilterModal = forwardRef(({ onChange, formValues }, ref) => {
-  return (
-    <Modal ref={ref} className='h-auto'>
-      <div className="text-[20px]">Filter</div>
-      <div className="mt-[24px] flex flex-col gap-[20px]">
-        <ReorderSelector
-          className='w-full'
-          value={formValues.orderType}
-          onChange={(orderType) => {
-            onChange({ orderType });
-          }}
-        />
-        <Input
-          className="w-full"
-          placeholder="Min Price"
-          type="number"
-          value={formValues.amountRangeStart}
-          onChange={(amountRangeStart) => {
-            onChange({ amountRangeStart });
-          }}
-        />
-        <Input
-          className="w-full"
-          placeholder="Max Price"
-          type="number"
-          value={formValues.amountRangeEnd}
-          onChange={(amountRangeEnd) => {
-            onChange({ amountRangeEnd });
-          }}
-        />
-        <div className="flex gap-[16px]">
-          <button
-            className="btn  btn-outline flex-1"
-            onClick={() => {
-              // trigger(purchaseOrder.amount);
-            }}
-          >
-            Cancel
-          </button>
-          <button
-            className="btn btn-primary flex-1"
-            onClick={() => {
-              // trigger(purchaseOrder.amount);
-            }}
-          >
-            Confirm
-          </button>
-        </div>
-      </div>
-    </Modal>
-  );
-});
+const FilterModal = forwardRef(
+  ({ open, onOpen, onChange, formValues, reload }, ref) => {
+    return (
+      <Modal show={open} onClose={() => onOpen(false)} dismissible>
+        <Modal.Header>Filter</Modal.Header>
+        <Modal.Body>
+          <div className="flex flex-col gap-[20px] p-6">
+            <ReorderSelector
+              value={formValues.orderType}
+              onChange={(orderType) => {
+                onChange({ orderType });
+              }}
+            />
+            <Input
+              className="w-full"
+              placeholder="Min Price"
+              type="number"
+              value={formValues.amountRangeStart}
+              onChange={(amountRangeStart) => {
+                onChange({ amountRangeStart });
+              }}
+            />
+            <Input
+              className="w-full"
+              placeholder="Max Price"
+              type="number"
+              value={formValues.amountRangeEnd}
+              onChange={(amountRangeEnd) => {
+                onChange({ amountRangeEnd });
+              }}
+            />
+            <div className="flex gap-[16px]">
+              <Button
+                color="outline"
+                className="flex-1"
+                onClick={() => {
+                  onOpen(false);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                color="primary"
+                className="flex-1"
+                onClick={() => {
+                  reload();
+                  onOpen(false);
+                }}
+              >
+                Apply
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
+    );
+  }
+);
 
 export default FilterModal;

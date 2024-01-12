@@ -1,13 +1,13 @@
 export default {
   button: {
-    base: 'outline-none border border-transparent  ',
+    base: 'outline-none border border-transparent flex-center',
     color: {
       primary:
         'bg-theme text-black hover:opacity-95 focus:outline-none h-[48px] ',
       outline: 'broder border-theme rounded-[4px] hover:bg-theme h-[48px]',
       secondary:
         'text-theme bg-fill-e-secondary focus:outline-none  hover:opacity-95 h-[48px]',
-      outlineGray:'broder border-fill-e-primary text-tc-secondary h-[48px]',
+      outlineGray:'broder bg-transparent border-fill-separator text-tc-secondary h-[48px]',
     },
     pill: {
       off: 'rounded-[4px]',
@@ -78,9 +78,9 @@ export default {
       style: {
         dark: 'bg-gray-900 text-white dark:bg-gray-700 ',
         light: 'border border-gray-200 bg-white text-gray-900 ',
-        auto: 'border border-fill-e-primary rounded-[4px] bg-fill-e-secondary',
+        auto: 'border border-fill-separator rounded-[4px] bg-fill-e-secondary',
       },
-      target: 'w-fit',
+      target: 'w-fit  w-full',
     },
     inlineWrapper: 'flex items-center',
   },

@@ -12,7 +12,7 @@ const Selector = ({ onChange, value, options, className }) => {
       label={
         <div
           className={cn(
-            'font-medium text-[16px]',
+            'font-medium text-[16px] w-full',
             'flex items-center justify-between',
             className
           )}

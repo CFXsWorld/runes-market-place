@@ -9,7 +9,7 @@ const Input = forwardRef(
         {...props}
         type={type}
         className={cn(
-          `flex w-full h-[48px] rounded-[4px] px-2 py-2   border  border-fill-e-primary bg-transparent
+          `flex w-full h-[48px] rounded-[4px] px-2 py-2   border border-fill-separator  bg-transparent
       focus:outline-none focus:ring-theme focus:ring-1  focus:border-theme focus:border-[1px]
       disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
       invalid:border-red-500 invalid:text-red-600
