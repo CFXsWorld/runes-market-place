@@ -19,11 +19,16 @@ const ListingModal = forwardRef(
         <Modal.Body>
           <div className="px-6 pb-3 flex flex-col">
             <div className="flex flex-col gap-[8px]">
-              <Label
-                htmlFor="price"
-                value="Set a price"
-                className="text-tc-secondary"
-              />
+              <div className="flex justify-between">
+                <Label
+                  htmlFor="price"
+                  value="Set a price"
+                  className="text-tc-secondary"
+                />
+                <span className="text-tc-secondary text-[12px]">
+                  Floor: 0.087
+                </span>
+              </div>
               <TextInput
                 id="price"
                 type="text"
@@ -65,12 +70,18 @@ const ListingModal = forwardRef(
                 }}
               />
             </div>
+            <div className="flex-center-between mt-[10px]">
+              <span className="text-tc-secondary">Locked</span>
+              <span className="text-theme font-medium">48 h</span>
+            </div>
             <div className="flex-center-between mt-[24px]">
               <span className="text-tc-secondary">Market fee</span>
               <span className="text-white font-medium">3%</span>
             </div>
             <div className="flex-center-between mt-[10px]">
-              <span className="text-tc-secondary">Total potential earnings</span>
+              <span className="text-tc-secondary">
+                Total potential earnings
+              </span>
               <span className="text-white font-medium">1164.95 USDT</span>
             </div>
             <Button
