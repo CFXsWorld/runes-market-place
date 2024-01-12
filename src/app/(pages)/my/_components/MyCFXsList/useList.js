@@ -11,6 +11,7 @@ import { getAddress } from 'ethers';
 import useHandleModal from '@/app/(pages)/my/_components/MyCFXsList/useHandleModal';
 
 const useList = () => {
+  const [listingOrder, setListingOrder] = useState(null);
   const [selected, setSelected] = useState([]);
   const [dataSource, setDataSource] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
@@ -95,8 +96,9 @@ const useList = () => {
     }
     return null;
   }, [dataSource]);
-  const handleListing = () => {
+  const handleListing = (item) => {
     onOpenListing(true);
+    setListingOrder(item);
   };
   const clearAll = () => {
     setSelected([]);
@@ -128,6 +130,7 @@ const useList = () => {
     onOpenMerge,
     onOpenSplit,
     onOpenTransfer,
+    listingOrder,
   };
 };
 

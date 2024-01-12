@@ -6,13 +6,23 @@ import usePromiseLoading from '@/app/hooks/usePromiseLoading';
 import { LoadingIcon, UsdtIcon } from '@/app/components/icons';
 import { formatNumberWithCommas } from '@/app/utils';
 import useListing from '@/app/(pages)/my/_components/MyCFXsList/listing/useListing';
-import dayjs from 'dayjs';
 
 const ListingModal = forwardRef(
-  ({ purchaseOrder, onBuy, onOpen, open }, ref) => {
-    const { trigger, loading } = usePromiseLoading(onBuy);
-    const { price, setPrice, duration, setDuration, dateFormate } =
-      useListing();
+  ({ reload, listingOrder, onOpen, open }, ref) => {
+    const {
+      price,
+      setPrice,
+      duration,
+      setDuration,
+      durationHours,
+      dateFormate,
+      isValid,
+      listing,
+      calcEarning,
+    } = useListing({ listingOrder, reload, onOpen });
+
+    const { trigger, loading } = usePromiseLoading(listing);
+
     return (
       <Modal show={open} onClose={() => onOpen(false)}>
         <Modal.Header>Quick List</Modal.Header>
@@ -48,10 +58,9 @@ const ListingModal = forwardRef(
               />
             </div>
             <div className="flex-center-between mt-[10px]">
-              <span className="text-tc-secondary">#{purchaseOrder?.id}</span>
+              <span className="text-tc-secondary">#{listingOrder?.id}</span>
               <span className="text-theme font-medium">
-                {/*{purchaseOrder?.a || 0}*/}
-                {formatNumberWithCommas(1000)}
+                {formatNumberWithCommas(price || 0)}
               </span>
             </div>
             <div className="flex flex-col gap-[8px] mt-[24px]">
@@ -72,7 +81,7 @@ const ListingModal = forwardRef(
             </div>
             <div className="flex-center-between mt-[10px]">
               <span className="text-tc-secondary">Locked</span>
-              <span className="text-theme font-medium">48 h</span>
+              <span className="text-theme font-medium">{durationHours} h</span>
             </div>
             <div className="flex-center-between mt-[24px]">
               <span className="text-tc-secondary">Market fee</span>
@@ -82,12 +91,14 @@ const ListingModal = forwardRef(
               <span className="text-tc-secondary">
                 Total potential earnings
               </span>
-              <span className="text-white font-medium">1164.95 USDT</span>
+              <span className="text-white font-medium">
+                {formatNumberWithCommas(calcEarning)} USDT
+              </span>
             </div>
             <Button
               color="primary"
               className="btn btn-primary w-full mt-[24px]"
-              disabled={!purchaseOrder || loading}
+              disabled={!listingOrder || loading || !isValid}
               onClick={() => {
                 trigger();
               }}

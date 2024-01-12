@@ -28,12 +28,18 @@ export default function MyCFXsList() {
     onOpenMerge,
     onOpenSplit,
     onOpenTransfer,
+    listingOrder,
   } = useList();
-
 
   return (
     <div>
-      <ListingModal open={openListing} onOpen={onOpenListing} />
+      <ListingModal
+        open={openListing}
+        onOpen={onOpenListing}
+        key={listingOrder?.id}
+        listingOrder={listingOrder}
+        reload={refresh}
+      />
       <Filter total={source?.length || 0} reload={refresh} />
       <div className="w-full pt-[32px] pb-[96px]">
         <div id="my-cfxs-sentinel" className="w-full" />
