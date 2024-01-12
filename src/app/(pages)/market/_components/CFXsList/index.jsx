@@ -24,18 +24,20 @@ export default function CFXsList() {
     refresh,
     filter,
     setFilter,
-    selectAll
+    selectAll,
   } = useList();
 
   const {
-    approveModalRef,
     purchaseOrder,
-    purchaseModalRef,
     handleApprove,
     handlePurchase,
     onBuy,
     getUSDTBalance,
     handleMultiPurchase,
+    approveOpen,
+    onApproveOpen,
+    purchaseOpen,
+    onPurchaseOpen,
   } = usePurchase({ selected, clearAll, refresh });
 
   return (
@@ -72,15 +74,22 @@ export default function CFXsList() {
             <LoadMore loading={isMutating} data={source} />
           </div>
         </Waypoint>
-        <MultiHandleBar selected={selected} clearAll={clearAll} selectAll={selectAll} handleMultiPurchase={handleMultiPurchase}/>
+        <MultiHandleBar
+          selected={selected}
+          clearAll={clearAll}
+          selectAll={selectAll}
+          handleMultiPurchase={handleMultiPurchase}
+        />
       </div>
       <ApproveModal
-        ref={approveModalRef}
+        open={approveOpen}
+        onOpen={onApproveOpen}
         purchaseOrder={purchaseOrder}
         handleApprove={handleApprove}
       />
       <PurchaseModal
-        ref={purchaseModalRef}
+        open={purchaseOpen}
+        onOpen={onPurchaseOpen}
         purchaseOrder={purchaseOrder}
         getUSDTBalance={getUSDTBalance}
         onBuy={onBuy}

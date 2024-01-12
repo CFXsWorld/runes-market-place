@@ -5,6 +5,7 @@ import Checkbox from '@/app/components/ui/Checkbox';
 import { useMemo } from 'react';
 import usePromiseLoading from '@/app/hooks/usePromiseLoading';
 import { LoadingIcon } from '@/app/components/icons';
+import { Button } from 'flowbite-react';
 
 const Total = ({ total }) => {
   return (
@@ -19,13 +20,14 @@ const Sweep = ({ selected, handleMultiPurchase }) => {
   const { trigger, loading } = usePromiseLoading(handleMultiPurchase);
   return (
     <div className="flex-center">
-      <button
-        className="btn btn-primary px-[24px]"
+      <Button
+        color="primary"
+        className="px-[24px]"
         disabled={selected.length === 0 || loading}
         onClick={() => trigger()}
       >
         {loading ? <LoadingIcon /> : 'SWEEP'}
-      </button>
+      </Button>
     </div>
   );
 };

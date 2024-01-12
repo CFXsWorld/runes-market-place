@@ -8,8 +8,10 @@ import useCFXsContract from '@/app/hooks/useCFXsContract';
 
 const usePurchase = ({ selected = [], clearAll }) => {
   const [currentOrder, setCurrentOrder] = useState(null);
-  const approveModalRef = useRef();
-  const purchaseModalRef = useRef();
+
+  const [approveOpen, onApproveOpen] = useState(false);
+  const [purchaseOpen, onPurchaseOpen] = useState(false);
+
   const USDTContract = useUSDTContract();
   const { contract: CFXsContract } = useCFXsContract();
   const { useAccount, browserProvider } = useWallet();
@@ -52,9 +54,9 @@ const usePurchase = ({ selected = [], clearAll }) => {
     setCurrentOrder(item);
     const approved = await USDTAllowance(item.amount);
     if (approved) {
-      purchaseModalRef.current.showModal();
+      onPurchaseOpen(true)
     } else {
-      approveModalRef.current.showModal();
+      onApproveOpen(true)
     }
   };
 
@@ -82,9 +84,9 @@ const usePurchase = ({ selected = [], clearAll }) => {
     if (selected.length > 0) {
       const approved = await USDTAllowance(selectedAmount);
       if (approved) {
-        purchaseModalRef.current.showModal();
+        onPurchaseOpen(true)
       } else {
-        approveModalRef.current.showModal();
+        onApproveOpen(true)
       }
     }
   };
@@ -104,23 +106,24 @@ const usePurchase = ({ selected = [], clearAll }) => {
         );
         await tx.wait();
         toast.success(`Approved ${amount} USDT success !`);
-        approveModalRef.current.close();
-        purchaseModalRef.current.showModal();
+        onApproveOpen(false)
+        onPurchaseOpen(true)
       }
     } catch (e) {
       console.log(e);
-      approveModalRef.current.close();
+      onApproveOpen(false)
       toast.error('Approval failed ！');
     }
   };
-
 
   return {
     purchaseOrder,
     handlePurchase,
     handleApprove,
-    approveModalRef,
-    purchaseModalRef,
+    approveOpen,
+    onApproveOpen,
+    purchaseOpen,
+    onPurchaseOpen,
     onBuy,
     getUSDTBalance,
     handleMultiPurchase,
