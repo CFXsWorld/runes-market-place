@@ -2,8 +2,9 @@
 
 import { cn } from '@/app/utils/classnames';
 import { MergeIcon, FragmentIcon, SplitIcon } from '@/app/components/icons';
+import { Button } from 'flowbite-react';
 
-const CFXsCard = ({ item, selected, onSelect, onBuy }) => {
+const CFXsCard = ({ item, selected, onSelect, onListing }) => {
   const isMerge = item.amount > 1;
   return (
     <div
@@ -36,15 +37,16 @@ const CFXsCard = ({ item, selected, onSelect, onBuy }) => {
               <SplitIcon />
             </div>
           )}
-          <button
-            className="btn btn-outline btn-primary h-[36px] min-h-[36px] px-[8px] text-[14px] font-normal rounded-[4px] flex-1"
+          <Button
+            color="outline"
+            className="h-[36px] min-h-[36px] px-[8px] text-[14px] font-normal rounded-[4px] flex-1"
             onClick={(e) => {
-              e.stopPropagation()
-              onBuy(item);
+              e.stopPropagation();
+              onListing(item);
             }}
           >
             List for sale
-          </button>
+          </Button>
         </div>
       </div>
     </div>

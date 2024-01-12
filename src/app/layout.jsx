@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { Inter } from 'next/font/google';
 import PageLayout from '@/app/components/PageLayout';
-import {  Flowbite } from 'flowbite-react';
+import { DarkThemeToggle, Flowbite, ThemeModeScript } from "flowbite-react";
 import WalletProvider, { useWalletStore } from '@/app/store/wallet';
 import { ToastContainer } from 'react-toastify';
 import theme from '@/app/components/ui/theme';
@@ -30,7 +30,7 @@ const Dapp = ({ children }) => {
   }, []);
 
   return (
-    <Flowbite theme={{theme}}>
+    <Flowbite theme={{ theme }}>
       <ToastContainer
         position="bottom-left"
         theme={'dark'}
@@ -45,6 +45,7 @@ const Dapp = ({ children }) => {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <ThemeModeScript />
       <title>CFXs World</title>
       <body className={inter.className}>
         <WalletProvider>

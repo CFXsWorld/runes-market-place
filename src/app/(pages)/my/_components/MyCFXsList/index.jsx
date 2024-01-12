@@ -6,6 +6,7 @@ import useList from './useList';
 import MultiHandleBar from './MultiHandleBar';
 import LoadMore from '@/app/components/LoadMore';
 import Filter from '@/app/(pages)/my/_components/Filter';
+import ListingModal from '@/app/(pages)/my/_components/MyCFXsList/listing/ListingModal';
 
 export default function MyCFXsList() {
   const {
@@ -16,13 +17,23 @@ export default function MyCFXsList() {
     selected,
     clearAll,
     onSelect,
-    onBuy,
+    handleListing,
     noMore,
     refresh,
+    openListing,
+    openMerge,
+    openSplit,
+    openTransfer,
+    onOpenListing,
+    onOpenMerge,
+    onOpenSplit,
+    onOpenTransfer,
   } = useList();
+
 
   return (
     <div>
+      <ListingModal open={openListing} onOpen={onOpenListing} />
       <Filter total={source?.length || 0} reload={refresh} />
       <div className="w-full pt-[32px] pb-[96px]">
         <div id="my-cfxs-sentinel" className="w-full" />
@@ -38,7 +49,7 @@ export default function MyCFXsList() {
               item={item}
               onSelect={onSelect}
               selected={selected}
-              onBuy={onBuy}
+              onListing={handleListing}
             />
           ))}
         </div>

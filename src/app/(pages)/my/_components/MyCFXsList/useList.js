@@ -8,6 +8,7 @@ import { pageItemCount } from '@/app/utils';
 import { uniqBy } from 'lodash';
 import useWallet from '@/app/hooks/useWallet';
 import { getAddress } from 'ethers';
+import useHandleModal from '@/app/(pages)/my/_components/MyCFXsList/useHandleModal';
 
 const useList = () => {
   const [selected, setSelected] = useState([]);
@@ -15,6 +16,16 @@ const useList = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const { useAccount } = useWallet();
   const [noMore, setNoMore] = useState(false);
+  const {
+    openListing,
+    openMerge,
+    openSplit,
+    openTransfer,
+    onOpenListing,
+    onOpenMerge,
+    onOpenSplit,
+    onOpenTransfer,
+  } = useHandleModal();
 
   const account = useAccount();
 
@@ -84,7 +95,9 @@ const useList = () => {
     }
     return null;
   }, [dataSource]);
-  const onBuy = () => {};
+  const handleListing = () => {
+    onOpenListing(true);
+  };
   const clearAll = () => {
     setSelected([]);
   };
@@ -99,7 +112,7 @@ const useList = () => {
   return {
     selected,
     onSelect,
-    onBuy,
+    handleListing,
     loadMore,
     refresh,
     isMutating,
@@ -107,6 +120,14 @@ const useList = () => {
     clearAll,
     source,
     noMore,
+    openListing,
+    openMerge,
+    openSplit,
+    openTransfer,
+    onOpenListing,
+    onOpenMerge,
+    onOpenSplit,
+    onOpenTransfer,
   };
 };
 

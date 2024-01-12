@@ -1,3 +1,10 @@
 .menu {
   padding: 0;
 }
+
+button:disabled {
+  background: rgba(128, 128, 128, 0.2);
+}
+button:disabled:hover {
+  background: rgba(128, 128, 128, 0.2);
+}
