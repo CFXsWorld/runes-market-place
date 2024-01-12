@@ -9,6 +9,7 @@ import Filter from '@/app/(pages)/my/_components/Filter';
 import ListingModal from '@/app/(pages)/my/_components/MyCFXsList/listing/ListingModal';
 import MergeModal from '@/app/(pages)/my/_components/MyCFXsList/merge/MergeModal';
 import TransferModal from '@/app/(pages)/my/_components/MyCFXsList/transfer/TransferModal';
+import BatchListingModal from '@/app/(pages)/my/_components/MyCFXsList/listing/BatchListingModal';
 
 export default function MyCFXsList() {
   const {
@@ -30,6 +31,8 @@ export default function MyCFXsList() {
     onOpenMerge,
     onOpenSplit,
     onOpenTransfer,
+    openBatchListing,
+    onOpenBatchListing,
     listingOrder,
     selectAll,
   } = useList();
@@ -52,6 +55,12 @@ export default function MyCFXsList() {
       <TransferModal
         open={openTransfer}
         onOpen={onOpenTransfer}
+        selected={selected}
+        reload={refresh}
+      />
+      <BatchListingModal
+        open={openBatchListing}
+        onOpen={onOpenBatchListing}
         selected={selected}
         reload={refresh}
       />
@@ -94,7 +103,7 @@ export default function MyCFXsList() {
             onOpenTransfer(true);
           }}
           onBatchListing={() => {
-            // o
+            onOpenBatchListing(true);
           }}
         />
       </div>

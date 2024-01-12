@@ -6,6 +6,7 @@ import usePromiseLoading from '@/app/hooks/usePromiseLoading';
 import { LoadingIcon, UsdtIcon } from '@/app/components/icons';
 import { formatNumberWithCommas } from '@/app/utils';
 import useListing from '@/app/(pages)/my/_components/MyCFXsList/listing/useListing';
+import { cn } from '@/app/utils/classnames';
 
 const ListingModal = forwardRef(
   ({ reload, listingOrder, onOpen, open }, ref) => {
@@ -19,6 +20,7 @@ const ListingModal = forwardRef(
       isValid,
       listing,
       calcEarning,
+      isPrice,
     } = useListing({ listingOrder, reload, onOpen });
 
     const { trigger, loading } = usePromiseLoading(listing);
@@ -35,9 +37,6 @@ const ListingModal = forwardRef(
                   value="Set a price"
                   className="text-tc-secondary"
                 />
-                <span className="text-tc-secondary text-[12px]">
-                  Floor: 0.087
-                </span>
               </div>
               <TextInput
                 id="price"
@@ -59,7 +58,11 @@ const ListingModal = forwardRef(
             </div>
             <div className="flex-center-between mt-[10px]">
               <span className="text-tc-secondary">#{listingOrder?.id}</span>
-              <span className="text-theme font-medium">
+              <span
+                className={cn('text-theme font-medium', {
+                  'text-red-500': price && !isPrice(price),
+                })}
+              >
                 {formatNumberWithCommas(price || 0)}
               </span>
             </div>

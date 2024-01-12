@@ -1,12 +1,13 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import useWallet from '@/app/hooks/useWallet';
 import { parseUnits } from 'ethers';
 import { toast } from 'react-toastify';
 import useCFXsContract from '@/app/hooks/useCFXsContract';
 
-const useListing = ({ listingOrder, reload, onOpen }) => {
-  const [price, setPrice] = useState();
+const useBatchListing = ({ reload, onOpen, selected }) => {
+  const [isSamePrice, setIsSamePrice] = useState(false);
+  const [prices, setPrices] = useState({});
   const [duration, setDuration] = useState(dayjs().add(2, 'day'));
   const dateFormate = (date) => dayjs(date).format('YYYY-MM-DD');
   const { browserProvider } = useWallet();
@@ -17,14 +18,17 @@ const useListing = ({ listingOrder, reload, onOpen }) => {
   }, [duration]);
 
   const listing = async () => {
-    if (isValid && listingOrder) {
+    if (isValid && selected?.length) {
       try {
         const signer = await browserProvider.getSigner();
         const contractWithSigner = CFXsContract.connect(signer);
+        const ids = selected.map((item) => item.id);
+        const orderTypes = ids.map(() => '0');
+        const confirmedPrices = ids.map((id) => parseUnits(prices[id], 18));
         const tx = await contractWithSigner.LockingScriptbatch(
-          [listingOrder.id],
-          ['0'],
-          [parseUnits(price, 18)],
+          ids,
+          orderTypes,
+          confirmedPrices,
           durationHours
         );
         await tx.wait();
@@ -41,16 +45,37 @@ const useListing = ({ listingOrder, reload, onOpen }) => {
   const isPrice = (value) => /^\d+(\.\d+)?$/.test(value);
 
   const isValid = useMemo(() => {
-    return isPrice(price) && Number(price) > 0 && durationHours > 0;
-  }, [price, durationHours]);
+    return (
+      Object.values(prices).some(
+        (price) => isPrice(price) && Number(price) > 0
+      ) && durationHours > 0
+    );
+  }, [prices, durationHours]);
 
   const calcEarning = useMemo(() => {
-    return isValid ? Number(price) - Number(price) * 0.03 : 0;
-  }, [price, isValid]);
+    if (isValid) {
+      const total = Object.values(prices).reduce((a, b) => a + Number(b), 0);
+      return (Number(total) - Number(total) * 0.03).toFixed(4);
+    }
+    return 0;
+  }, [prices, isValid]);
+
+  const onSameChange = (checked) => {
+    setIsSamePrice(checked);
+  };
+
+  const equalize = useCallback(
+    (value) => {
+      return (selected || []).reduce((prices, next) => {
+        prices[next.id] = value;
+        return prices;
+      }, {});
+    },
+    [selected]
+  );
 
   return {
-    price,
-    setPrice,
+    onSameChange,
     duration,
     setDuration,
     dateFormate,
@@ -58,7 +83,11 @@ const useListing = ({ listingOrder, reload, onOpen }) => {
     isValid,
     listing,
     calcEarning,
+    setPrices,
+    prices,
+    isSamePrice,
+    equalize,
     isPrice,
   };
 };
-export default useListing;
+export default useBatchListing;

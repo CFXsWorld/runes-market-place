@@ -26,6 +26,8 @@ const useList = () => {
     onOpenMerge,
     onOpenSplit,
     onOpenTransfer,
+    openBatchListing,
+    onOpenBatchListing,
   } = useHandleModal();
 
   const account = useAccount();
@@ -139,6 +141,8 @@ const useList = () => {
     onOpenSplit,
     onOpenTransfer,
     listingOrder,
+    openBatchListing,
+    onOpenBatchListing,
     selectAll,
   };
 };
