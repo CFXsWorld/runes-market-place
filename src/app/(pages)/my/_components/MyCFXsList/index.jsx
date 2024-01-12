@@ -7,6 +7,7 @@ import MultiHandleBar from './MultiHandleBar';
 import LoadMore from '@/app/components/LoadMore';
 import Filter from '@/app/(pages)/my/_components/Filter';
 import ListingModal from '@/app/(pages)/my/_components/MyCFXsList/listing/ListingModal';
+import MergeModal from '@/app/(pages)/my/_components/MyCFXsList/merge/MergeModal';
 
 export default function MyCFXsList() {
   const {
@@ -29,6 +30,7 @@ export default function MyCFXsList() {
     onOpenSplit,
     onOpenTransfer,
     listingOrder,
+    selectAll,
   } = useList();
 
   return (
@@ -38,6 +40,12 @@ export default function MyCFXsList() {
         onOpen={onOpenListing}
         key={listingOrder?.id}
         listingOrder={listingOrder}
+        reload={refresh}
+      />
+      <MergeModal
+        open={openMerge}
+        onOpen={onOpenMerge}
+        selected={selected}
         reload={refresh}
       />
       <Filter total={source?.length || 0} reload={refresh} />
@@ -67,7 +75,20 @@ export default function MyCFXsList() {
             <LoadMore loading={isMutating} data={source} noMore={noMore} />
           </div>
         </Waypoint>
-        <MultiHandleBar selected={selected} clearAll={clearAll} />
+        <MultiHandleBar
+          selected={selected}
+          clearAll={clearAll}
+          selectAll={selectAll}
+          onMerge={() => {
+            onOpenMerge(true);
+          }}
+          onTransfer={() => {
+            onOpenTransfer(true);
+          }}
+          onBatchListing={() => {
+            // o
+          }}
+        />
       </div>
     </div>
   );

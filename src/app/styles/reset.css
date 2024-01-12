@@ -4,6 +4,7 @@
 
 button:disabled {
   background: rgba(128, 128, 128, 0.2);
+  color: black;
 }
 button:disabled:hover {
   background: rgba(128, 128, 128, 0.2);

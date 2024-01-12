@@ -2,46 +2,40 @@
 
 import { cn } from '@/app/utils/classnames';
 import Checkbox from '@/app/components/ui/Checkbox';
-import usePromiseLoading from '@/app/hooks/usePromiseLoading';
-import { LoadingIcon, SplitIcon, TransferIcon } from '@/app/components/icons';
-import Datepicker from "react-tailwindcss-datepicker";
-import { useState } from "react";
+import { SplitIcon, TransferIcon } from '@/app/components/icons';
+import { Button } from 'flowbite-react';
 
-const Action = ({ selected, handleMultiPurchase }) => {
-  const [value, setValue] = useState({
-    startDate: new Date(),
-    endDate: new Date().setMonth(11)
-  });
-
-  const handleValueChange = (newValue) => {
-    console.log("newValue:", newValue);
-    setValue(newValue);
-  }
-
-  const { trigger, loading } = usePromiseLoading(handleMultiPurchase);
+const Action = ({ selected, onMerge, onTransfer, onBatchListing }) => {
   return (
     <div className="flex-center gap-[16px]">
       <div className="flex center gap-[16px]">
-        <Datepicker
-          value={value}
-          onChange={handleValueChange}
-        />
-        <button className="max-sm:text-[12px] btn btn-outline btn-primary  px-[8px] text-[14px] font-normal">
+        <Button
+          color="outline"
+          disabled={selected.length === 0}
+          className="max-sm:text-[12px] btn btn-outline btn-primary  px-[8px] text-[14px] font-normal"
+          onClick={onMerge}
+        >
           <SplitIcon />
           MERGE
-        </button>
-        <button className="max-sm:text-[12px] btn btn-outline btn-primary px-[8px] text-[14px] font-normal">
+        </Button>
+        <Button
+          color="outline"
+          disabled={selected.length === 0}
+          className="max-sm:text-[12px] btn btn-outline btn-primary px-[8px] text-[14px] font-normal"
+          onClick={onTransfer}
+        >
           <TransferIcon />
           TRANSFER
-        </button>
+        </Button>
       </div>
-      <button
+      <Button
+        color="primary"
         className="btn btn-primary px-[24px]"
-        disabled={selected.length === 0 || loading}
-        onClick={() => trigger()}
+        disabled={selected.length === 0}
+        onClick={onBatchListing}
       >
-        {loading ? <LoadingIcon /> : 'BATCH LISTING'}
-      </button>
+        BATCH LISTING
+      </Button>
     </div>
   );
 };
@@ -69,7 +63,9 @@ const MultiHandleBar = ({
   selected = [],
   clearAll,
   selectAll,
-  handleMultiPurchase,
+  onMerge,
+  onTransfer,
+  onBatchListing,
 }) => {
   return (
     <div
@@ -86,7 +82,12 @@ const MultiHandleBar = ({
             <SelectedCount selected={selected} />
           </div>
         </div>
-        <Action selected={selected} handleMultiPurchase={handleMultiPurchase} />
+        <Action
+          selected={selected}
+          onMerge={onMerge}
+          onTransfer={onTransfer}
+          onBatchListing={onBatchListing}
+        />
       </div>
       <div className="md:max-w-[1368px] w-full flex-center-between max-md:hidden">
         <div className="flex-center text-tc-secondary">
@@ -99,7 +100,9 @@ const MultiHandleBar = ({
         <div className="flex-center">
           <Action
             selected={selected}
-            handleMultiPurchase={handleMultiPurchase}
+            onMerge={onMerge}
+            onTransfer={onTransfer}
+            onBatchListing={onBatchListing}
           />
         </div>
       </div>

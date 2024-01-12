@@ -103,6 +103,14 @@ const useList = () => {
   const clearAll = () => {
     setSelected([]);
   };
+  const selectAll = (checked) => {
+    if (checked) {
+      setSelected((source || []).slice(0, 24));
+    } else {
+      setSelected([]);
+    }
+  };
+
   const onSelect = (id) => {
     setSelected((prev) => {
       if (prev.includes(id)) {
@@ -131,6 +139,7 @@ const useList = () => {
     onOpenSplit,
     onOpenTransfer,
     listingOrder,
+    selectAll,
   };
 };
 

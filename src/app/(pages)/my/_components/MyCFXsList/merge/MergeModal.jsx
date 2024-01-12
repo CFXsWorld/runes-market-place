@@ -1,66 +1,52 @@
 'use client';
 
-import { Button, Modal } from "flowbite-react";
-import { forwardRef, useEffect, useMemo } from 'react';
+import { Button, Modal } from 'flowbite-react';
+import { forwardRef } from 'react';
 import usePromiseLoading from '@/app/hooks/usePromiseLoading';
 import { LoadingIcon } from '@/app/components/icons';
-import useSWRMutation from 'swr/mutation';
-import { formatUnits } from 'ethers';
-import { usdtDecimal } from '@/app/utils';
+import useMerge from '@/app/(pages)/my/_components/MyCFXsList/merge/useMerge';
 
-const PurchaseModal = forwardRef(
-  ({ purchaseOrder, onBuy, getUSDTBalance, onOpen, open }, ref) => {
-    const { trigger, loading } = usePromiseLoading(onBuy);
-    const { data = 0, trigger: getBalance } = useSWRMutation('balance', () =>
-      getUSDTBalance()
-    );
+const MergeModal = forwardRef(({ selected, onOpen, open, reload }, ref) => {
+  const { merge } = useMerge({ reload, selected, onOpen });
 
-    useEffect(() => {
-      getBalance();
-    }, [purchaseOrder]);
+  const { trigger, loading } = usePromiseLoading(merge);
 
-    const USDTAmount = useMemo(() => {
-      return Math.ceil(formatUnits(data, usdtDecimal));
-    }, [data]);
-    return (
-      <Modal show={open} onClose={() => onOpen(false)}>
-        <Modal.Header>Purchase</Modal.Header>
-        <Modal.Body>
-          <div className="p-6 flex flex-col">
-            <div className="flex-center-between mb-[12px]">
-              <span className="text-tc-secondary">You will pay</span>
-              <span className="text-white font-medium">
-                {purchaseOrder?.amount || 0} USDT
-              </span>
-            </div>
-            <div className="flex-center-between">
-              <span className="text-tc-secondary">For</span>
-              <span className="text-white font-medium">
-                {purchaseOrder?.count || 0} CFXs
-              </span>
-            </div>
-            <div className="text-tc-secondary text-[14px] mt-[32px] mb-[24px] pt-[12px] border border-transparent border-t-fill-e-primary">
-              You will be asked to approve this purchase from your wallet.
-            </div>
-            <Button
-              color='primary'
-              className="btn btn-primary w-full"
-              disabled={!purchaseOrder || loading}
-              onClick={() => {
-                trigger();
-              }}
-            >
-              {loading ? <LoadingIcon /> : 'BUY'}
-            </Button>
-            <div className="flex mt-[12px]">
-              <span>Balance:</span>
-              <span className="text-theme pl-[6px]">{USDTAmount} USDT</span>
-            </div>
+  const total = (selected || []).reduce((a, b) => a + b.amount, 0);
+  return (
+    <Modal show={open} onClose={() => onOpen(false)}>
+      <Modal.Header>Merge Items</Modal.Header>
+      <Modal.Body>
+        <div className="p-6 flex flex-col">
+          <div className="flex-center-between mb-[12px]">
+            <span className="text-tc-secondary">You will merge</span>
+            <span className="text-white font-medium">
+              {selected?.length || 0} CFXs
+            </span>
           </div>
-        </Modal.Body>
-      </Modal>
-    );
-  }
-);
+          <div className="flex-center-between">
+            <span className="text-tc-secondary">
+              The amount of new CFXs will be
+            </span>
+            <span className="text-white font-medium">{total}</span>
+          </div>
+          <div className="text-tc-secondary text-[14px] mt-[32px] mb-[24px] pt-[12px] border border-transparent border-t-fill-e-primary">
+            The merged CFXs will generate a new CFXs ID. The amount of new CFXs
+            according to the total amount of merged CFXs.
+          </div>
+          <Button
+            color="primary"
+            className="btn btn-primary w-full"
+            disabled={!selected || loading}
+            onClick={() => {
+              trigger();
+            }}
+          >
+            {loading ? <LoadingIcon /> : 'COMFIRM MERGE'}
+          </Button>
+        </div>
+      </Modal.Body>
+    </Modal>
+  );
+});
 
-export default PurchaseModal;
+export default MergeModal;

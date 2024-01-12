@@ -11,7 +11,7 @@ export default {
       outlineGray:
         'broder bg-transparent border-fill-separator text-tc-secondary h-[48px]',
     },
-    disabled: 'cursor-not-allowed',
+    disabled: 'cursor-not-allowed border-none',
     pill: {
       off: 'rounded-[4px]',
     },

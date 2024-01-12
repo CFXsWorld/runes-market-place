@@ -5,7 +5,7 @@ import * as DefaultWallet from "@cfxjs/use-wallet-react/ethereum";
 import * as FluentWallet from "@cfxjs/use-wallet-react/ethereum/Fluent";
 import * as MetaMask from "@cfxjs/use-wallet-react/ethereum/MetaMask";
 import * as OKXWallet from "@cfxjs/use-wallet-react/ethereum/OKX";
-import { addressFormat, defaultLockHours, isCorrectChainId, maxTransferSelectedItemsCount, pageItemCount, usdtDecimal } from "@/app/utils";
+import { addressFormat, defaultLockHours, handleErrorMessage, isCorrectChainId, maxTransferSelectedItemsCount, pageItemCount, usdtDecimal } from "@/app/utils";
 import { BrowserProvider, Contract, getAddress, isAddress, parseUnits } from "ethers";
 import { abi as oldCfxsContractAbi } from "@/app/contracts/oldCfxsContractAbi.json";
 import { abi as newCfxsContractAbi } from "@/app/contracts/newCfxsContractAbi.json";
@@ -50,8 +50,12 @@ export default function Page() {
   const [loadingTransfer, setLoadingTransfer] = React.useState(false);
   const [loadingList, setLoadingList] = React.useState(false);
   const [loadingUnLock, setLoadingUnLock] = React.useState(false);
+  const [loadingMerge, setLoadingMerge] = React.useState(false);
   const [transferToAddress, setTransferToAddress] = React.useState("");
   const [toBeListedCfxsItems, setToBeListedCfxsItems] = React.useState([]);
+  const [toBeMergeInputCfxsItems, setToBeMergeInputCfxsItems] = React.useState([]);
+  const [toBeMergeOutputCfxsItems, setToBeMergeOutputCfxsItems] = React.useState([]);
+  const [warningOutputText, setWarningOutputText] = React.useState("");
 
   const account = () => defaultWalletAccount || fluentWalletAccount || metaMaskWalletAccount || okxWalletAccount;
 
@@ -70,18 +74,16 @@ export default function Page() {
   const browserProvier = defaultWalletAccount
     ? DefaultWallet.provider
     : fluentWalletAccount
-    ? FluentWallet.provider
-    : metaMaskWalletAccount
-    ? MetaMask.provider
-    : okxWalletAccount
-    ? OKXWallet.provider
-    : globalThis.ethereum;
+      ? FluentWallet.provider
+      : metaMaskWalletAccount
+        ? MetaMask.provider
+        : okxWalletAccount
+          ? OKXWallet.provider
+          : globalThis.ethereum;
 
   const provider = new BrowserProvider(browserProvier);
-  const oldContract = new Contract(process.env.NEXT_PUBLIC_OldContractAddress, oldCfxsContractAbi, provider);
-  const newContract = new Contract(process.env.NEXT_PUBLIC_NewContractAddress, newCfxsContractAbi, provider);
-  const bridgeContract = new Contract(process.env.NEXT_PUBLIC_BridgeContractAddress, bridgeContractAbi, provider);
-  const multiCallContract = new Contract(process.env.NEXT_PUBLIC_MultiCallContractAddress, multiCallContractAbi, provider);
+  // const bridgeContract = new Contract(process.env.NEXT_PUBLIC_BridgeContractAddress, bridgeContractAbi, provider);
+  // const multiCallContract = new Contract(process.env.NEXT_PUBLIC_MultiCallContractAddress, multiCallContractAbi, provider);
 
   const loadMoreOldData = (isReset) => {
     if (account()) {
@@ -136,7 +138,7 @@ export default function Page() {
               data.rows.map((c, i) => {
                 return {
                   id: c.id,
-                  amount: 1,
+                  amount: c.amount,
                   checked: false,
                   locked: false,
                 };
@@ -163,6 +165,7 @@ export default function Page() {
 
             // batch rpc
             let calls = [];
+            const newContract = new Contract(process.env.NEXT_PUBLIC_NewContractAddress, newCfxsContractAbi, provider);
             data.rows.map((c) => {
               calls.push(newContract.getLockStates(c.id));
             });
@@ -173,9 +176,7 @@ export default function Page() {
                   setNewCfxsItems(
                     data.rows.map((c, i) => {
                       return {
-                        id: c.id,
-                        amount: 1,
-                        checked: false,
+                        ...c,
                         locked: states[i],
                       };
                     })
@@ -186,7 +187,7 @@ export default function Page() {
               })
               .catch((err) => {
                 console.error(err);
-                toast(err ? err.message : "Unknown Error", { type: "error" });
+                toast(handleErrorMessage(err), { type: "error" });
               });
           }
         })
@@ -203,6 +204,7 @@ export default function Page() {
     if (account()) {
       setLoadingOldData(true);
       setWarningOldText("");
+      const oldContract = new Contract(process.env.NEXT_PUBLIC_OldContractAddress, oldCfxsContractAbi, provider);
       oldContract
         .balanceOf(account())
         .then((balance) => {
@@ -218,7 +220,7 @@ export default function Page() {
         })
         .catch((err) => {
           console.error(err);
-          toast(err ? err.message : "Unknown Error", { type: "error" });
+          toast(handleErrorMessage(err), { type: "error" });
           setWarningOldText("Failed to get balance, please retry.");
           setLoadingOldData(false);
         });
@@ -229,6 +231,7 @@ export default function Page() {
     if (account()) {
       setLoadingNewData(true);
       setWarningNewText("");
+      const newContract = new Contract(process.env.NEXT_PUBLIC_NewContractAddress, newCfxsContractAbi, provider);
       newContract
         .balanceOf(account())
         .then((balance) => {
@@ -243,7 +246,7 @@ export default function Page() {
         })
         .catch((err) => {
           console.error(err);
-          // toast(err ? err.message : "Unknown Error", { type: "error" });
+          // toast(handleErrorMessage(err), { type: "error" });
           setWarningNewText("Failed to get balance, please retry.");
           setLoadingNewData(false);
         });
@@ -371,6 +374,7 @@ export default function Page() {
       const checkedCfxsItems = newCfxsItems.filter((c) => c.checked);
       const ids = checkedCfxsItems.map((c) => c.id);
       setLoadingTransfer(true);
+      const newContract = new Contract(process.env.NEXT_PUBLIC_NewContractAddress, newCfxsContractAbi, provider);
       provider.getSigner().then((signer) => {
         const contractWithSigner = newContract.connect(signer);
         contractWithSigner["transfer(uint256[], address)"](ids, transferToAddress)
@@ -406,7 +410,7 @@ export default function Page() {
                 console.error(err);
                 setNewCfxsItems(oldNewCfxsItems);
                 setNewCfxsTotalCount(_newCfxsTotalCount);
-                toast(err ? err.message : "Unknown Error", { type: "error" });
+                toast(handleErrorMessage(err), { type: "error" });
               })
               .finally(() => {
                 setLoadingTransfer(false);
@@ -415,7 +419,7 @@ export default function Page() {
           })
           .catch((err) => {
             console.error(err);
-            toast(err ? err.message : "Unknown Error", { type: "error" });
+            toast(handleErrorMessage(err), { type: "error" });
             setLoadingTransfer(false);
             document.getElementById("transferModal").close();
           });
@@ -467,6 +471,7 @@ export default function Page() {
       const tokenTypes = toBeListedCfxsItems.map((c) => +c.tokenType);
       const amounts = toBeListedCfxsItems.map((c) => parseUnits(c.amount, usdtDecimal));
       setLoadingList(true);
+      const newContract = new Contract(process.env.NEXT_PUBLIC_NewContractAddress, newCfxsContractAbi, provider);
       provider.getSigner().then((signer) => {
         const contractWithSigner = newContract.connect(signer);
         contractWithSigner
@@ -489,7 +494,7 @@ export default function Page() {
                 console.error(err);
                 setNewCfxsItems(oldNewCfxsItems);
                 setNewCfxsTotalCount(_newCfxsTotalCount);
-                toast(err ? err.message : "Unknown Error", { type: "error" });
+                toast(handleErrorMessage(err), { type: "error" });
               })
               .finally(() => {
                 setLoadingList(false);
@@ -498,7 +503,7 @@ export default function Page() {
           })
           .catch((err) => {
             console.error(err);
-            toast(err ? err.message : "Unknown Error", { type: "error" });
+            toast(handleErrorMessage(err), { type: "error" });
             setLoadingList(false);
             document.getElementById("listModal").close();
           });
@@ -530,6 +535,7 @@ export default function Page() {
       const ids = checkedCfxsItems.map((c) => c.id);
       if (ids.length === 1) {
         setLoadingUnLock(true);
+        const newContract = new Contract(process.env.NEXT_PUBLIC_NewContractAddress, newCfxsContractAbi, provider);
         provider.getSigner().then((signer) => {
           const contractWithSigner = newContract.connect(signer);
           contractWithSigner
@@ -566,7 +572,7 @@ export default function Page() {
                   console.error(err);
                   setListedCfxsItems(oldListedCfxsItems);
                   setListedCfxsTotalCount(_listedCfxsTotalCount);
-                  toast(err ? err.message : "Unknown Error", { type: "error" });
+                  toast(handleErrorMessage(err), { type: "error" });
                 })
                 .finally(() => {
                   setLoadingUnLock(false);
@@ -575,7 +581,7 @@ export default function Page() {
             })
             .catch((err) => {
               console.error(err);
-              toast(err ? err.message : "Unknown Error", { type: "error" });
+              toast(handleErrorMessage(err), { type: "error" });
               setLoadingUnLock(false);
             });
         });
@@ -584,6 +590,135 @@ export default function Page() {
       }
     } else {
       toast("Invalid Address", { type: "error" });
+    }
+  };
+
+  const openMergeModal = () => {
+    const checkedCfxsItems = newCfxsItems.filter((c) => c.checked);
+    if (checkedCfxsItems.length > 0) {
+      if (checkedCfxsItems.some((c) => c.locked)) {
+        toast("Some Locked CFXs have been selected", { type: "error" });
+      } else {
+        setToBeMergeInputCfxsItems(() => checkedCfxsItems);
+        setToBeMergeOutputCfxsItems(() => [
+          {
+            owner: account() ? getAddress(account()) : "",
+            amount: checkedCfxsItems.reduce((total, item) => total + +item.amount, 0),
+            data: "",
+          },
+        ]);
+        document.getElementById("processTransactionModal").showModal();
+      }
+    } else {
+      toast("No CFXs have been selected", { type: "error" });
+    }
+  };
+
+  const onMergeFormChange = (index, field, value) => {
+    setToBeMergeOutputCfxsItems(() =>
+      toBeMergeOutputCfxsItems.map((c, i) => {
+        if (i === index) {
+          if (field === "owner") c.owner = value;
+          if (field === "amount") c.amount = value || 0;
+          if (field === "data") c.data = value;
+        }
+        return c;
+      })
+    );
+  };
+
+  const addMergeFormChange = () => {
+    setToBeMergeOutputCfxsItems(() => [
+      ...toBeMergeOutputCfxsItems,
+      {
+        owner: toBeMergeOutputCfxsItems.length > 0 ? toBeMergeOutputCfxsItems[0].owner : "",
+        amount: "",
+        data: "",
+      },
+    ]);
+  };
+
+  const delMergeFormChange = (index) => {
+    setToBeMergeOutputCfxsItems(() => toBeMergeOutputCfxsItems.filter((c, i) => i !== index));
+  };
+
+  const resetMergeFormChange = () => {
+    setToBeMergeOutputCfxsItems(() => [
+      {
+        owner: account() ? getAddress(account()) : "",
+        amount: toBeMergeInputCfxsItems.reduce((total, item) => total + +item.amount, 0),
+        data: "",
+      },
+    ]);
+  };
+
+  const isMergeFormValid = () => {
+    const inputAmounts = toBeMergeInputCfxsItems.reduce((total, item) => total + +item.amount, 0);
+    const outputAmounts = toBeMergeOutputCfxsItems.reduce((total, item) => total + +item.amount, 0);
+    if (inputAmounts !== outputAmounts) return false;
+    return !toBeMergeOutputCfxsItems.some((c) => {
+      return c.amount === "" || c.amount <= 0 || !Number.isInteger(+c.amount) || c.owner === "" || !isAddress(c.owner);
+    });
+  };
+
+  const handleMerge = () => {
+    if (isMergeFormValid()) {
+      const ids = toBeMergeInputCfxsItems.map((c) => c.id);
+      setLoadingMerge(true);
+      const newContract = new Contract(process.env.NEXT_PUBLIC_NewContractAddress, newCfxsContractAbi, provider);
+      provider.getSigner().then((signer) => {
+        const contractWithSigner = newContract.connect(signer);
+        console.log(ids);
+        console.log(toBeMergeOutputCfxsItems);
+        contractWithSigner
+          .processTransaction(ids, toBeMergeOutputCfxsItems)
+          .then((tx) => {
+            console.log(tx);
+
+            document.getElementById("processTransactionModal").close();
+            setWarningNewText("Please wait for the transaction and do not close the window.");
+
+            const _newCfxsItems = [...newCfxsItems];
+            const _newCfxsTotalCount = newCfxsTotalCount;
+            setNewCfxsItems(
+              newCfxsItems
+                .filter((c) => !ids.includes(c.id))
+                .map((c, i) => {
+                  return {
+                    ...c,
+                    checked: false,
+                  };
+                })
+            );
+            setNewCfxsTotalCount(_newCfxsTotalCount - ids.length);
+
+            tx.wait()
+              .then((txReceipt) => {
+                console.log(txReceipt);
+                toast("Success: " + txReceipt.hash, {
+                  type: "success",
+                });
+                setToBeMergeInputCfxsItems([]);
+                setToBeMergeOutputCfxsItems([]);
+              })
+              .catch((err) => {
+                console.error(err);
+                setNewCfxsItems(_newCfxsItems);
+                setNewCfxsTotalCount(_newCfxsTotalCount);
+                toast(handleErrorMessage(err), { type: "error" });
+              })
+              .finally(() => {
+                setLoadingMerge(false);
+                setWarningNewText("");
+              });
+          })
+          .catch((err) => {
+            console.error(err);
+            toast(handleErrorMessage(err), { type: "error" });
+            setLoadingMerge(false);
+            document.getElementById("processTransactionModal").close();
+          });
+      });
     }
   };
 
@@ -610,7 +745,7 @@ export default function Page() {
         <div className="px-4 py-4 text-lg">
           <div className="text-wrap whitespace-normal break-all">
             <span className="text-warning">{warningNewText}</span>{" "}
-            {(loadingList || loadingTransfer) && <span className="loading loading-spinner loading-sm ml-2" />}
+            {(loadingList || loadingTransfer || loadingMerge) && <span className="loading loading-spinner loading-sm ml-2" />}
           </div>
           <div className="pt-2 flex justify-between items-center max-w-full">
             <div className="flex justify-between items-center">
@@ -633,9 +768,8 @@ export default function Page() {
                 </div>
               </div>
             </div>
-            <div className="dropdown dropdown-end dropdown-top fixDropdown md:dropdown-bottom">
+            <div className="dropdown dropdown-end md:dropdown-left dropdown-top fixDropdown md:dropdown-bottom">
               <div tabIndex={0} role="button" className="btn btn-primary btn-sm ">
-                Menu
                 <svg className="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5073" width="20" height="20">
                   <path d="M170.666667 213.333333m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" fill="#ffffff" p-id="5074" />
                   <path d="M170.666667 512m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" fill="#ffffff" p-id="5075" />
@@ -646,6 +780,7 @@ export default function Page() {
                     p-id="5077"
                   />
                 </svg>
+                Menu
               </div>
               <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                 <li>
@@ -672,6 +807,11 @@ export default function Page() {
                   <a className="font-bold" onClick={openListModal}>
                     List on Marketspace {loadingList && <span className="loading loading-spinner loading-sm" />}
                     {/*<span className="text-xs">(coming soon)</span>*/}
+                  </a>
+                </li>
+                <li>
+                  <a className="font-bold" onClick={openMergeModal}>
+                    Merge / Split {loadingMerge && <span className="loading loading-spinner loading-sm" />}
                   </a>
                 </li>
               </ul>
@@ -746,9 +886,8 @@ export default function Page() {
                 </button>
               </div>
             </div>
-            <div className="dropdown dropdown-end dropdown-top fixDropdown md:dropdown-bottom">
+            <div className="dropdown dropdown-end md:dropdown-left dropdown-top fixDropdown md:dropdown-bottom">
               <div tabIndex={0} role="button" className="btn btn-primary btn-sm ">
-                Menu
                 <svg className="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5073" width="20" height="20">
                   <path d="M170.666667 213.333333m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" fill="#ffffff" p-id="5074" />
                   <path d="M170.666667 512m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" fill="#ffffff" p-id="5075" />
@@ -759,6 +898,7 @@ export default function Page() {
                     p-id="5077"
                   />
                 </svg>
+                Menu
               </div>
               <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                 <li>
@@ -887,7 +1027,7 @@ export default function Page() {
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
           </form>
           <h3 className="font-bold text-lg">List CFXs</h3>
-          <p className="py-4">Please select currency and enter sales amount</p>
+          <p className="py-4">Please enter sales amount</p>
           <div className="flex flex-wrap">
             {toBeListedCfxsItems.map((c, i) => (
               <div className="card card-side border mt-2 mr-1 md:mr-2" key={i}>
@@ -931,7 +1071,120 @@ export default function Page() {
           </div>
         </div>
       </dialog>
-      <ToastContainer style={{ width: "800px", maxWidth: "98%" }} position="top-right" />
+      <dialog id="processTransactionModal" className="modal">
+        <div className="modal-box max-w-screen-lg">
+          <form method="dialog">
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+          </form>
+          <h3 className="font-bold text-lg">Merge / Spilt</h3>
+          <p className="py-4">Please input Output CFXs data</p>
+          <h4 className="font-bold">
+            Input CFXs{" "}
+            <span className="text-xs font-light ml-2">
+              Total Input Amount:{" "}
+              <span className="text-sm text-info font-bold">{toBeMergeInputCfxsItems.reduce((total, item) => total + +item.amount, 0)}</span>
+            </span>
+          </h4>
+          <div className="flex flex-wrap">
+            {toBeMergeInputCfxsItems.map((c, i) => (
+              <div className="card card-side border mt-2 mr-1 md:mr-2" key={i}>
+                <div className="card-body p-3 gap-1">
+                  <div className="stat-desc text-xs">#{c.id}</div>
+                  <div className="flex items-center">
+                    <div className="stat-value font-normal text-sm">
+                      <span>{c.amount}</span>
+                      <span className="font-light"> CFXs</span>
+                    </div>
+                  </div>
+                  <div className={`stat-desc text-xs ${c.locked ? "text-info" : "text-success"}`}>{c.locked ? "Locked" : "No Lock"}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <h4 className="font-bold mt-3">
+            Output CFXs{" "}
+            <span className="text-xs font-light ml-2">
+              Total Output Amount:{" "}
+              <span className="text-sm text-info font-bold">{toBeMergeOutputCfxsItems.reduce((total, item) => total + +item.amount, 0)}</span>
+            </span>
+          </h4>
+          <div className="flex flex-wrap flex-col">
+            {toBeMergeOutputCfxsItems.map((c, i) => (
+              <div className="card card-side border mt-2 mr-1 md:mr-2" key={i}>
+                <div className="card-body p-3 gap-1 flex flex-col items-end md:flex-row">
+                  <input
+                    type="text"
+                    placeholder="Output CFXs Owner Address 0x..."
+                    className="input text-xs input-bordered input-sm w-full shrink-0 md:w-96"
+                    value={c.owner}
+                    onChange={(e) => onMergeFormChange(i, "owner", e.target.value)}
+                  />
+                  <input
+                    type="number"
+                    placeholder="Amount(uint)..."
+                    className="input text-xs input-bordered w-20 input-sm w-full ml-0 shrink-0 md:ml-2 md:w-32"
+                    value={c.amount}
+                    step="1"
+                    pattern="\d+"
+                    onChange={(e) => onMergeFormChange(i, "amount", e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Data..."
+                    className="input text-xs input-bordered input-sm w-full ml-0 md:ml-2"
+                    value={c.data}
+                    onChange={(e) => onMergeFormChange(i, "data", e.target.value)}
+                  />
+                  <button className="btn btn-warning text-xs btn-xs ml-0 md:ml-2 md:btn-sm" onClick={() => delMergeFormChange(i)} disabled={i === 0}>
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="flex flex-col justify-between md:flex-row">
+            <div className="text-sm mt-2 order-2 md:order-1">
+              <ul>
+                <li className={toBeMergeOutputCfxsItems.some((c) => c.owner === "" || !isAddress(c.owner)) ? "text-error" : "text-success"}>
+                  · All addresses must be in the correct format.
+                </li>
+                <li
+                  className={
+                    toBeMergeOutputCfxsItems.some((c) => c.amount === "" || c.amount <= 0 || !Number.isInteger(+c.amount)) ? "text-error" : "text-success"
+                  }
+                >
+                  · All amounts must be positive integers.
+                </li>
+                <li
+                  className={
+                    toBeMergeInputCfxsItems.reduce((total, item) => total + +item.amount, 0) !==
+                    toBeMergeOutputCfxsItems.reduce((total, item) => total + +item.amount, 0)
+                      ? "text-error"
+                      : "text-success"
+                  }
+                >
+                  · The total input amount should be equal to the total output amount
+                </li>
+              </ul>
+            </div>
+            <div className="mt-3 order-1 md:order-2">
+              <button className="btn btn-accent btn-sm" onClick={addMergeFormChange}>
+                Add Output CFXs
+              </button>
+              <button className="btn btn-accent btn-sm ml-2" onClick={resetMergeFormChange}>
+                Reset
+              </button>
+            </div>
+          </div>
+          <div className="modal-action">
+            <button className="btn btn-primary" onClick={handleMerge} disabled={!isMergeFormValid() || loadingMerge}>
+              {isMergeFormValid() ? "Merge / Split" : "Please fill out the form correctly"}
+              {loadingMerge && <span className="loading loading-spinner loading-sm ml-2" />}
+            </button>
+          </div>
+        </div>
+      </dialog>
+      <ToastContainer className="toastBox" position="top-right" limit={1} autoClose={1000} />
     </div>
   );
 }
