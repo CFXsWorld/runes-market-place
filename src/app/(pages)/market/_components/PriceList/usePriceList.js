@@ -62,6 +62,20 @@ const items = [
   },
 ];
 
+// const a = {
+//   totalSupply: '1000',
+//   percentage: '30.00',
+//   floor: '--',
+//   unitPrice: '30.00',
+//   '24hVolume': '--',
+//   '24hSales': '30',
+//   totalVolume: '30',
+//   totalSales: '30',
+//   owners: '30',
+//   listed: '30',
+//   marketCap: '30',
+// };
+
 const data = {
   floor: 0.1,
   unitPrice: 0.7,
@@ -75,15 +89,14 @@ const data = {
 };
 const usePriceList = () => {
   const mounted = useMounted();
-  const { isMutating, trigger: getStatistics } = useSWRMutation(
-    APIs.MARKET_STATISTICS,
-    getMarketStatistics,
-    {
-      onSuccess: (res) => {
-        console.log(res);
-      },
-    }
-  );
+  const {
+    isMutating,
+    trigger: getStatistics,
+  } = useSWRMutation(APIs.MARKET_STATISTICS, getMarketStatistics, {
+    onSuccess: (res) => {
+      console.log(res);
+    },
+  });
   const { count, isPC } = useResponsive(
     { min: 100, max: 140, gap: 8 },
     mounted && typeof document !== 'undefined'

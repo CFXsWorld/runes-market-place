@@ -9,7 +9,7 @@ export const usdtDecimal = 18;
 
 export const addressFormat = (address) => {
   return address
-    ? `${getAddress(address).substr(0, 6)}...${getAddress(address).substr(
+    ? `${getAddress(address).substr(0, 4)}...${getAddress(address).substr(
         address.length - 4,
         4
       )}`

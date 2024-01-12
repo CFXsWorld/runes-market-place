@@ -11,6 +11,7 @@ import {
 import { addressFormat } from '@/app/utils';
 import dayjs from 'dayjs';
 import usePromiseLoading from '@/app/hooks/usePromiseLoading';
+import { Button } from 'flowbite-react';
 
 const CFXsCard = ({ item, selected, onSelect, onBuy }) => {
   const { trigger, loading } = usePromiseLoading(onBuy);
@@ -20,7 +21,7 @@ const CFXsCard = ({ item, selected, onSelect, onBuy }) => {
     <div
       className={cn(
         'min-w-[200px] max-w-[300px]  max-sm:min-w-[160px]  max-sm:max-w-full flex flex-col cursor-pointer overflow-hidden',
-        'bg-fill-secondary h-[276px] max-sm:h-[224px] border-[2px] border-fill-e-secondary',
+        'bg-fill-secondary h-[276px] max-sm:h-[234px] border-[2px] border-fill-e-secondary',
         'rounded-[8px]',
         { 'border-theme': isSelected }
       )}
@@ -53,7 +54,7 @@ const CFXsCard = ({ item, selected, onSelect, onBuy }) => {
         <div className="inline-block text-tc-secondary bg-fill-e-secondary w-auto p-[4px] rounded-[2px]">
           <div className="flex-center">
             <TimeIcon className="text-[12px] mr-[4px]" />
-            <span className="text-[12px]">
+            <span className="text-[12px] line-clamp-1">
               Expired:{' '}
               {item.locktime
                 ? dayjs.unix(item.locktime).format('MM-DD HH:mm')
@@ -74,16 +75,21 @@ const CFXsCard = ({ item, selected, onSelect, onBuy }) => {
           <span className="text-tc-secondary text-[12px]">
             {addressFormat(item.chainto)}
           </span>
-          <button
-            className="max-sm:text-[12px] btn btn-outline btn-primary max-sm:h-[26px] max-sm:min-h-[26px] h-[30px] min-h-[30px] px-[8px] text-[14px] font-normal"
+          <Button
+            color="outline"
+            className="max-sm:text-[12px] btn btn-outline btn-primary max-sm:h-[26px] max-sm:min-h-[26px] h-[30px] min-h-[30px] text-[12px] font-normal line-clamp-1 ml-[3px]"
             disabled={loading}
             onClick={(e) => {
               e.stopPropagation();
               trigger(item);
             }}
           >
-            {loading ? <LoadingIcon /> : '   Buy Now'}
-          </button>
+            {loading ? (
+              <LoadingIcon />
+            ) : (
+              <span className="line-clamp-1">Buy Now</span>
+            )}
+          </Button>
         </div>
       </div>
     </div>

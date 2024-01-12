@@ -4,7 +4,7 @@ export default {
     color: {
       primary:
         'bg-theme text-black hover:opacity-95 focus:outline-none h-[48px] ',
-      outline: 'broder border-theme rounded-[4px] hover:bg-theme h-[48px]',
+      outline: 'broder border-theme rounded-[4px] hover:bg-theme h-[48px] text-theme hover:text-black',
       secondary:
         'text-theme bg-fill-e-secondary focus:outline-none  hover:opacity-95 h-[48px]',
       outlineGray:
@@ -13,6 +13,13 @@ export default {
     pill: {
       off: 'rounded-[4px]',
     },
+    "size": {
+      "xs": "text-xs px-2 py-1",
+      "sm": "text-sm px-3 py-1.5",
+      "md": "text-sm px-3 py-2",
+      "lg": "text-base px-5 py-2.5",
+      "xl": "text-base px-6 py-3"
+    }
   },
   modal: {
     root: {

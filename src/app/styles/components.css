@@ -8,7 +8,8 @@
     position: relative;
   }
   .wave:before {
-    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-property: color, background-color, border-color,
+      text-decoration-color, fill, stroke;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 0.15s;
     content: '';
@@ -23,7 +24,8 @@
     @apply animate-wave;
   }
   .wave:after {
-    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-property: color, background-color, border-color,
+      text-decoration-color, fill, stroke;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 0.15s;
     content: '';
@@ -37,5 +39,11 @@
     box-sizing: border-box;
     @apply animate-wave;
   }
-
+  [type='checkbox']:checked {
+    @apply text-theme;
+  }
+  [type='checkbox']:focus,
+  [type='radio']:focus {
+    --tw-ring-color: none;
+  }
 }
