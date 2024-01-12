@@ -1,4 +1,5 @@
 import { getAddress } from 'ethers';
+import { isNumber } from 'lodash';
 
 export const maxSelectedItemsCount = 32;
 export const maxTransferSelectedItemsCount = 24;

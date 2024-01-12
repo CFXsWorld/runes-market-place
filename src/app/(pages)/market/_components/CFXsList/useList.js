@@ -5,7 +5,7 @@ import useSWRMutation from 'swr/mutation';
 import { APIs } from '@/app/services/request';
 import { getMarketCFXsList } from '@/app/services';
 import { pageItemCount } from '@/app/utils';
-import { omit, uniqBy } from 'lodash';
+import { isNumber, omit, uniqBy } from 'lodash';
 
 const useList = () => {
   const [selected, setSelected] = useState([]);
@@ -28,8 +28,11 @@ const useList = () => {
     min: 0,
     recently: 0,
     merged: 0,
-    orderType: 'ASC',
     id: undefined,
+    owner: undefined,
+    // hack
+    orderType: 'ASC',
+    searchValue: '',
   });
 
   const transformedFilter = useMemo(() => {
@@ -37,6 +40,8 @@ const useList = () => {
       recently: 0,
       merged: 0,
       ao: 0,
+      id: undefined,
+      owner: undefined,
     };
     if (filter.orderType) {
       if (filter.orderType === 'ASC') {
@@ -62,8 +67,14 @@ const useList = () => {
         order.merged = 1;
       }
     }
-
-    return { ...omit(filter, 'orderType'), ...order };
+    if (filter.searchValue) {
+      if (/^\d+$/.test(filter.searchValue)) {
+        order.id = filter.searchValue;
+      } else {
+        order.owner = filter.searchValue;
+      }
+    }
+    return { ...omit(filter, ['orderType', 'searchValue']), ...order };
   }, [filter]);
 
   const {
@@ -87,11 +98,9 @@ const useList = () => {
   const refresh = () => {
     setDataSource(null);
     setCurrentPage(0);
-    getData({ ...transformedFilter, startIndex: 0 }).then(
-      (res) => {
-        setDataSource({ [0]: res.rows });
-      }
-    );
+    getData({ ...transformedFilter, startIndex: 0 }).then((res) => {
+      setDataSource({ [0]: res.rows });
+    });
   };
 
   const loadMore = async () => {

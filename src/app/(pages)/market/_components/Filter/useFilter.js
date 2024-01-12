@@ -6,6 +6,7 @@ const useFilter = ({ filter, setFilter }) => {
       orderType: filter.orderType,
       amountRangeStart: filter.amountRangeStart,
       amountRangeEnd: filter.amountRangeEnd,
+      searchValue: filter.searchValue,
     };
   }, [filter]);
   const onFilterChange = (form) => {
