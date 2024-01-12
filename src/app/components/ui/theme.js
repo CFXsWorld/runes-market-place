@@ -7,7 +7,8 @@ export default {
       outline: 'broder border-theme rounded-[4px] hover:bg-theme h-[48px]',
       secondary:
         'text-theme bg-fill-e-secondary focus:outline-none  hover:opacity-95 h-[48px]',
-      outlineGray:'broder bg-transparent border-fill-separator text-tc-secondary h-[48px]',
+      outlineGray:
+        'broder bg-transparent border-fill-separator text-tc-secondary h-[48px]',
     },
     pill: {
       off: 'rounded-[4px]',
@@ -83,5 +84,11 @@ export default {
       target: 'w-fit  w-full',
     },
     inlineWrapper: 'flex items-center',
+  },
+  progress: {
+    "base": "w-full overflow-hidden rounded-full bg-fill-e-secondary",
+    color: {
+      primary: 'bg-theme',
+    },
   },
 };

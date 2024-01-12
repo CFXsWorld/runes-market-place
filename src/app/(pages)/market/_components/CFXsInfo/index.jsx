@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { CFXsIcon, XIcon, TelegramIcon } from '@/app/components/icons';
 import useCFXsContract from '@/app/hooks/useCFXsContract';
 import { formatNumberWithCommas } from '@/app/utils';
+import { Progress } from 'flowbite-react';
 
 const CFXsInfo = () => {
   const { totalSupply, maxCount } = useCFXsContract();
@@ -34,10 +35,10 @@ const CFXsInfo = () => {
             consensus, integrating the advantages of both UTXO and account
             models.
           </div>
-          <progress
+          <Progress
             className="progress progress-primary  w-full max-w-[400px] h-[8px] rounded-[4px]"
-            value={rate}
-            max="100"
+            progress={rate}
+            color='primary'
           />
           <div className="text-tc-secondary text-[12px] mt-[8px]">
             Total Supply:
