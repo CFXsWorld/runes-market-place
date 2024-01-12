@@ -1,18 +1,19 @@
 'use client';
 
-import Dropdown from '@/app/components/ui/Dropdown';
 import { cn } from '@/app/utils/classnames';
 import { ArrowDownIcon } from '@/app/components/icons';
+import { Dropdown } from 'flowbite-react';
 
 const Selector = ({ onChange, value, options, className }) => {
   const item = options.find((opt) => opt.value === value);
   return (
     <Dropdown
-      renderTrigger={() => (
+      color="outlineGray"
+      label={
         <div
           className={cn(
-            'btn bg-transparent border border-fill-e-primary group font-medium text-[16px]',
-            'rounded-[4px] hover:bg-transparent flex items-center justify-between px-[16px]',
+            'font-medium text-[16px]',
+            'flex items-center justify-between',
             className
           )}
         >
@@ -22,12 +23,9 @@ const Selector = ({ onChange, value, options, className }) => {
             )}
             <span>{item.label}</span>
           </div>
-          <ArrowDownIcon
-            className=" ml-1 ease-[cubic-bezier(0.87,_0,_0.13,_1)] transition-transform duration-300 group-data-[state=open]:rotate-180"
-            aria-hidden
-          />
         </div>
-      )}
+      }
+      dismissOnClick
     >
       <div className="menu">
         {options.map((option, index) => (
