@@ -37,7 +37,7 @@ export default {
       "popup": "pt-0"
     },
     content: {
-      base: 'relative w-full  p-0 md:h-auto max-md:h-auto',
+      base: 'relative w-full  p-4 md:h-auto max-md:h-auto',
       inner:
         'relative rounded-lg bg-fill-e-secondary shadow dark:bg-gray-700 flex flex-col max-h-[90vh]',
     },
