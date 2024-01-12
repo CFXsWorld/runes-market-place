@@ -1,10 +1,13 @@
 'use client';
 
+import { useEffect } from 'react';
 import { Inter } from 'next/font/google';
 import PageLayout from '@/app/components/PageLayout';
-import { useEffect } from 'react';
+import {  Flowbite } from 'flowbite-react';
 import WalletProvider, { useWalletStore } from '@/app/store/wallet';
 import { ToastContainer } from 'react-toastify';
+import theme from '@/app/components/ui/theme';
+
 import 'react-toastify/dist/ReactToastify.css';
 import './globals.css';
 
@@ -27,7 +30,7 @@ const Dapp = ({ children }) => {
   }, []);
 
   return (
-    <>
+    <Flowbite theme={{theme}}>
       <ToastContainer
         position="bottom-left"
         theme={'dark'}
@@ -35,7 +38,7 @@ const Dapp = ({ children }) => {
         closeButton={false}
       />
       <PageLayout>{children}</PageLayout>
-    </>
+    </Flowbite>
   );
 };
 

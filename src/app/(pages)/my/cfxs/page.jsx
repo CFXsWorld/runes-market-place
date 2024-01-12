@@ -8,7 +8,6 @@ export default function My() {
   return (
     <div className="mt-[24px]">
       <Attention />
-      <Filter />
       <MyCFXsList />
     </div>
   );

@@ -19,12 +19,8 @@ const Filter = ({ total, reload }) => {
   };
   return (
     <div className="flex flex-col">
-      <div className="md:hidden w-full flex items-center justify-end mb-[10px]">
-        <Refresh />
-      </div>
-      <div className="text-tc-secondary flex items-center justify-between ">
+      <div className="text-tc-secondary flex items-center gap-[16px] ">
         <div className="flex-center max-md:mr-[16px]">
-          <Refresh className="max-md:hidden" />
           <Selector
             options={options}
             value={value}
@@ -32,7 +28,21 @@ const Filter = ({ total, reload }) => {
             className="w-[254px] max-md:w-full"
           />
         </div>
-        <Search className="w-[300px] max-md:w-full max-md:flex-1 max-md:max-w-[280px]" placeholder="Search by ID" />
+        <Search
+          className="w-[300px] max-md:w-full max-md:flex-1 max-md:max-w-[280px]"
+          placeholder="Search by ID"
+        />
+        <button
+          className="btn btn-primary rounded-[4px] ml-[16px]"
+          onClick={() => {
+            reload();
+          }}
+        >
+          Apply
+        </button>
+      </div>
+      <div className=" w-full flex items-center mt-[16px]">
+        <Refresh total={total} reload={reload}/>
       </div>
     </div>
   );

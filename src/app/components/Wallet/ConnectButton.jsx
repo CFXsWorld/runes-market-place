@@ -3,12 +3,13 @@
 import ConnectModal from '@/app/components/Wallet/ConnectModal';
 import { useEffect, useRef, useState } from 'react';
 import { useCFXsWallet } from '@/app/components/Wallet/index';
-import { ESpaceIcon, WalletIcon } from '@/app/components/icons';
+import { ActiveIcon, ESpaceIcon, WalletIcon } from '@/app/components/icons';
 import { useWalletStore } from '@/app/store/wallet';
-import { addressFormat, addressFormatShort } from "@/app/utils";
+import { addressFormat, addressFormatShort } from '@/app/utils';
 import useEnv from '@/app/hooks/useEnv';
 import { cn } from '@/app/utils/classnames';
 import { toast } from 'react-toastify';
+import { Button, Datepicker } from 'flowbite-react';
 
 const getText = (status, address) => {
   if (status === 'in-detecting') {
@@ -92,29 +93,34 @@ const WalletButton = ({
           />
         ) : isCorrectChain ? (
           <span
-            className="text-[14px] text-tc-secondary cursor-pointer"
+            className="text-[14px] text-tc-secondary cursor-pointer "
             onClick={onClick}
           >
             {addressFormatShort(account)}
           </span>
         ) : (
-          <WalletIcon className="text-[20px] cursor-pointer" onClick={onClick} />
+          <WalletIcon
+            className="text-[20px] cursor-pointer"
+            onClick={onClick}
+          />
         )}
       </div>
-      <button
+      <Button
         onClick={onClick}
-        className="btn btn-primary flex-center-between rounded-[4px] max-md:hidden"
+        color={isActive ? 'secondary' : 'primary'}
+        className="flex-center"
       >
-        <WalletIcon className="text-[20px]" />
-        {getText(status, account)}
-      </button>
+        {isActive ? <ActiveIcon /> : <WalletIcon className="text-[20px]" />}
+
+        <span className="ml-[5px]"> {getText(status, account)}</span>
+      </Button>
     </div>
   );
 };
 
 export default function ConnectWallet() {
   const walletProvider = useWalletStore((state) => state.walletProvider);
-  const modal = useRef();
+  const [open, onOpen] = useState(false);
   const wallets = useCFXsWallet();
 
   const currentWallet = wallets[walletProvider];
@@ -125,12 +131,12 @@ export default function ConnectWallet() {
         <WalletButton
           {...currentWallet}
           onClick={() => {
-            modal.current.showModal();
+            onOpen(true)
           }}
         />
       )}
 
-      <ConnectModal ref={modal} />
+      <ConnectModal open={open} onOpen={onOpen} />
     </div>
   );
 }

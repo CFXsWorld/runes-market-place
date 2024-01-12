@@ -2,7 +2,7 @@
 
 import { useWalletStore } from '@/app/store/wallet';
 import useCFXsWallet from '@/app/hooks/useCFXsWallet';
-import Modal from '@/app/components/ui/Modal';
+import { Modal } from 'flowbite-react';
 import { forwardRef } from 'react';
 import { cn } from '@/app/utils/classnames';
 import { FluentIcon, MetamaskIcon } from '@/app/components/icons';
@@ -26,7 +26,8 @@ const items = [
     type: WalletProvider.Fluent,
   },
 ];
-const ConnectModal = forwardRef((_, ref) => {
+
+const ConnectModal = forwardRef(({ open, onOpen }, ref) => {
   const updateWalletProvider = useWalletStore(
     (state) => state.updateWalletProvider
   );
@@ -40,21 +41,21 @@ const ConnectModal = forwardRef((_, ref) => {
     } finally {
       updateWalletProvider(type);
       localStorage.setItem('walletProvider', type);
-      ref.current.close();
+      onOpen(false);
     }
   };
 
   return (
-    <Modal outside ref={ref}>
-      <div>
-        <div className="text-[20px]">Connect a wallet</div>
-        <div className="mt-[42px] flex flex-col">
+    <Modal show={open} onClose={() => onOpen(false)} ref={ref} position='center'>
+      <Modal.Header>Connect a wallet</Modal.Header>
+      <Modal.Body>
+        <div className="mt-6  px-6 flex flex-col">
           {items.map((item) => (
             <button
               key={item.type}
               onClick={() => connect(item.type)}
               className={cn(
-                'btn w-full h-[60px] mb-[24px] rounded-[4px] bg-fill-e-primary border-none',
+                'px-[12px] btn w-full h-[60px] mb-[24px] rounded-[4px] bg-fill-e-primary border-none',
                 'hover:bg-theme hover:opacity-80 text-white hover:btn-primary',
                 'flex-center-between'
               )}
@@ -64,7 +65,7 @@ const ConnectModal = forwardRef((_, ref) => {
             </button>
           ))}
         </div>
-      </div>
+      </Modal.Body>
     </Modal>
   );
 });

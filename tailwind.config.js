@@ -5,20 +5,8 @@ module.exports = {
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    'node_modules/flowbite-react/lib/esm/**/*.js',
   ],
-  daisyui: {
-    themes: [
-      {
-        dark: {
-          ...require('daisyui/src/theming/themes')['black'],
-          primary: '#AD8D65',
-          '.modal-box': {
-            background: 'var(--cfxs-bg-e-secondary)',
-          },
-        },
-      },
-    ],
-  },
   theme: {
     screens: {
       sm: '488px',
@@ -87,7 +75,7 @@ module.exports = {
     },
   },
   plugins: [
-    require('daisyui'),
+    require('flowbite/plugin'),
     require('tailwindcss-animate'),
     require('@tailwindcss/line-clamp'),
   ],

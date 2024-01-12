@@ -1,41 +1,76 @@
 'use client';
 
 import { cn } from '@/app/utils/classnames';
+import Checkbox from '@/app/components/ui/Checkbox';
+import usePromiseLoading from '@/app/hooks/usePromiseLoading';
+import { LoadingIcon, SplitIcon, TransferIcon } from '@/app/components/icons';
+import Datepicker from "react-tailwindcss-datepicker";
+import { useState } from "react";
 
-const Total = () => {
-  return (
-    <div className="mr-[32px] text-[20px] max-md:text-[12px] max-md:mt-[5px] ">
-      <span className="text-tc-secondary pr-[4px]"> Total:</span>
-      <span className="text-theme font-medium">9800.12 USDT</span>
-    </div>
-  );
-};
+const Action = ({ selected, handleMultiPurchase }) => {
+  const [value, setValue] = useState({
+    startDate: new Date(),
+    endDate: new Date().setMonth(11)
+  });
 
-const Sweep = () => {
+  const handleValueChange = (newValue) => {
+    console.log("newValue:", newValue);
+    setValue(newValue);
+  }
+
+  const { trigger, loading } = usePromiseLoading(handleMultiPurchase);
   return (
-    <div className="flex-center">
-      <button className="btn btn-primary px-[24px]">SWEEP</button>
+    <div className="flex-center gap-[16px]">
+      <div className="flex center gap-[16px]">
+        <Datepicker
+          value={value}
+          onChange={handleValueChange}
+        />
+        <button className="max-sm:text-[12px] btn btn-outline btn-primary  px-[8px] text-[14px] font-normal">
+          <SplitIcon />
+          MERGE
+        </button>
+        <button className="max-sm:text-[12px] btn btn-outline btn-primary px-[8px] text-[14px] font-normal">
+          <TransferIcon />
+          TRANSFER
+        </button>
+      </div>
+      <button
+        className="btn btn-primary px-[24px]"
+        disabled={selected.length === 0 || loading}
+        onClick={() => trigger()}
+      >
+        {loading ? <LoadingIcon /> : 'BATCH LISTING'}
+      </button>
     </div>
   );
 };
 
 const SelectedCount = ({ selected }) => {
   return (
-    <span className="text-tc-secondary max-md:text-[12px]">
+    <span className="text-tc-secondary max-md:text-[12px] w-[80px]">
       {selected.length} Item
     </span>
   );
 };
 
-const CheckBox = () => {
+const CheckBox = ({ onChange }) => {
   return (
-    <span className="md:mx-[32px] text-tc-secondary max-md:text-[12px] max-md:mr-[16px]">
+    <Checkbox
+      onChange={onChange}
+      className="md:mr-[32px] md:ml-[8px] text-tc-secondary max-md:text-[12px] max-md:mr-[16px]"
+    >
       Select All
-    </span>
+    </Checkbox>
   );
 };
 
-const MultiHandleBar = ({ selected = [], clearAll }) => {
+const MultiHandleBar = ({
+  selected = [],
+  clearAll,
+  selectAll,
+  handleMultiPurchase,
+}) => {
   return (
     <div
       className={cn(
@@ -47,24 +82,25 @@ const MultiHandleBar = ({ selected = [], clearAll }) => {
       <div className="md:hidden w-full flex items-center justify-between">
         <div className="flex items-start justify-start flex-col">
           <div className="flex items-center">
-            <CheckBox />
+            <CheckBox onChange={selectAll} />
             <SelectedCount selected={selected} />
           </div>
-          <Total />
         </div>
-        <Sweep />
+        <Action selected={selected} handleMultiPurchase={handleMultiPurchase} />
       </div>
       <div className="md:max-w-[1368px] w-full flex-center-between max-md:hidden">
         <div className="flex-center text-tc-secondary">
           <SelectedCount selected={selected} />
-          <CheckBox />
+          <CheckBox onChange={selectAll} />
           <span className="text-theme cursor-pointer" onClick={clearAll}>
             Clear
           </span>
         </div>
         <div className="flex-center">
-          <Total />
-          <Sweep />
+          <Action
+            selected={selected}
+            handleMultiPurchase={handleMultiPurchase}
+          />
         </div>
       </div>
     </div>

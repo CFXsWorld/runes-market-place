@@ -47,15 +47,10 @@ const useList = () => {
       : null
   );
 
-  const {
-    data,
-    isMutating,
-    trigger: getData,
-  } = useSWRMutation(APIs.MARKET_LIST, getMyCFSxList);
-
-  const totalResult = useMemo(() => {
-    return data?.count || 0;
-  }, [data]);
+  const { isMutating, trigger: getData } = useSWRMutation(
+    APIs.MARKET_LIST,
+    getMyCFSxList
+  );
 
   const refresh = () => {
     setNoMore(false);
@@ -106,6 +101,7 @@ const useList = () => {
     onSelect,
     onBuy,
     loadMore,
+    refresh,
     isMutating,
     count,
     clearAll,

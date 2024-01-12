@@ -27,6 +27,8 @@ import Menu from './svgs/menu.svg';
 import Close from './svgs/close.svg';
 import LogoMDSvg from './svgs/logo-md.svg';
 import FilterSvg from './svgs/filter.svg';
+import Transfer from './svgs/transfer.svg';
+import Active from './svgs/active.svg';
 
 export const Icon = ({ className, style, children, ...props }) => {
   return (
@@ -38,6 +40,12 @@ export const Icon = ({ className, style, children, ...props }) => {
 export const ArrowDownIcon = (props) => (
   <Icon {...props}>
     <ArrowDown />
+  </Icon>
+);
+
+export const TransferIcon = (props) => (
+  <Icon {...props}>
+    <Transfer />
   </Icon>
 );
 export const EmptyIcon = (props) => (
@@ -177,5 +185,10 @@ export const CloseIcon = (props) => (
 export const FilterIcon = (props) => (
   <Icon {...props}>
     <FilterSvg />
+  </Icon>
+);
+export const ActiveIcon = (props) => (
+  <Icon {...props}>
+    <Active />
   </Icon>
 );
