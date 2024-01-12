@@ -84,10 +84,10 @@ const useList = () => {
     return null;
   }, [dataSource]);
 
-  const refresh = (filterData = {}) => {
+  const refresh = () => {
     setDataSource(null);
     setCurrentPage(0);
-    getData({ ...transformedFilter, ...filterData, startIndex: 0 }).then(
+    getData({ ...transformedFilter, startIndex: 0 }).then(
       (res) => {
         setDataSource({ [0]: res.rows });
       }

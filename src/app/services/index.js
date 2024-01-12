@@ -1,9 +1,13 @@
 import request, { APIs } from '@/app/services/request';
 
-export const getMarketCFXsList = (aaa, { arg }) => {
+export const getMarketCFXsList = (_, { arg }) => {
   return request(APIs.MARKET_LIST, { method: 'get', params: arg });
 };
 
 export const getMarketStatistics = () => {
   return request(APIs.MARKET_STATISTICS, { method: 'get' });
+};
+
+export const getMyCFSxList = (_, { arg }) => {
+  return request(APIs.MY_CFXs_LIST, { method: 'get', params: arg });
 };

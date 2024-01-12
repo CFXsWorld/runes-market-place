@@ -4,6 +4,7 @@ import { cn } from '@/app/utils/classnames';
 import { MergeIcon, FragmentIcon, SplitIcon } from '@/app/components/icons';
 
 const CFXsCard = ({ item, selected, onSelect, onBuy }) => {
+  const isMerge = item.amount > 1;
   return (
     <div
       className={cn(
@@ -19,23 +20,26 @@ const CFXsCard = ({ item, selected, onSelect, onBuy }) => {
       <div className="p-[16px] max-sm:p-[10px]">
         <div className="flex-center-between">
           <div className="text-theme flex items-center">
-          <span className="text-[24px] mr-[8px] max-sm:text-[14px]">
-              {item.count > 0 ? <MergeIcon /> : <FragmentIcon />}
+            <span className="text-[24px] mr-[8px] max-sm:text-[14px]">
+              {!isMerge ? <FragmentIcon /> : <MergeIcon />}
             </span>
-            <span className='max-sm:text-[12px]'>{item.symbol}</span>
+            <span className="max-sm:text-[12px]">CFXs</span>
           </div>
           <span className="text-tc-secondary">#{item.id}</span>
         </div>
         <div className="my-[16px] flex flex-col justify-center items-center max-sm:my-[12px]">
-          <span className="text-[24px] font-[500]">{item.count}</span>
+          <span className="text-[24px] font-[500]">{item.amount}</span>
         </div>
         <div className="flex-center">
-          <div className="w-[36px] h-[36px] border border-theme rounded-[4px] flex-center mr-[12px]">
-            <SplitIcon />
-          </div>
+          {isMerge && (
+            <div className="w-[36px] h-[36px] border border-theme rounded-[4px] flex-center mr-[12px]">
+              <SplitIcon />
+            </div>
+          )}
           <button
             className="btn btn-outline btn-primary h-[36px] min-h-[36px] px-[8px] text-[14px] font-normal rounded-[4px] flex-1"
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation()
               onBuy(item);
             }}
           >

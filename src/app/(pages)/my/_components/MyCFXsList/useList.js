@@ -1,11 +1,43 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import useMounted from '@/app/hooks/useMounted';
 import useResponsive from '@/app/hooks/useResponsive';
-const sleep = () => new Promise((resolve) => setTimeout(resolve, 1000));
+import useSWRMutation from 'swr/mutation';
+import { APIs } from '@/app/services/request';
+import { getMyCFSxList } from '@/app/services';
+import { pageItemCount } from '@/app/utils';
+import { uniqBy } from 'lodash';
+import useWallet from '@/app/hooks/useWallet';
+import { getAddress } from 'ethers';
 
 const useList = () => {
   const [selected, setSelected] = useState([]);
-  const [dataSource, setDataSource] = useState([]);
+  const [dataSource, setDataSource] = useState(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const { useAccount } = useWallet();
+  const [noMore, setNoMore] = useState(false);
+
+  const account = useAccount();
+
+  const [filter, setFilter] = useState({
+    startIndex: 0,
+    size: pageItemCount,
+    merged: undefined,
+    id: undefined,
+    owner: undefined,
+  });
+
+  useEffect(() => {
+    if (account) {
+      refresh();
+    }
+  }, [account]);
+
+  const transformedFilter = useMemo(() => {
+    return {
+      ...filter,
+      owner: account ? getAddress(account) : undefined,
+    };
+  }, [account]);
 
   const mounted = useMounted();
   const { count } = useResponsive(
@@ -15,30 +47,48 @@ const useList = () => {
       : null
   );
 
-  const getData = async () => {
-    await sleep();
-    return [...new Array(30)].map(() => ({
-      id: Math.floor(Math.random() * 1000000),
-      symbol: 'CFXs',
-      count: 1000,
-      unitPrice: 0.009,
-      totalAmount: 900,
-      expiredDate: '2024-01-06',
-      owner: '0xfe97e85d13abd9c1c33384e796f10b73905637ce',
-    }));
-  };
+  const {
+    data,
+    isMutating,
+    trigger: getData,
+  } = useSWRMutation(APIs.MARKET_LIST, getMyCFSxList);
 
-  const loadMore = async () => {
-    console.log('load more');
-    const data = await getData();
-    setDataSource((prev) => [...prev, ...data]);
-  };
+  const totalResult = useMemo(() => {
+    return data?.count || 0;
+  }, [data]);
 
-  useEffect(() => {
-    getData().then((res) => {
-      setDataSource(res);
+  const refresh = () => {
+    setNoMore(false);
+    setDataSource(null);
+    setCurrentPage(0);
+    getData({ ...transformedFilter, startIndex: 0 }).then((res) => {
+      setDataSource({ [0]: res.rows || [] });
     });
-  }, []);
+  };
+  const loadMore = async () => {
+    getData({
+      ...transformedFilter,
+      startIndex: currentPage * pageItemCount,
+    }).then((res) => {
+      if (res.rows && res.rows.length === 0 && currentPage > 0) {
+        setNoMore(true);
+      } else {
+        setCurrentPage(currentPage + 1);
+        setDataSource({ ...(dataSource || {}), [currentPage]: res.rows || [] });
+      }
+    });
+  };
+  const source = useMemo(() => {
+    if (dataSource) {
+      return uniqBy(
+        Object.keys(dataSource)
+          .sort()
+          .reduce((prev, next) => prev.concat(dataSource[next]), []),
+        (item) => item.id
+      );
+    }
+    return null;
+  }, [dataSource]);
   const onBuy = () => {};
   const clearAll = () => {
     setSelected([]);
@@ -56,9 +106,11 @@ const useList = () => {
     onSelect,
     onBuy,
     loadMore,
-    dataSource,
+    isMutating,
     count,
     clearAll,
+    source,
+    noMore,
   };
 };
 

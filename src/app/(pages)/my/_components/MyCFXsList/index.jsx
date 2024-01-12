@@ -7,8 +7,17 @@ import MultiHandleBar from './MultiHandleBar';
 import LoadMore from '@/app/components/LoadMore';
 
 export default function MyCFXsList() {
-  const { dataSource, loadMore, count, selected, clearAll, onSelect, onBuy } =
-    useList();
+  const {
+    source,
+    isMutating,
+    loadMore,
+    count,
+    selected,
+    clearAll,
+    onSelect,
+    onBuy,
+    noMore,
+  } = useList();
 
   return (
     <div className="w-full pt-[32px] pb-[96px]">
@@ -19,7 +28,7 @@ export default function MyCFXsList() {
           gridTemplateColumns: `repeat(${count},1fr)`,
         }}
       >
-        {dataSource.map((item) => (
+        {(source || []).map((item) => (
           <Card
             key={item.id}
             item={item}
@@ -34,12 +43,10 @@ export default function MyCFXsList() {
         onEnter={loadMore}
       >
         <div className="w-full">
-          <LoadMore loading={true} />
+          <LoadMore loading={isMutating} data={source} noMore={noMore} />
         </div>
       </Waypoint>
-      {selected.length > 0 && (
-        <MultiHandleBar selected={selected} clearAll={clearAll} />
-      )}
+      <MultiHandleBar selected={selected} clearAll={clearAll} />
     </div>
   );
 }
