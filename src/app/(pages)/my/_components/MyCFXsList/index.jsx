@@ -8,6 +8,7 @@ import LoadMore from '@/app/components/LoadMore';
 import Filter from '@/app/(pages)/my/_components/Filter';
 import ListingModal from '@/app/(pages)/my/_components/MyCFXsList/listing/ListingModal';
 import MergeModal from '@/app/(pages)/my/_components/MyCFXsList/merge/MergeModal';
+import TransferModal from '@/app/(pages)/my/_components/MyCFXsList/transfer/TransferModal';
 
 export default function MyCFXsList() {
   const {
@@ -48,6 +49,13 @@ export default function MyCFXsList() {
         selected={selected}
         reload={refresh}
       />
+      <TransferModal
+        open={openTransfer}
+        onOpen={onOpenTransfer}
+        selected={selected}
+        reload={refresh}
+      />
+
       <Filter total={source?.length || 0} reload={refresh} />
       <div className="w-full pt-[32px] pb-[96px]">
         <div id="my-cfxs-sentinel" className="w-full" />
