@@ -76,7 +76,7 @@ export default function MyCFXsList() {
       />
 
       <Filter total={source?.length || 0} reload={refresh} />
-      <div className="w-full pt-[32px] pb-[96px]">
+      <div className="w-full pt-[32px] pb-[96px] max-sm:pb-[180px]">
         <div id="my-cfxs-sentinel" className="w-full" />
         <div
           className="grid w-full gap-[24px] max-md:gap-[8px]"

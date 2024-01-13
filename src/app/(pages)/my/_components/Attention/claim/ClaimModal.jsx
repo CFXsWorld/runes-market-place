@@ -81,6 +81,7 @@ const ClaimModal = forwardRef(({ onOpen, open }, ref) => {
             <Button
               color="primary"
               disabled={!selected.length || loading}
+              className='w-[70px]'
               onClick={() => {
                 trigger();
               }}

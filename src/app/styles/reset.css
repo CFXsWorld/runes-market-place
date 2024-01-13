@@ -4,8 +4,9 @@
 
 button:disabled {
   background: rgba(128, 128, 128, 0.2);
-  color: black;
+  color: var(--cfxs-tc-secondary);
 }
 button:disabled:hover {
   background: rgba(128, 128, 128, 0.2);
+  color: var(--cfxs-tc-secondary);
 }

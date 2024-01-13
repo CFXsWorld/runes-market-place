@@ -7,12 +7,12 @@ import { Button } from 'flowbite-react';
 
 const Action = ({ selected, onMerge, onTransfer, onBatchListing }) => {
   return (
-    <div className="flex-center gap-[16px]">
-      <div className="flex center gap-[16px]">
+    <div className="flex-center gap-[16px] max-sm:flex-col max-sm:w-full">
+      <div className="flex center gap-[16px] max-sm:w-full max-sm:mt-[12px]">
         <Button
           color="outline"
           disabled={selected.length === 0}
-          className="max-sm:text-[12px] btn btn-outline btn-primary  px-[8px] text-[14px] font-normal"
+          className="max-sm:text-[12px] btn btn-outline btn-primary  px-[8px] text-[14px] font-normal max-sm:flex-1"
           onClick={onMerge}
         >
           <SplitIcon />
@@ -21,7 +21,7 @@ const Action = ({ selected, onMerge, onTransfer, onBatchListing }) => {
         <Button
           color="outline"
           disabled={selected.length === 0}
-          className="max-sm:text-[12px] btn btn-outline btn-primary px-[8px] text-[14px] font-normal"
+          className="max-sm:text-[12px] btn btn-outline btn-primary px-[8px] text-[14px] font-normal max-sm:flex-1"
           onClick={onTransfer}
         >
           <TransferIcon />
@@ -30,7 +30,7 @@ const Action = ({ selected, onMerge, onTransfer, onBatchListing }) => {
       </div>
       <Button
         color="primary"
-        className="btn btn-primary px-[24px]"
+        className="max-sm:w-full px-[24px]"
         disabled={selected.length === 0}
         onClick={onBatchListing}
       >
@@ -71,11 +71,11 @@ const MultiHandleBar = ({
     <div
       className={cn(
         'fixed right-0 left-0 bottom-0 flex-center  max-md:px-[16px] md:px-[24px]',
-        'h-[78px] border border-fill-e-secondary',
+        'h-[78px] border border-fill-e-secondary max-sm:h-[176px]',
         'bg-[rgba(24,24,24,0.9)] backdrop-filter-[50px]'
       )}
     >
-      <div className="md:hidden w-full flex items-center justify-between">
+      <div className="md:hidden w-full flex flex-col items-start">
         <div className="flex items-start justify-start flex-col">
           <div className="flex items-center">
             <CheckBox onChange={selectAll} />

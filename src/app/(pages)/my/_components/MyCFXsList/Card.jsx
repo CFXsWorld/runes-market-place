@@ -52,7 +52,9 @@ const CFXsCard = ({ item, selected, onSelect, onListing, onSplit }) => {
               onListing(item);
             }}
           >
-            List for sale
+            <span className="max-sm:text-[12px] line-clamp-1">
+              List for sale
+            </span>
           </Button>
         </div>
       </div>
