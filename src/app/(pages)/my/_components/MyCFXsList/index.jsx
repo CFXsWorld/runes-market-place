@@ -38,86 +38,89 @@ export default function MyCFXsList() {
     selectAll,
     handleSplit,
     splitOrder,
+    account,
   } = useList();
 
   return (
-    <div>
-      <ListingModal
-        open={openListing}
-        onOpen={onOpenListing}
-        key={listingOrder?.id}
-        listingOrder={listingOrder}
-        reload={refresh}
-      />
-      <MergeModal
-        open={openMerge}
-        onOpen={onOpenMerge}
-        selected={selected}
-        reload={refresh}
-      />
-      <TransferModal
-        open={openTransfer}
-        onOpen={onOpenTransfer}
-        selected={selected}
-        reload={refresh}
-      />
-      <BatchListingModal
-        open={openBatchListing}
-        onOpen={onOpenBatchListing}
-        selected={selected}
-        reload={refresh}
-      />
-
-      <SplitModal
-        open={openSplit}
-        onOpen={onOpenSplit}
-        splitOrder={splitOrder}
-        reload={refresh}
-      />
-
-      <Filter total={source?.length || 0} reload={refresh} />
-      <div className="w-full pt-[32px] pb-[96px] max-sm:pb-[180px]">
-        <div id="my-cfxs-sentinel" className="w-full" />
-        <div
-          className="grid w-full gap-[24px] max-md:gap-[8px]"
-          style={{
-            gridTemplateColumns: `repeat(${count},1fr)`,
-          }}
-        >
-          {(source || []).map((item) => (
-            <Card
-              key={item.id}
-              item={item}
-              onSelect={onSelect}
-              selected={selected}
-              onListing={handleListing}
-              onSplit={handleSplit}
-            />
-          ))}
-        </div>
-        <Waypoint
-          scrollableAncestor={typeof window !== 'undefined' ? window : null}
-          onEnter={loadMore}
-        >
-          <div className="w-full">
-            <LoadMore loading={isMutating} data={source} noMore={noMore} />
-          </div>
-        </Waypoint>
-        <MultiHandleBar
-          selected={selected}
-          clearAll={clearAll}
-          selectAll={selectAll}
-          onMerge={() => {
-            onOpenMerge(true);
-          }}
-          onTransfer={() => {
-            onOpenTransfer(true);
-          }}
-          onBatchListing={() => {
-            onOpenBatchListing(true);
-          }}
+    account && (
+      <div>
+        <ListingModal
+          open={openListing}
+          onOpen={onOpenListing}
+          key={listingOrder?.id}
+          listingOrder={listingOrder}
+          reload={refresh}
         />
+        <MergeModal
+          open={openMerge}
+          onOpen={onOpenMerge}
+          selected={selected}
+          reload={refresh}
+        />
+        <TransferModal
+          open={openTransfer}
+          onOpen={onOpenTransfer}
+          selected={selected}
+          reload={refresh}
+        />
+        <BatchListingModal
+          open={openBatchListing}
+          onOpen={onOpenBatchListing}
+          selected={selected}
+          reload={refresh}
+        />
+
+        <SplitModal
+          open={openSplit}
+          onOpen={onOpenSplit}
+          splitOrder={splitOrder}
+          reload={refresh}
+        />
+
+        <Filter total={source?.length || 0} reload={refresh} />
+        <div className="w-full pt-[32px] pb-[96px] max-sm:pb-[180px]">
+          <div id="my-cfxs-sentinel" className="w-full" />
+          <div
+            className="grid w-full gap-[24px] max-md:gap-[8px]"
+            style={{
+              gridTemplateColumns: `repeat(${count},1fr)`,
+            }}
+          >
+            {(source || []).map((item) => (
+              <Card
+                key={item.id}
+                item={item}
+                onSelect={onSelect}
+                selected={selected}
+                onListing={handleListing}
+                onSplit={handleSplit}
+              />
+            ))}
+          </div>
+          <Waypoint
+            scrollableAncestor={typeof window !== 'undefined' ? window : null}
+            onEnter={loadMore}
+          >
+            <div className="w-full">
+              <LoadMore loading={isMutating} data={source} noMore={noMore} />
+            </div>
+          </Waypoint>
+          <MultiHandleBar
+            selected={selected}
+            clearAll={clearAll}
+            selectAll={selectAll}
+            onMerge={() => {
+              onOpenMerge(true);
+            }}
+            onTransfer={() => {
+              onOpenTransfer(true);
+            }}
+            onBatchListing={() => {
+              onOpenBatchListing(true);
+            }}
+          />
+        </div>
       </div>
-    </div>
+    )
   );
 }

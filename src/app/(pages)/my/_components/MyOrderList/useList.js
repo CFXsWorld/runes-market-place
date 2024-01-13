@@ -1,12 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import useMounted from '@/app/hooks/useMounted';
 import useResponsive from '@/app/hooks/useResponsive';
-const sleep = () => new Promise((resolve) => setTimeout(resolve, 1000));
+import { pageItemCount } from '@/app/utils';
+import { uniqBy } from 'lodash';
+import useSWRMutation from 'swr/mutation';
+import { APIs } from '@/app/services/request';
+import { getMarketCFXsList } from '@/app/services';
+import { getAddress } from 'ethers';
+import useWallet from '@/app/hooks/useWallet';
 
 const useList = () => {
-  const [dataSource, setDataSource] = useState([]);
-
+  const [orders, setOrders] = useState(null);
+  const [open, onOpen] = useState(false);
   const mounted = useMounted();
+  const { useAccount } = useWallet();
+  const account = useAccount();
   const { count } = useResponsive(
     { min: 200, max: 300, gap: 24, H5Min: 160 },
     mounted && typeof document !== 'undefined'
@@ -14,36 +22,95 @@ const useList = () => {
       : null
   );
 
-  const getData = async () => {
-    await sleep();
-    return [...new Array(30)].map(() => ({
-      id: Math.floor(Math.random() * 1000000),
-      symbol: 'CFXs',
-      count: 1000,
-      unitPrice: 0.009,
-      totalAmount: 900,
-      expiredDate: '2024-01-06',
-      owner: '0xfe97e85d13abd9c1c33384e796f10b73905637ce',
-    }));
-  };
+  const [dataSource, setDataSource] = useState(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [filter] = useState({
+    startIndex: 0,
+    size: pageItemCount,
+    owner: undefined,
+  });
 
-  const loadMore = async () => {
-    console.log('load more');
-    const data = await getData();
-    setDataSource((prev) => [...prev, ...data]);
-  };
+  const transformedFilter = useMemo(() => {
+    return {
+      ...filter,
+      owner: account ? getAddress(account) : undefined,
+    };
+  }, [account]);
 
-  useEffect(() => {
-    getData().then((res) => {
-      setDataSource(res);
+  const {
+    data,
+    isMutating,
+    trigger: getData,
+  } = useSWRMutation(APIs.MARKET_LIST, getMarketCFXsList);
+
+  const source = useMemo(() => {
+    if (dataSource) {
+      return uniqBy(
+        Object.keys(dataSource)
+          .sort()
+          .reduce((prev, next) => prev.concat(dataSource[next]), []),
+        (item) => item.id
+      );
+    }
+    return null;
+  }, [dataSource]);
+
+  const totalResult = useMemo(() => {
+    return data?.count || 0;
+  }, [data]);
+
+  const refresh = () => {
+    setDataSource(null);
+    setCurrentPage(0);
+    getData({ ...transformedFilter, startIndex: 0 }).then((res) => {
+      setDataSource({ [0]: res.rows });
     });
-  }, []);
-  const onBuy = () => {};
+  };
+  const loadMore = async () => {
+    getData({
+      ...transformedFilter,
+      startIndex: currentPage * pageItemCount,
+    }).then((res) => {
+      if (res.rows && res.rows.length === 0 && currentPage > 0) {
+      } else {
+        setCurrentPage(currentPage + 1);
+        setDataSource({ ...(dataSource || {}), [currentPage]: res.rows });
+      }
+    });
+  };
+
+  const noMore = useMemo(() => {
+    return source && source.length === totalResult;
+  }, [source, totalResult]);
+
+  const handleCancel = (item) => {
+    setOrders([item]);
+    onOpen(true);
+  };
+
+  const handleCancelAll = () => {
+    if (source?.length > 0) {
+      setOrders(source);
+      onOpen(true);
+    }
+  };
+
   return {
-    onBuy,
     loadMore,
+    refresh,
     dataSource,
+    isMutating,
     count,
+    totalResult,
+    source,
+    noMore,
+    account,
+    onOpen,
+    open,
+    handleCancelAll,
+    handleCancel,
+    orders,
+    setOrders,
   };
 };
 

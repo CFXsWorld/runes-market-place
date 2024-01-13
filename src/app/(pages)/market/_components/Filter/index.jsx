@@ -1,8 +1,7 @@
 'use client';
 
-import { FilterIcon, ListIcon } from '@/app/components/icons';
+import { ListIcon } from '@/app/components/icons';
 
-import Search from '@/app/components/ui/Input/Search';
 import Refresh from '@/app/(pages)/market/_components/Filter/Refresh';
 import FilterForm from '@/app/(pages)/market/_components/Filter/FilterForm';
 import useFilter from '@/app/(pages)/market/_components/Filter/useFilter';

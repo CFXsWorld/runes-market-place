@@ -17,6 +17,7 @@ const useList = () => {
   const [dataSource, setDataSource] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const { useAccount } = useWallet();
+  const account = useAccount();
   const [noMore, setNoMore] = useState(false);
   const {
     openListing,
@@ -31,7 +32,7 @@ const useList = () => {
     onOpenBatchListing,
   } = useHandleModal();
 
-  const account = useAccount();
+
 
   const [filter, setFilter] = useState({
     startIndex: 0,
@@ -63,7 +64,7 @@ const useList = () => {
   );
 
   const { isMutating, trigger: getData } = useSWRMutation(
-    APIs.MARKET_LIST,
+    APIs.MY_CFXs_LIST,
     getMyCFSxList
   );
 
@@ -156,6 +157,7 @@ const useList = () => {
     splitOrder,
     setSplitOrder,
     handleSplit,
+    account,
   };
 };
 
