@@ -10,6 +10,7 @@ import ListingModal from '@/app/(pages)/my/_components/MyCFXsList/listing/Listin
 import MergeModal from '@/app/(pages)/my/_components/MyCFXsList/merge/MergeModal';
 import TransferModal from '@/app/(pages)/my/_components/MyCFXsList/transfer/TransferModal';
 import BatchListingModal from '@/app/(pages)/my/_components/MyCFXsList/listing/BatchListingModal';
+import SplitModal from '@/app/(pages)/my/_components/MyCFXsList/split/SplitModal';
 
 export default function MyCFXsList() {
   const {
@@ -35,6 +36,8 @@ export default function MyCFXsList() {
     onOpenBatchListing,
     listingOrder,
     selectAll,
+    handleSplit,
+    splitOrder,
   } = useList();
 
   return (
@@ -65,6 +68,13 @@ export default function MyCFXsList() {
         reload={refresh}
       />
 
+      <SplitModal
+        open={openSplit}
+        onOpen={onOpenSplit}
+        splitOrder={splitOrder}
+        reload={refresh}
+      />
+
       <Filter total={source?.length || 0} reload={refresh} />
       <div className="w-full pt-[32px] pb-[96px]">
         <div id="my-cfxs-sentinel" className="w-full" />
@@ -81,6 +91,7 @@ export default function MyCFXsList() {
               onSelect={onSelect}
               selected={selected}
               onListing={handleListing}
+              onSplit={handleSplit}
             />
           ))}
         </div>

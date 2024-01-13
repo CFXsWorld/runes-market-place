@@ -206,4 +206,9 @@ export default {
       },
     },
   },
+  radio: {
+    root: {
+      base: 'h-4 w-4 border border-them focus:ring-theme focus:ring-theme text-theme bg-transparent',
+    },
+  },
 };

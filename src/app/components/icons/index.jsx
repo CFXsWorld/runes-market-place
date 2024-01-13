@@ -29,6 +29,9 @@ import LogoMDSvg from './svgs/logo-md.svg';
 import FilterSvg from './svgs/filter.svg';
 import Transfer from './svgs/transfer.svg';
 import Active from './svgs/active.svg';
+import Reduce from './svgs/reduce.svg';
+import Plus from './svgs/plus.svg';
+import Warning from './svgs/warning.svg';
 
 export const Icon = ({ className, style, children, ...props }) => {
   return (
@@ -190,5 +193,20 @@ export const FilterIcon = (props) => (
 export const ActiveIcon = (props) => (
   <Icon {...props}>
     <Active />
+  </Icon>
+);
+export const ReduceIcon = (props) => (
+  <Icon {...props}>
+    <Reduce />
+  </Icon>
+);
+export const PlusIcon = (props) => (
+  <Icon {...props}>
+    <Plus />
+  </Icon>
+);
+export const WarningIcon = (props) => (
+  <Icon {...props}>
+    <Warning />
   </Icon>
 );

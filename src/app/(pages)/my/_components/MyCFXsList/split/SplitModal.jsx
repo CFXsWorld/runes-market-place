@@ -1,66 +1,111 @@
 'use client';
 
-import { Button, Modal } from "flowbite-react";
-import { forwardRef, useEffect, useMemo } from 'react';
+import { Button, Label, Modal, Radio } from 'flowbite-react';
+import { forwardRef } from 'react';
 import usePromiseLoading from '@/app/hooks/usePromiseLoading';
 import { LoadingIcon } from '@/app/components/icons';
-import useSWRMutation from 'swr/mutation';
-import { formatUnits } from 'ethers';
-import { usdtDecimal } from '@/app/utils';
+import { formatNumberWithCommas } from '@/app/utils';
 
-const PurchaseModal = forwardRef(
-  ({ purchaseOrder, onBuy, getUSDTBalance, onOpen, open }, ref) => {
-    const { trigger, loading } = usePromiseLoading(onBuy);
-    const { data = 0, trigger: getBalance } = useSWRMutation('balance', () =>
-      getUSDTBalance()
-    );
+import useSplit, {
+  SPLIT_TYPE,
+} from '@/app/(pages)/my/_components/MyCFXsList/split/useSplit';
+import CustomSplit from '@/app/(pages)/my/_components/MyCFXsList/split/CustomSplit';
+import ShareSplit from '@/app/(pages)/my/_components/MyCFXsList/split/ShareSplit';
 
-    useEffect(() => {
-      getBalance();
-    }, [purchaseOrder]);
+const types = [
+  {
+    value: SPLIT_TYPE.CUSTOM,
+    label: 'Custom',
+  },
+  {
+    value: SPLIT_TYPE.SHARE,
+    label: 'Share',
+  },
+];
 
-    const USDTAmount = useMemo(() => {
-      return Math.ceil(formatUnits(data, usdtDecimal));
-    }, [data]);
-    return (
-      <Modal show={open} onClose={() => onOpen(false)}>
-        <Modal.Header>Purchase</Modal.Header>
-        <Modal.Body>
-          <div className="p-6 flex flex-col">
-            <div className="flex-center-between mb-[12px]">
-              <span className="text-tc-secondary">You will pay</span>
-              <span className="text-white font-medium">
-                {purchaseOrder?.amount || 0} USDT
+const SplitModal = forwardRef(({ reload, onOpen, open, splitOrder }, ref) => {
+  const {
+    split,
+    splitType,
+    setSplitType,
+    items,
+    delItem,
+    addItem,
+    shareCount,
+    setShareCount,
+    onCustomValueChange,
+    isValidAmount,
+  } = useSplit({ splitOrder, reload, onOpen });
+
+  const { trigger, loading } = usePromiseLoading(split);
+
+  return (
+    <Modal show={open} onClose={() => onOpen(false)}>
+      <Modal.Header>Split</Modal.Header>
+      <Modal.Body>
+        <div className="px-6 pb-3 flex flex-col">
+          <div className="flex-center-between">
+            <span className="text-[14px] text-tc-secondary">
+              #{splitOrder?.id}
+            </span>
+            <span className="text-white font-medium">
+              {formatNumberWithCommas(splitOrder?.amount || 0)}
+              <span className="text-tc-secondary font-normal text-[12px]">
+                {' '}
+                CFXs
               </span>
-            </div>
-            <div className="flex-center-between">
-              <span className="text-tc-secondary">For</span>
-              <span className="text-white font-medium">
-                {purchaseOrder?.count || 0} CFXs
-              </span>
-            </div>
-            <div className="text-tc-secondary text-[14px] mt-[32px] mb-[24px] pt-[12px] border border-transparent border-t-fill-e-primary">
-              You will be asked to approve this purchase from your wallet.
-            </div>
-            <Button
-              color='primary'
-              className="btn btn-primary w-full"
-              disabled={!purchaseOrder || loading}
-              onClick={() => {
-                trigger();
-              }}
-            >
-              {loading ? <LoadingIcon /> : 'BUY'}
-            </Button>
-            <div className="flex mt-[12px]">
-              <span>Balance:</span>
-              <span className="text-theme pl-[6px]">{USDTAmount} USDT</span>
-            </div>
+            </span>
           </div>
-        </Modal.Body>
-      </Modal>
-    );
-  }
-);
+          <div className="flex items-center gap-4 mb-[16px] mt-[24px]">
+            {types.map((radio) => (
+              <div className="flex items-center gap-2" key={radio.value}>
+                <Radio
+                  id={radio.value}
+                  name={radio.label}
+                  checked={radio.value === splitType}
+                  onChange={(e) => {
+                    setSplitType(radio.value);
+                  }}
+                />
+                <Label
+                  htmlFor={radio.value}
+                  className="text-tc-secondary cursor-pointer"
+                >
+                  {radio.label}
+                </Label>
+              </div>
+            ))}
+          </div>
+          {splitType === SPLIT_TYPE.CUSTOM ? (
+            <CustomSplit
+              items={items}
+              delItem={delItem}
+              onCustomValueChange={onCustomValueChange}
+              addItem={addItem}
+              isValidAmount={isValidAmount}
+            />
+          ) : (
+            <ShareSplit
+              setShareCount={setShareCount}
+              shareCount={shareCount}
+              isValidAmount={isValidAmount}
+            />
+          )}
 
-export default PurchaseModal;
+          <Button
+            color="primary"
+            className="btn btn-primary w-full mt-[24px]"
+            disabled={loading || !isValidAmount}
+            onClick={() => {
+              trigger();
+            }}
+          >
+            {loading ? <LoadingIcon /> : 'CONFIRM SPLIT'}
+          </Button>
+        </div>
+      </Modal.Body>
+    </Modal>
+  );
+});
+
+export default SplitModal;

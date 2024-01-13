@@ -4,7 +4,7 @@ import { cn } from '@/app/utils/classnames';
 import { MergeIcon, FragmentIcon, SplitIcon } from '@/app/components/icons';
 import { Button } from 'flowbite-react';
 
-const CFXsCard = ({ item, selected, onSelect, onListing }) => {
+const CFXsCard = ({ item, selected, onSelect, onListing, onSplit }) => {
   const isMerge = item.amount > 1;
   const isSelected = selected.find((record) => record.id === item.id);
   return (
@@ -34,7 +34,13 @@ const CFXsCard = ({ item, selected, onSelect, onListing }) => {
         </div>
         <div className="flex-center">
           {isMerge && (
-            <div className="w-[36px] h-[36px] border border-theme rounded-[4px] flex-center mr-[12px]">
+            <div
+              className="w-[36px] h-[36px] border border-theme rounded-[4px] flex-center mr-[12px] text-theme hover:bg-theme hover:text-black"
+              onClick={(e) => {
+                e.stopPropagation();
+                onSplit(item);
+              }}
+            >
               <SplitIcon />
             </div>
           )}

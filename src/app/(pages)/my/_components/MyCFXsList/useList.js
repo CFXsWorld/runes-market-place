@@ -12,6 +12,7 @@ import useHandleModal from '@/app/(pages)/my/_components/MyCFXsList/useHandleMod
 
 const useList = () => {
   const [listingOrder, setListingOrder] = useState(null);
+  const [splitOrder, setSplitOrder] = useState(null);
   const [selected, setSelected] = useState([]);
   const [dataSource, setDataSource] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
@@ -102,6 +103,12 @@ const useList = () => {
     onOpenListing(true);
     setListingOrder(item);
   };
+
+  const handleSplit = (item) => {
+    onOpenSplit(true);
+    setSplitOrder(item);
+  };
+
   const clearAll = () => {
     setSelected([]);
   };
@@ -144,6 +151,9 @@ const useList = () => {
     openBatchListing,
     onOpenBatchListing,
     selectAll,
+    splitOrder,
+    setSplitOrder,
+    handleSplit,
   };
 };
 
