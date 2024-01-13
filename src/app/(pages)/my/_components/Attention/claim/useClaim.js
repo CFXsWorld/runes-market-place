@@ -2,34 +2,97 @@ import useWallet from '@/app/hooks/useWallet';
 import useCFXsContract from '@/app/hooks/useCFXsContract';
 import { toast } from 'react-toastify';
 import { getAddress } from 'ethers';
+import { useEffect, useMemo, useState } from 'react';
+import { pageItemCount } from '@/app/utils';
+import { uniqBy } from 'lodash';
 
-const useClaim = () => {
+const useClaim = ({ getData }) => {
+  const [selected, setSelected] = useState([]);
   const { browserProvider, useAccount } = useWallet();
   const { contract: CFXsContract } = useCFXsContract();
   const account = useAccount();
-  const claim = async () => {
-    // if (account && selected?.length) {
-    //   try {
-    //     const signer = await browserProvider.getSigner();
-    //     const contractWithSigner = CFXsContract.connect(signer);
-    //     const data = {
-    //       owner: getAddress(account),
-    //       amount: selected.reduce((total, item) => total + +item.amount, 0),
-    //       data: '',
-    //     };
-    //     const ids = selected.map((item) => item.id);
-    //     const tx = await contractWithSigner.processTransaction(ids, [data]);
-    //     await tx.wait();
-    //     reload();
-    //     toast.success('Merge success !');
-    //     onOpen(false);
-    //   } catch (e) {
-    //     console.log(e);
-    //     toast.error('Merge failed !');
-    //   }
-    // }
+  const [dataSource, setDataSource] = useState(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [noMore, setNoMore] = useState(false);
+
+  const transformedFilter = useMemo(() => {
+    return {
+      size: pageItemCount,
+      startIndex: 0,
+      owner: account ? getAddress(account) : undefined,
+    };
+  }, [account]);
+
+  useEffect(() => {
+    if (account) {
+      refresh();
+    }
+  }, [account]);
+
+  const refresh = () => {
+    setNoMore(false);
+    setDataSource(null);
+    setCurrentPage(0);
+    getData({ ...transformedFilter, startIndex: 0 }).then((res) => {
+      setDataSource({ [0]: res.rows || [] });
+    });
   };
-  return { claim };
+  const loadMore = async () => {
+    getData({
+      ...transformedFilter,
+      startIndex: currentPage * pageItemCount,
+    }).then((res) => {
+      if (res.rows && res.rows.length === 0 && currentPage > 0) {
+        setNoMore(true);
+      } else {
+        setCurrentPage(currentPage + 1);
+        setDataSource({ ...(dataSource || {}), [currentPage]: res.rows || [] });
+      }
+    });
+  };
+  const source = useMemo(() => {
+    if (dataSource) {
+      return uniqBy(
+        Object.keys(dataSource)
+          .sort()
+          .reduce((prev, next) => prev.concat(dataSource[next]), []),
+        (item) => item.id
+      );
+    }
+    return null;
+  }, [dataSource]);
+  const clearAll = () => {
+    setSelected([]);
+  };
+  const onSelect = (item) => {
+    setSelected((prev) => {
+      if (prev.find((re) => re.id === item.id)) {
+        return prev.filter((record) => record.id !== item.id);
+      }
+      return [...prev, item];
+    });
+  };
+
+  const selectAll = (checked) => {
+    if (checked) {
+      setSelected((source || []).slice(0, 24));
+    } else {
+      setSelected([]);
+    }
+  };
+
+  const claim = async () => {};
+  return {
+    claim,
+    clearAll,
+    selectAll,
+    selected,
+    source,
+    refresh,
+    loadMore,
+    noMore,
+    onSelect,
+  };
 };
 
 export default useClaim;

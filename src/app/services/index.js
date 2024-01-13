@@ -11,3 +11,7 @@ export const getMarketStatistics = () => {
 export const getMyCFSxList = (_, { arg }) => {
   return request(APIs.MY_CFXs_LIST, { method: 'get', params: arg });
 };
+
+export const getMyOldCFXsList = (_, { arg }) => {
+  return request(APIs.MY_OLD_CFXs_LIST, { method: 'get', params: arg });
+};
