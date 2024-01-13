@@ -11,13 +11,9 @@ const Attention = () => {
   const [openClaim, onOpenClaim] = useState(false);
   const { eSpaceExplor, oldContractAddress, newContractAddress } = useEnv();
 
-
   return (
     <div className="w-full border border-theme-non-opaque rounded-[8px] mb-[32px] max-md:mb-[16px]  p-[24px] flex items-start">
-      <ClaimModal
-        open={openClaim}
-        onOpen={onOpenClaim}
-      />
+      <ClaimModal open={openClaim} onOpen={onOpenClaim} />
       <div className="pt-[5px] mr-[12px] max-md:hidden">
         <FlagIcon />
       </div>
@@ -58,7 +54,7 @@ const Attention = () => {
           </Link>
           (only supported eSpace). If your CFXs are in Core Space,
           <Link
-            href={`${eSpaceExplor}/${newContractAddress}`}
+            href={`https://www.conins.io/coreClaim`}
             target="_blank"
             className="text-theme px-[5px]"
           >

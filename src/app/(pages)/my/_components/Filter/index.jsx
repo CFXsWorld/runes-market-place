@@ -20,22 +20,22 @@ const Filter = ({ total, reload }) => {
   };
   return (
     <div className="flex flex-col">
-      <div className="text-tc-secondary flex items-center gap-[16px] ">
-        <div className="flex-center max-md:mr-[16px]">
+      <div className="text-tc-secondary flex items-center gap-[16px] max-md:gap-[6px] ">
+        <div className="flex-center max-md:mr-[16px] max-sm:mr-[4px]">
           <Selector
             options={options}
             value={value}
             onChange={onChange}
-            className="w-[254px] max-md:w-full"
+            className="w-[254px] max-md:w-full line-clamp-1 max-sm:w-[60px]"
           />
         </div>
         <Search
-          className="w-[300px] max-md:w-full max-md:flex-1 max-md:max-w-[280px]"
+          className="w-[300px] max-md:w-full max-md:flex-1 max-md:max-w-[280px] min-w-[120px]"
           placeholder="Search by ID"
         />
         <Button
           color='primary'
-          className="btn btn-primary rounded-[4px] ml-[16px]"
+          className="btn btn-primary rounded-[4px] ml-[16px] max-md:ml-[8px]"
           onClick={() => {
             reload();
           }}

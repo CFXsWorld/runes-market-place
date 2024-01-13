@@ -17,11 +17,11 @@ const Selector = ({ onChange, value, options, className }) => {
             className
           )}
         >
-          <div className="flex items-center mr-[8px]">
+          <div className="flex items-center mr-[8px] max-sm:mr-[4px]">
             {item.icon && (
-              <span className="text-[20px] mr-[8px]">{item.icon}</span>
+              <span className="text-[20px] mr-[8px] max-sm:text-[14px]">{item.icon}</span>
             )}
-            <span>{item.label}</span>
+            <span className='line-clamp-1 max-sm:text-[12px]'>{item.label}</span>
           </div>
         </div>
       }
