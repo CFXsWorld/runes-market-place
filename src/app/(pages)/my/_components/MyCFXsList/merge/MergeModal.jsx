@@ -41,7 +41,7 @@ const MergeModal = forwardRef(({ selected, onOpen, open, reload }, ref) => {
               trigger();
             }}
           >
-            {loading ? <LoadingIcon /> : 'COMFIRM MERGE'}
+            {loading ? <LoadingIcon /> : 'CONFIRM MERGE'}
           </Button>
         </div>
       </Modal.Body>

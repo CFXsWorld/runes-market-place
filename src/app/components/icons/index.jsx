@@ -32,6 +32,7 @@ import Active from './svgs/active.svg';
 import Reduce from './svgs/reduce.svg';
 import Plus from './svgs/plus.svg';
 import Warning from './svgs/warning.svg';
+import Refresh2 from './svgs/refresh2.svg';
 
 export const Icon = ({ className, style, children, ...props }) => {
   return (
@@ -208,5 +209,10 @@ export const PlusIcon = (props) => (
 export const WarningIcon = (props) => (
   <Icon {...props}>
     <Warning />
+  </Icon>
+);
+export const Refresh2Icon = (props) => (
+  <Icon {...props}>
+    <Refresh2 />
   </Icon>
 );

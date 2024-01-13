@@ -7,6 +7,7 @@ const useHandleModal = () => {
   const [openSplit, onOpenSplit] = useState(false);
   const [openTransfer, onOpenTransfer] = useState(false);
 
+
   return {
     openListing,
     openMerge,
@@ -17,7 +18,7 @@ const useHandleModal = () => {
     onOpenSplit,
     onOpenTransfer,
     openBatchListing,
-    onOpenBatchListing,
+    onOpenBatchListing
   };
 };
 

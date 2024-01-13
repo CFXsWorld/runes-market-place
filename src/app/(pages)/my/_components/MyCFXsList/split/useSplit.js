@@ -62,7 +62,6 @@ const useSplit = ({ reload, onOpen, splitOrder }) => {
 
         const data =
           SPLIT_TYPE.CUSTOM === splitType ? formattedCustomItems : shareItems;
-        console.log(data)
         const tx = await contractWithSigner.processTransaction(
           [splitOrder.id],
           data

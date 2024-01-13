@@ -4,15 +4,18 @@ import { FlagIcon } from '@/app/components/icons';
 import { Button } from 'flowbite-react';
 import useEnv from '@/app/hooks/useEnv';
 import Link from 'next/link';
+import { useState } from 'react';
+import ClaimModal from './claim/ClaimModal';
 
 const Attention = () => {
+  const [openClaim, onOpenClaim] = useState(false);
   const { eSpaceExplor, oldContractAddress, newContractAddress } = useEnv();
   return (
     <div className="w-full border border-theme-non-opaque rounded-[8px] mb-[32px] max-md:mb-[16px]  p-[24px] flex items-start">
+      <ClaimModal open={openClaim} onOpen={onOpenClaim} />
       <div className="pt-[5px] mr-[12px] max-md:hidden">
         <FlagIcon />
       </div>
-
       <div className="flex flex-col">
         <div className="flex">
           <span className="text-theme text-[24px] font-bold mr-[24px] flex-center max-md:text-[20px] max-md:mb-[8px]">
@@ -24,6 +27,9 @@ const Attention = () => {
           <Button
             color="primary"
             className="btn btn-primary h-[30px] min-h-[30px] rounded-[4px] max-md:hidden"
+            onClick={() => {
+              onOpenClaim(true);
+            }}
           >
             CHECK ON eSPACE
           </Button>
@@ -52,7 +58,8 @@ const Attention = () => {
             className="text-theme px-[5px]"
           >
             click here
-          </Link>.
+          </Link>
+          .
         </div>
         <Button
           color="primary"
