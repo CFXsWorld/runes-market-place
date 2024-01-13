@@ -121,12 +121,14 @@ const useList = () => {
   };
 
   const onSelect = (id) => {
-    setSelected((prev) => {
-      if (prev.includes(id)) {
-        return prev.filter((record) => record !== id);
-      }
-      return [...prev, id];
-    });
+    if (selected < 24) {
+      setSelected((prev) => {
+        if (prev.includes(id)) {
+          return prev.filter((record) => record !== id);
+        }
+        return [...prev, id];
+      });
+    }
   };
   return {
     selected,

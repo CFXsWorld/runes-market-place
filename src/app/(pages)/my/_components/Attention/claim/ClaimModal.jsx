@@ -9,7 +9,7 @@ import { formatNumberWithCommas } from '@/app/utils';
 import Checkbox from '@/app/components/ui/Checkbox';
 import ClaimableList from '@/app/(pages)/my/_components/Attention/claim/ClaimableList';
 
-const ClaimModal = forwardRef(({ onOpen, open, getData, isMutating }, ref) => {
+const ClaimModal = forwardRef(({ onOpen, open }, ref) => {
   const {
     claim,
     clearAll,
@@ -19,8 +19,12 @@ const ClaimModal = forwardRef(({ onOpen, open, getData, isMutating }, ref) => {
     refresh,
     onSelect,
     loadMore,
+    isMutating,
     noMore,
-  } = useClaim({ getData });
+    balance,
+    claimableTotal,
+  } = useClaim();
+
   const { trigger, loading } = usePromiseLoading(claim);
   return (
     <Modal show={open} onClose={() => onOpen(false)}>
@@ -30,13 +34,16 @@ const ClaimModal = forwardRef(({ onOpen, open, getData, isMutating }, ref) => {
           <div className="flex-center-between mb-[12px]">
             <span className="text-tc-secondary">Old World CFXs</span>
             <span className="text-white font-medium">
-              {formatNumberWithCommas('200000')}
+              {balance ? formatNumberWithCommas(balance + '') : '0'}
             </span>
           </div>
           <div className="flex-center-between mt-[12px]">
             <div className="flex-center">
               <span className="text-tc-secondary">
-                Claimable: <span className="text-white"> 1,000,000</span>
+                Claimable:
+                <span className="text-white pl-[5px]">
+                  {formatNumberWithCommas(claimableTotal)}
+                </span>
               </span>
               <Refresh2Icon
                 className="text-theme ml-[10px] cursor-pointer hover:opacity-95"
@@ -62,7 +69,7 @@ const ClaimModal = forwardRef(({ onOpen, open, getData, isMutating }, ref) => {
               selected={selected}
             />
           </div>
-          <div className="flex-center-between">
+          <div className="flex-center-between pt-[12px]">
             <div className="flex-center">
               <span className="text-tc-secondary max-md:text-[12px] w-[80px]">
                 {selected.length} Item

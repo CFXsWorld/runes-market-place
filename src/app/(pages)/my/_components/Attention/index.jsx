@@ -6,26 +6,17 @@ import useEnv from '@/app/hooks/useEnv';
 import Link from 'next/link';
 import { useState } from 'react';
 import ClaimModal from './claim/ClaimModal';
-import useSWRMutation from 'swr/mutation';
-import { APIs } from '@/app/services/request';
-import { getMyCFSxList } from '@/app/services';
 
 const Attention = () => {
   const [openClaim, onOpenClaim] = useState(false);
   const { eSpaceExplor, oldContractAddress, newContractAddress } = useEnv();
 
-  const { isMutating, trigger: getData } = useSWRMutation(
-    APIs.MARKET_LIST,
-    getMyCFSxList
-  );
 
   return (
     <div className="w-full border border-theme-non-opaque rounded-[8px] mb-[32px] max-md:mb-[16px]  p-[24px] flex items-start">
       <ClaimModal
         open={openClaim}
         onOpen={onOpenClaim}
-        getData={getData}
-        isMutating={isMutating}
       />
       <div className="pt-[5px] mr-[12px] max-md:hidden">
         <FlagIcon />
@@ -78,6 +69,9 @@ const Attention = () => {
         <Button
           color="primary"
           className="btn btn-primary  rounded-[4px] md:hidden mt-[16px]"
+          onClick={() => {
+            onOpenClaim(true);
+          }}
         >
           CHECK ON eSPACE
         </Button>

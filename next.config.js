@@ -36,9 +36,13 @@ const nextConfig = {
         source: '/test/api/:path*',
         destination: 'https://api.conins.io/test/:path*',
       },
-      // mainnet
       {
-        source: '/getCfxsList',
+        source: '/getCFXsList',
+        destination: 'https://api.conins.io/main/',
+      },
+      // TODO REMOVE
+      {
+        source: '/getCFXsList',
         destination: 'https://api.conins.io/main/',
       },
       {

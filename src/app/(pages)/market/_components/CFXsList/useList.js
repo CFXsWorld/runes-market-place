@@ -122,13 +122,16 @@ const useList = () => {
   const clearAll = () => {
     setSelected([]);
   };
-  const onSelect = (item) => {
-    setSelected((prev) => {
-      if (prev.find((re) => re.id === item.id)) {
-        return prev.filter((record) => record.id !== item.id);
-      }
-      return [...prev, item];
-    });
+
+  const onSelect = (id) => {
+    if (selected < 24) {
+      setSelected((prev) => {
+        if (prev.find((re) => re.id === item.id)) {
+          return prev.filter((record) => record.id !== item.id);
+        }
+        return [...prev, item];
+      });
+    }
   };
 
   const selectAll = (checked) => {
@@ -156,7 +159,7 @@ const useList = () => {
     setFilter,
     filter,
     selectAll,
-    noMore
+    noMore,
   };
 };
 
