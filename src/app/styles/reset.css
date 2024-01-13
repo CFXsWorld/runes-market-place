@@ -5,6 +5,7 @@
 button:disabled {
   background: rgba(128, 128, 128, 0.2);
   color: var(--cfxs-tc-secondary);
+  border: 1px solid transparent;
 }
 button:disabled:hover {
   background: rgba(128, 128, 128, 0.2);
