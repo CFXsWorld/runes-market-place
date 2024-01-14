@@ -23,18 +23,18 @@ const FilterForm = ({ formValues, onChange, reload }) => {
           className="w-[173px] mx-[16px]"
           placeholder="Min Price"
           type="number"
-          value={formValues.amountRangeStart}
-          onChange={(amountRangeStart) => {
-            onChange({ amountRangeStart });
+          value={formValues.unit_price_start}
+          onChange={(unit_price_start) => {
+            onChange({ unit_price_start });
           }}
         />
         <Input
           className="w-[173px] mr-[16px]"
           placeholder="Max Price"
           type="number"
-          value={formValues.amountRangeEnd}
-          onChange={(amountRangeEnd) => {
-            onChange({ amountRangeEnd });
+          value={formValues.unit_price_end}
+          onChange={(unit_price_end) => {
+            onChange({ unit_price_end });
           }}
         />
       </div>

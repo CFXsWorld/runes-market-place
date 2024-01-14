@@ -3,7 +3,7 @@ import useMounted from '@/app/hooks/useMounted';
 import useResponsive from '@/app/hooks/useResponsive';
 import useSWRMutation from 'swr/mutation';
 import { APIs } from '@/app/services/request';
-import { getMyCFSxList } from '@/app/services';
+import { getMyCFXsList } from '@/app/services';
 import { pageItemCount } from '@/app/utils';
 import { uniqBy } from 'lodash';
 import useWallet from '@/app/hooks/useWallet';
@@ -65,7 +65,7 @@ const useList = () => {
 
   const { isMutating, trigger: getData } = useSWRMutation(
     APIs.MY_CFXs_LIST,
-    getMyCFSxList
+    getMyCFXsList
   );
 
   const refresh = () => {

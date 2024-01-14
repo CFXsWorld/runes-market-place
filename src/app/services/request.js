@@ -4,7 +4,8 @@ export const APIs = {
   MARKET_LIST: 'MARKET_LIST',
   MARKET_STATISTICS: 'MARKET_STATISTICS',
   MY_CFXs_LIST: 'MY_CFXs_LIST',
-  MY_OLD_CFXs_LIST:'MY_OLD_CFXs_LIST'
+  MY_CFXs_ORDER_LIST: 'MY_CFXs_ORDER_LIST',
+  MY_OLD_CFXs_LIST: 'MY_OLD_CFXs_LIST',
 };
 
 export const isTest = process.env.NEXT_PUBLIC_IsTest === 'true';
@@ -17,10 +18,11 @@ const testApi = {
 };
 
 const productApi = {
-  [APIs.MARKET_LIST]: '/api/shop/goods2',
+  [APIs.MARKET_LIST]: '/api/shop',
   [APIs.MARKET_STATISTICS]: '/api/shop/statistics',
-  [APIs.MY_CFXs_LIST]: '/api/main/newlist',
-  [APIs.MY_OLD_CFXs_LIST]: '/getCFXsList',
+  [APIs.MY_CFXs_ORDER_LIST]: '/api/shop/my',
+  [APIs.MY_CFXs_LIST]: '/api/my/new',
+  [APIs.MY_OLD_CFXs_LIST]: '/api/my/old',
 };
 
 const request = async (api, { params, ...rest } = {}) => {

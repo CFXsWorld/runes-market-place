@@ -21,16 +21,16 @@ const useList = () => {
   );
 
   const [filter, setFilter] = useState({
-    startIndex: 0,
-    size: pageItemCount,
-    ao: 0,
-    amountRangeStart: undefined,
-    amountRangeEnd: undefined,
-    min: 0,
     recently: 0,
     merged: 0,
-    id: undefined,
     owner: undefined,
+    quantity_min: 0,
+    unit_price_start: undefined,
+    unit_price_end: undefined,
+    index: 0,
+    size: pageItemCount,
+    price_asc: 0,
+    id: undefined,
     // hack
     orderType: 'ASC',
     searchValue: '',
@@ -40,16 +40,16 @@ const useList = () => {
     const order = {
       recently: 0,
       merged: 0,
-      ao: 0,
+      price_asc: 0,
       id: undefined,
       owner: undefined,
     };
     if (filter.orderType) {
       if (filter.orderType === 'ASC') {
-        order.ao = 0;
+        order.price_asc = 0;
       }
       if (filter.orderType === 'DESC') {
-        order.ao = 1;
+        order.price_asc = 1;
       }
 
       if (filter.orderType === 'RECENTLY') {
@@ -100,7 +100,7 @@ const useList = () => {
     setNoMore(false);
     setDataSource(null);
     setCurrentPage(0);
-    getData({ ...transformedFilter, startIndex: 0 }).then((res) => {
+    getData({ ...transformedFilter, index: 0 }).then((res) => {
       setDataSource({ [0]: res.rows });
     });
   };
@@ -108,7 +108,7 @@ const useList = () => {
   const loadMore = async () => {
     getData({
       ...transformedFilter,
-      startIndex: currentPage * pageItemCount,
+      index: currentPage * pageItemCount,
     }).then((res) => {
       if (res.rows && res.rows.length === 0 && currentPage > 0) {
         setNoMore(true);

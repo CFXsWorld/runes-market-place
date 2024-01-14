@@ -22,18 +22,18 @@ const FilterModal = forwardRef(
               className="w-full"
               placeholder="Min Price"
               type="number"
-              value={formValues.amountRangeStart}
-              onChange={(amountRangeStart) => {
-                onChange({ amountRangeStart });
+              value={formValues.unit_price_start}
+              onChange={(unit_price_start) => {
+                onChange({ unit_price_start });
               }}
             />
             <Input
               className="w-full"
               placeholder="Max Price"
               type="number"
-              value={formValues.amountRangeEnd}
-              onChange={(amountRangeEnd) => {
-                onChange({ amountRangeEnd });
+              value={formValues.unit_price_end}
+              onChange={(unit_price_end) => {
+                onChange({ unit_price_end });
               }}
             />
             <div className="flex gap-[16px]">

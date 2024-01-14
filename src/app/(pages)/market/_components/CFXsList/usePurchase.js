@@ -26,6 +26,7 @@ const usePurchase = ({ selected = [], clearAll }) => {
     if (currentOrder) {
       return {
         count: 1,
+        quantity: currentOrder.quantity,
         amount: currentOrder.amount,
         items: [currentOrder],
       };
@@ -33,6 +34,7 @@ const usePurchase = ({ selected = [], clearAll }) => {
 
     return {
       count: selected.length,
+      quantity: (selected || []).reduce((a, b) => a + Number(b.quantity), 0),
       amount: selectedAmount,
       items: selected,
     };
@@ -54,9 +56,9 @@ const usePurchase = ({ selected = [], clearAll }) => {
     setCurrentOrder(item);
     const approved = await USDTAllowance(item.amount);
     if (approved) {
-      onPurchaseOpen(true)
+      onPurchaseOpen(true);
     } else {
-      onApproveOpen(true)
+      onApproveOpen(true);
     }
   };
 
@@ -84,9 +86,9 @@ const usePurchase = ({ selected = [], clearAll }) => {
     if (selected.length > 0) {
       const approved = await USDTAllowance(selectedAmount);
       if (approved) {
-        onPurchaseOpen(true)
+        onPurchaseOpen(true);
       } else {
-        onApproveOpen(true)
+        onApproveOpen(true);
       }
     }
   };
@@ -106,12 +108,12 @@ const usePurchase = ({ selected = [], clearAll }) => {
         );
         await tx.wait();
         toast.success(`Approved ${amount} USDT success !`);
-        onApproveOpen(false)
-        onPurchaseOpen(true)
+        onApproveOpen(false);
+        onPurchaseOpen(true);
       }
     } catch (e) {
       console.log(e);
-      onApproveOpen(false)
+      onApproveOpen(false);
       toast.error('Approval failed ！');
     }
   };

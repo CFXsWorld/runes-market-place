@@ -9,7 +9,6 @@ import Filter from '@/app/(pages)/market/_components/Filter';
 import ApproveModal from '@/app/(pages)/market/_components/CFXsList/ApproveModal';
 import PurchaseModal from '@/app/(pages)/market/_components/CFXsList/PurchaseModal';
 import usePurchase from '@/app/(pages)/market/_components/CFXsList/usePurchase';
-import purchaseModal from '@/app/(pages)/market/_components/CFXsList/PurchaseModal';
 
 export default function CFXsList() {
   const {

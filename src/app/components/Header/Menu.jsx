@@ -4,30 +4,40 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/app/utils/classnames';
 
+export const menus = [
+  {
+    name: 'Market',
+    path: '/market',
+  },
+  {
+    name: 'Wormhole',
+    path: '/wormhole',
+  },
+  {
+    name: 'My',
+    path: '/my',
+  },
+];
+
 const Menu = () => {
   const pathname = usePathname();
 
   return (
     <div className="flex-center text-[16px] font-[500] text-tc-secondary">
-      <Link
-        className={cn(
-          'border border-transparent mr-[32px] px-[20px] py-[6px]',
-          {
-            'text-theme': pathname === '/market',
-          }
-        )}
-        href="/market"
-      >
-        MARKET
-      </Link>
-      <Link
-        className={cn(' border border-transparent px-[20px] py-[6px]', {
-          'text-theme': pathname.includes('/my'),
-        })}
-        href="/my"
-      >
-        MY
-      </Link>
+      {menus.map((menu) => (
+        <Link
+          key={menu.name}
+          className={cn(
+            'border border-transparent mr-[32px] px-[20px] py-[6px]',
+            {
+              'text-theme': pathname.includes(menu.path),
+            }
+          )}
+          href={menu.path}
+        >
+          {menu.name}
+        </Link>
+      ))}
     </div>
   );
 };

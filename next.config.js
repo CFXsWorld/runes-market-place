@@ -30,11 +30,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'https://api.conins.io/:path*',
-      },
-      {
-        source: '/test/api/:path*',
-        destination: 'https://api.conins.io/test/:path*',
+        destination: 'https://api3.conins.io/:path*',
       },
       {
         source: '/getCFXsList',
