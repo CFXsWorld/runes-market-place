@@ -2,14 +2,12 @@
 
 import { FlagIcon } from '@/app/components/icons';
 import { Button } from 'flowbite-react';
-import useEnv from '@/app/hooks/useEnv';
 import Link from 'next/link';
 import { useState } from 'react';
 import ClaimModal from './claim/ClaimModal';
 
 const Attention = () => {
   const [openClaim, onOpenClaim] = useState(false);
-  const { eSpaceExplor, oldContractAddress, newContractAddress } = useEnv();
 
   return (
     <div className="w-full border border-theme-non-opaque rounded-[8px] mb-[32px] max-md:mb-[16px]  p-[24px] flex items-start">
@@ -38,7 +36,7 @@ const Attention = () => {
         <div className="text-tc-secondary pt-[10px]">
           Please claim the CFXs from the
           <Link
-            href={`${eSpaceExplor}/${oldContractAddress}`}
+            href={`https://evm.confluxscan.io/address/0xc6e865c213c89ca42a622c5572d19f00d84d7a16`}
             target="_blank"
             className="text-theme px-[5px]"
           >
@@ -46,7 +44,7 @@ const Attention = () => {
           </Link>
           to the
           <Link
-            href={`${eSpaceExplor}/${newContractAddress}`}
+            href={`https://evm.confluxscan.io/address/0xd3a4d837e0a7b40de0b4024fa0f93127dd47b8b8`}
             target="_blank"
             className="text-theme px-[5px]"
           >
