@@ -25,7 +25,7 @@ const useList = () => {
   const [dataSource, setDataSource] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [filter] = useState({
-    startIndex: 0,
+    index: 0,
     size: pageItemCount,
     owner: undefined,
   });
@@ -62,14 +62,14 @@ const useList = () => {
   const refresh = () => {
     setDataSource(null);
     setCurrentPage(0);
-    getData({ ...transformedFilter, startIndex: 0 }).then((res) => {
+    getData({ ...transformedFilter, index: 0 }).then((res) => {
       setDataSource({ [0]: res.rows });
     });
   };
   const loadMore = async () => {
     getData({
       ...transformedFilter,
-      startIndex: currentPage * pageItemCount,
+      index: currentPage * pageItemCount,
     }).then((res) => {
       if (res.rows && res.rows.length === 0 && currentPage > 0) {
       } else {
