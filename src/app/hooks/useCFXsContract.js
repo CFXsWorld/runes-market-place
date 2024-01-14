@@ -9,20 +9,9 @@ const useCFXsContract = () => {
   const wallet = useWallet();
   const provider = new BrowserProvider(wallet.provider);
 
-  const { data: totalSupply = 0 } = useReadContract({
-    funcName: 'totalSupply',
-    abi: abi,
-    address: newContractAddress,
-  });
-  const { data: maxCount = 0 } = useReadContract({
-    funcName: 'MAX_CFXs_COUNT',
-    abi: abi,
-    address: newContractAddress,
-  });
-
   const contract = new Contract(newContractAddress, abi, provider);
 
-  return { totalSupply, maxCount, contract };
+  return { contract };
 };
 
 export default useCFXsContract;

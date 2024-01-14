@@ -5,11 +5,21 @@ import { CFXsIcon, XIcon, TelegramIcon } from '@/app/components/icons';
 import useCFXsContract from '@/app/hooks/useCFXsContract';
 import { formatNumberWithCommas } from '@/app/utils';
 import { Progress } from 'flowbite-react';
+import useSWR from 'swr';
 
 const CFXsInfo = () => {
-  const { totalSupply, maxCount } = useCFXsContract();
+  const { contract } = useCFXsContract();
+
+  const { data: totalSupply } = useSWR(`totalSupply`, () =>
+    contract.totalSupply()
+  );
+
+  const { data: maxCount } = useSWR(`totalSupply`, () => contract.maxCount());
+
+  console.log(totalSupply, maxCount);
 
   const rate = (Number(totalSupply) / Number(maxCount)) * 100;
+
   return (
     <div className="flex flex-col">
       <div className="flex items-center justify-start">
@@ -38,7 +48,7 @@ const CFXsInfo = () => {
           <Progress
             className="progress progress-primary  w-full max-w-[400px] h-[8px] rounded-[4px]"
             progress={rate}
-            color='primary'
+            color="primary"
           />
           <div className="text-tc-secondary text-[12px] mt-[8px]">
             Total Supply:

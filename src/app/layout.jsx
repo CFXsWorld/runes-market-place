@@ -45,7 +45,6 @@ const Dapp = ({ children }) => {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <ThemeModeScript />
       <title>CFXs World</title>
       <body className={inter.className}>
         <WalletProvider>

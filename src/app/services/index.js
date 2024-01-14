@@ -1,5 +1,18 @@
 import request, { APIs } from '@/app/services/request';
 
+// const a = {
+//   totalSupply: '1000',
+//   percentage: '30.00',
+//   floor: '--',
+//   unitPrice: '30.00',
+//   '24hVolume': '--',
+//   '24hSales': '30',
+//   totalVolume: '30',
+//   totalSales: '30',
+//   owners: '30',
+//   listed: '30',
+//   marketCap: '30',
+// };
 
 
 // 市场列表

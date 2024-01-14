@@ -4,7 +4,7 @@ import { formatNumber, formatNumberWithCommas } from '@/app/utils';
 import useSWRMutation from 'swr/mutation';
 import { APIs } from '@/app/services/request';
 import { getMarketStatistics } from '@/app/services';
-import { useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 const items = [
   {
     label: 'Floor',
@@ -20,13 +20,13 @@ const items = [
   },
   {
     label: '24h Volume',
-    name: 'dailyVolume',
+    name: '24hVolume',
     symbol: '$',
     format: formatNumberWithCommas,
   },
   {
     label: '24h Sales',
-    name: 'dailySales',
+    name: '24hSales',
     symbol: '',
     format: formatNumberWithCommas,
   },
@@ -62,41 +62,24 @@ const items = [
   },
 ];
 
-// const a = {
-//   totalSupply: '1000',
-//   percentage: '30.00',
-//   floor: '--',
-//   unitPrice: '30.00',
-//   '24hVolume': '--',
-//   '24hSales': '30',
-//   totalVolume: '30',
-//   totalSales: '30',
-//   owners: '30',
-//   listed: '30',
-//   marketCap: '30',
-// };
-
-const data = {
-  floor: 0.1,
-  unitPrice: 0.7,
-  dailyVolume: 1000,
-  dailySales: 1000000,
-  totalVolume: 10000,
-  totalSales: 100000,
-  owners: 20131,
-  listed: 101131,
-  marketCap: 91231111,
-};
 const usePriceList = () => {
   const mounted = useMounted();
-  const {
-    isMutating,
-    trigger: getStatistics,
-  } = useSWRMutation(APIs.MARKET_STATISTICS, getMarketStatistics, {
-    onSuccess: (res) => {
-      console.log(res);
-    },
-  });
+  const [data, setData] = useState({});
+  const { trigger: getStatistics } = useSWRMutation(
+    APIs.MARKET_STATISTICS,
+    getMarketStatistics,
+    {
+      onSuccess: (res) => {
+        setData(
+          Object.keys(res || {}).reduce((prev, next) => {
+            prev[next] =
+              res[next] === '--' || !res[next] ? 0 : Number(res[next]);
+            return prev;
+          }, {})
+        );
+      },
+    }
+  );
   const { count, isPC } = useResponsive(
     { min: 100, max: 140, gap: 8 },
     mounted && typeof document !== 'undefined'

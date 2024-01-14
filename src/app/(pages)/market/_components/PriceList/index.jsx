@@ -26,8 +26,9 @@ const PriceList = () => {
                 {item.label}
               </span>
               <span className="text-[20px] font-bold max-md:text-[16px]">
-                {item.symbol}
-                {item.format(data[item.name])}
+                {data[item.name]
+                  ? `${item.symbol} ${item.format(data[item.name])}`
+                  : '--'}
               </span>
             </div>
           ))}
