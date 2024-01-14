@@ -1,15 +1,19 @@
 import { abi } from '../contracts/newCfxsContractAbi.json';
-import useReadContract from '@/app/hooks/useReadContract';
 import useEnv from '@/app/hooks/useEnv';
 import useWallet from '@/app/hooks/useWallet';
-import { BrowserProvider, Contract } from 'ethers';
+import { Contract } from 'ethers';
+import { useMemo } from 'react';
 
 const useCFXsContract = () => {
   const { newContractAddress } = useEnv();
-  const wallet = useWallet();
-  const provider = new BrowserProvider(wallet.provider);
+  const { browserProvider } = useWallet();
 
-  const contract = new Contract(newContractAddress, abi, provider);
+  const contract = useMemo(() => {
+    return browserProvider && newContractAddress
+      ? new Contract(newContractAddress, abi, browserProvider)
+      : null;
+  }, [browserProvider, newContractAddress]);
+
 
   return { contract };
 };

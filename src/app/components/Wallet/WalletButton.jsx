@@ -20,22 +20,12 @@ const WalletButton = ({
   const chainId = useChainId();
   const account = useAccount();
   const balance = useBalance();
-  const renderText = (status, address) => {
-    if (status === 'in-detecting') {
-      return 'CONNECTING';
-    }
-    if (status === 'active') {
-      return addressFormat(address);
-    }
-    return 'CONNECT WALLET';
-  };
 
   const { correctChainId } = useEnv();
-
   const isActive = status === 'active';
   const isCorrectChain = correctChainId === chainId;
-
   useEffect(() => {}, [account]);
+
   return (
     <div className="flex-center">
       <ChainInfo status={status} chainId={chainId} switchChain={switchChain} />
@@ -65,8 +55,13 @@ const WalletButton = ({
         className="flex-center max-md:hidden"
       >
         {isActive ? <ActiveIcon /> : <WalletIcon className="text-[20px]" />}
-
-        <div className="ml-[5px]"> {renderText(status, account)}</div>
+        <div className="ml-[5px]">
+          {account && status && status === 'in-detecting'
+            ? 'CONNECTING'
+            : status === 'active'
+              ? addressFormat(account)
+              : 'CONNECT WALLET'}
+        </div>
       </Button>
     </div>
   );

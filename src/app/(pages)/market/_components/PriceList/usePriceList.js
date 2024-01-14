@@ -64,31 +64,12 @@ const items = [
 
 const usePriceList = () => {
   const mounted = useMounted();
-  const [data, setData] = useState({});
-  const { trigger: getStatistics } = useSWRMutation(
-    APIs.MARKET_STATISTICS,
-    getMarketStatistics,
-    {
-      onSuccess: (res) => {
-        setData(
-          Object.keys(res || {}).reduce((prev, next) => {
-            prev[next] =
-              res[next] === '--' || !res[next] ? 0 : Number(res[next]);
-            return prev;
-          }, {})
-        );
-      },
-    }
-  );
   const { count, isPC } = useResponsive(
     { min: 100, max: 140, gap: 8 },
     mounted && typeof document !== 'undefined'
       ? document.querySelector('#price-list-sentinel')
       : null
   );
-  useEffect(() => {
-    getStatistics();
-  }, []);
 
   const layoutStyle = {
     display: 'grid',
@@ -98,7 +79,6 @@ const usePriceList = () => {
 
   return {
     count,
-    data,
     items,
     isPC,
     style: !isPC ? layoutStyle : {},

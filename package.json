@@ -14,7 +14,7 @@
     "clsx": "^2.1.0",
     "dayjs": "^1.11.10",
     "decimal.js": "^10.4.3",
-    "ethers": "^6.9.1",
+    "ethers": "^6.9.2",
     "flowbite-react": "^0.7.2",
     "immer": "^10.0.3",
     "js-conflux-sdk": "^2.3.0",

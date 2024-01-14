@@ -3,8 +3,8 @@
 import { cn } from '@/app/utils/classnames';
 import usePriceList from '@/app/(pages)/market/_components/PriceList/usePriceList';
 
-const PriceList = () => {
-  const { count, isPC, data, items, style } = usePriceList();
+const PriceList = ({ data = {} }) => {
+  const { count, isPC, items, style } = usePriceList();
   return (
     <div className="w-full">
       <div id="price-list-sentinel" className="w-full md:hidden" />
