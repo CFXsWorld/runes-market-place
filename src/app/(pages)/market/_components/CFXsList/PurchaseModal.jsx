@@ -45,7 +45,7 @@ const PurchaseModal = forwardRef(
               </span>
             </div>
             <div className="text-tc-secondary text-[14px] mt-[32px] mb-[24px] pt-[12px] border border-transparent border-t-fill-e-primary">
-              You will be asked to approve this purchase from your wallet.
+              {/*You will be asked to approve this purchase from your wallet.*/}
             </div>
             <Button
               color="primary"

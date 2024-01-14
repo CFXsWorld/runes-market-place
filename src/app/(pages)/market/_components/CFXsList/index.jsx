@@ -25,6 +25,8 @@ export default function CFXsList() {
     setFilter,
     selectAll,
     noMore,
+    checkAll,
+    setCheckAll,
   } = useList();
 
   const {
@@ -79,6 +81,7 @@ export default function CFXsList() {
           clearAll={clearAll}
           selectAll={selectAll}
           handleMultiPurchase={handleMultiPurchase}
+          checkAll={checkAll}
         />
       </div>
       <ApproveModal

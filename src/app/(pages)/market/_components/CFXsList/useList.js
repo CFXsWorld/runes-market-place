@@ -8,6 +8,7 @@ import { pageItemCount } from '@/app/utils';
 import { isNumber, omit, uniqBy } from 'lodash';
 
 const useList = () => {
+  const [checkAll, setCheckAll] = useState(false);
   const [selected, setSelected] = useState([]);
   const [dataSource, setDataSource] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
@@ -99,6 +100,8 @@ const useList = () => {
   const refresh = () => {
     setNoMore(false);
     setDataSource(null);
+    setSelected([]);
+    setCheckAll(false);
     setCurrentPage(0);
     getData({ ...transformedFilter, index: 0 }).then((res) => {
       setDataSource({ [0]: res.rows });
@@ -121,6 +124,7 @@ const useList = () => {
 
   const clearAll = () => {
     setSelected([]);
+    setCheckAll(false);
   };
 
   const onSelect = (item) => {
@@ -135,6 +139,7 @@ const useList = () => {
   };
 
   const selectAll = (checked) => {
+    setCheckAll(checked);
     if (checked) {
       setSelected((source || []).slice(0, 24));
     } else {
@@ -160,6 +165,8 @@ const useList = () => {
     filter,
     selectAll,
     noMore,
+    checkAll,
+    setCheckAll,
   };
 };
 
