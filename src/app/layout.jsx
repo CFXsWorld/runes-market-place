@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { Inter } from 'next/font/google';
 import PageLayout from '@/app/components/PageLayout';
-import { DarkThemeToggle, Flowbite, ThemeModeScript } from "flowbite-react";
+import {  Flowbite, ThemeModeScript } from "flowbite-react";
 import WalletProvider, { useWalletStore } from '@/app/store/wallet';
 import { ToastContainer } from 'react-toastify';
 import theme from '@/app/components/ui/theme';
