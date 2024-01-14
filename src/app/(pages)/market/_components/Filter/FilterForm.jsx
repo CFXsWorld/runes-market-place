@@ -39,8 +39,8 @@ const FilterForm = ({ formValues, onChange, reload }) => {
         />
       </div>
       <Search
-        className="md:max-w-[320px] max-md:max-w-[280px]"
-        placeholder="Search by ID or owner address"
+        className="md:max-w-[340px] max-md:max-w-[280px]"
+        placeholder="ID or owner address"
         value={formValues.searchValue}
         onChange={(searchValue) => {
           onChange({ searchValue });

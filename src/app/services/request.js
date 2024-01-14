@@ -21,8 +21,8 @@ const productApi = {
   [APIs.MARKET_LIST]: '/api/shop',
   [APIs.MARKET_STATISTICS]: '/api/shop/statistics',
   [APIs.MY_CFXs_ORDER_LIST]: '/api/shop/my',
-  [APIs.MY_CFXs_LIST]: '/api/my/new',
-  [APIs.MY_OLD_CFXs_LIST]: '/api/my/old',
+  [APIs.MY_CFXs_LIST]: '/api/cfxs/my/new',
+  [APIs.MY_OLD_CFXs_LIST]: '/api/cfxs/my/old',
 };
 
 const request = async (api, { params, ...rest } = {}) => {

@@ -11,7 +11,7 @@ import { getMyOldCFXsList } from '@/app/services';
 import useOldCFXsContract from '@/app/hooks/useOldCFXsContract';
 import useBridgeContract from '@/app/hooks/useBridgeContract';
 
-const useClaim = () => {
+const useClaim = ({ open }) => {
   const [selected, setSelected] = useState([]);
   const { browserProvider, useAccount } = useWallet();
   const { contract: CFXsContract } = useCFXsContract();
@@ -24,7 +24,7 @@ const useClaim = () => {
   const { contract: bridgeContract } = useBridgeContract();
 
   const { data: balance, trigger: getBalance } = useSWRMutation(
-    APIs.MARKET_LIST,
+    'balanceOf',
     () => oldCFXsContract.balanceOf(account)
   );
 
@@ -32,7 +32,7 @@ const useClaim = () => {
     data,
     isMutating,
     trigger: getData,
-  } = useSWRMutation(APIs.MARKET_LIST, getMyOldCFXsList);
+  } = useSWRMutation(APIs.MY_CFXs_ORDER_LIST, getMyOldCFXsList);
   const claimableTotal = useMemo(() => {
     return data?.count || 0;
   }, [data]);
@@ -45,11 +45,11 @@ const useClaim = () => {
   }, [account]);
 
   useEffect(() => {
-    if (account) {
+    if (account && open) {
       refresh();
       getBalance();
     }
-  }, [account]);
+  }, [account, open]);
 
   const refresh = () => {
     setNoMore(false);

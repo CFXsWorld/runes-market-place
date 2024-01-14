@@ -23,7 +23,7 @@ const ClaimModal = forwardRef(({ onOpen, open }, ref) => {
     noMore,
     balance,
     claimableTotal,
-  } = useClaim();
+  } = useClaim({open});
 
   const { trigger, loading } = usePromiseLoading(claim);
   return (
@@ -81,7 +81,7 @@ const ClaimModal = forwardRef(({ onOpen, open }, ref) => {
             <Button
               color="primary"
               disabled={!selected.length || loading}
-              className='w-[70px]'
+              className="w-[70px]"
               onClick={() => {
                 trigger();
               }}

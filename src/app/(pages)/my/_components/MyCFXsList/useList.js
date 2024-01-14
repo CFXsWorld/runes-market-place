@@ -35,7 +35,7 @@ const useList = () => {
 
 
   const [filter, setFilter] = useState({
-    startIndex: 0,
+    index: 0,
     size: pageItemCount,
     merged: undefined,
     id: undefined,
@@ -72,14 +72,14 @@ const useList = () => {
     setNoMore(false);
     setDataSource(null);
     setCurrentPage(0);
-    getData({ ...transformedFilter, startIndex: 0 }).then((res) => {
+    getData({ ...transformedFilter, index: 0 }).then((res) => {
       setDataSource({ [0]: res.rows || [] });
     });
   };
   const loadMore = async () => {
     getData({
       ...transformedFilter,
-      startIndex: currentPage * pageItemCount,
+      index: currentPage * pageItemCount,
     }).then((res) => {
       if (res.rows && res.rows.length === 0 && currentPage > 0) {
         setNoMore(true);
