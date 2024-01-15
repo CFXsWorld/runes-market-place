@@ -1,10 +1,6 @@
 import useMounted from '@/app/hooks/useMounted';
 import useResponsive from '@/app/hooks/useResponsive';
 import { formatNumber, formatNumberWithCommas } from '@/app/utils';
-import useSWRMutation from 'swr/mutation';
-import { APIs } from '@/app/services/request';
-import { getMarketStatistics } from '@/app/services';
-import { useEffect, useMemo, useState } from 'react';
 const items = [
   {
     label: 'Floor',
@@ -22,31 +18,31 @@ const items = [
     label: '24h Volume',
     name: '24hVolume',
     symbol: '$',
-    format: formatNumberWithCommas,
+    format: formatNumber,
   },
   {
     label: '24h Sales',
     name: '24hSales',
     symbol: '',
-    format: formatNumberWithCommas,
+    format: formatNumber,
   },
   {
     label: 'Total Volume',
     name: 'totalVolume',
     symbol: '$',
-    format: formatNumberWithCommas,
+    format: formatNumber,
   },
   {
     label: 'Total Sales',
     name: 'totalSales',
     symbol: '',
-    format: formatNumberWithCommas,
+    format: formatNumber,
   },
   {
     label: 'Owners',
     name: 'owners',
     symbol: '',
-    format: formatNumberWithCommas,
+    format: formatNumber,
   },
   {
     label: 'Listed',
@@ -58,7 +54,7 @@ const items = [
     label: 'Market Cap',
     name: 'marketCap',
     symbol: '$',
-    format: formatNumberWithCommas,
+    format: formatNumber,
   },
 ];
 

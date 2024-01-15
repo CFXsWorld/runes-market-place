@@ -7,7 +7,8 @@ import useSWRMutation from 'swr/mutation';
 import { APIs } from '@/app/services/request';
 import { getMarketStatistics } from '@/app/services';
 import { useEffect, useState } from 'react';
-import { parseUnits } from 'ethers';
+import { parseUnits, formatUnits } from 'ethers';
+import { usdtDecimal } from '@/app/utils';
 
 export default function Market() {
   const [data, setData] = useState({});
@@ -18,10 +19,10 @@ export default function Market() {
       onSuccess: (res) => {
         setData({
           ...res,
-          totalSupply: 0,
-          percentage: 0,
           floor: parseFloat(res.floor),
           unitPrice: parseFloat(res.unitPrice),
+          '24hVolume': Math.ceil(+formatUnits(res['24hVolume'], usdtDecimal)),
+          totalVolume: Math.ceil(+formatUnits(res['24hVolume'], usdtDecimal)),
         });
       },
     }
