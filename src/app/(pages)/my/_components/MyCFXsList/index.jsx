@@ -39,7 +39,9 @@ export default function MyCFXsList() {
     handleSplit,
     splitOrder,
     account,
-    checkAll
+    checkAll,
+    filter,
+    setFilter,
   } = useList();
 
   return (
@@ -78,7 +80,12 @@ export default function MyCFXsList() {
           reload={refresh}
         />
 
-        <Filter total={source?.length || 0} reload={refresh} />
+        <Filter
+          total={source?.length || 0}
+          reload={refresh}
+          filter={filter}
+          setFilter={setFilter}
+        />
         <div className="w-full pt-[32px] pb-[96px] max-sm:pb-[180px]">
           <div id="my-cfxs-sentinel" className="w-full" />
           <div

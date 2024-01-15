@@ -35,7 +35,7 @@ const useList = () => {
   const [filter, setFilter] = useState({
     index: 0,
     size: pageItemCount,
-    merged: undefined,
+    merged: 0,
     id: undefined,
     owner: undefined,
   });
@@ -51,7 +51,7 @@ const useList = () => {
       ...filter,
       owner: account ? getAddress(account) : undefined,
     };
-  }, [account]);
+  }, [account, filter]);
 
   const mounted = useMounted();
   const { count } = useResponsive(
@@ -162,6 +162,8 @@ const useList = () => {
     account,
     checkAll,
     setCheckAll,
+    filter,
+    setFilter,
   };
 };
 
