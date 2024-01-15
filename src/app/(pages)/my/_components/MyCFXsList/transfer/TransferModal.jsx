@@ -23,7 +23,7 @@ const TransferModal = forwardRef(({ selected, onOpen, open, reload }, ref) => {
             <div className="flex justify-between">
               <Label
                 htmlFor="price"
-                value="Set a price"
+                value="Set a address"
                 className="text-tc-secondary"
               />
             </div>

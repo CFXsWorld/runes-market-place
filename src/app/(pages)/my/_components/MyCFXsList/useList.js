@@ -8,7 +8,7 @@ import { pageItemCount } from '@/app/utils';
 import { uniqBy } from 'lodash';
 import { getAddress } from 'ethers';
 import useHandleModal from '@/app/(pages)/my/_components/MyCFXsList/useHandleModal';
-import { useWalletStore } from "@/app/store/wallet";
+import { useWalletStore } from '@/app/store/wallet';
 
 const useList = () => {
   const [listingOrder, setListingOrder] = useState(null);
@@ -16,7 +16,7 @@ const useList = () => {
   const [selected, setSelected] = useState([]);
   const [dataSource, setDataSource] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const account = useWalletStore(state=>state.account);
+  const account = useWalletStore((state) => state.account);
   const [noMore, setNoMore] = useState(false);
   const {
     openListing,
@@ -30,8 +30,6 @@ const useList = () => {
     openBatchListing,
     onOpenBatchListing,
   } = useHandleModal();
-
-
 
   const [filter, setFilter] = useState({
     index: 0,
@@ -120,16 +118,17 @@ const useList = () => {
     }
   };
 
-  const onSelect = (id) => {
-    if ((selected?.length || 0) < 24) {
-      setSelected((prev) => {
-        if (prev.includes(id)) {
-          return prev.filter((record) => record !== id);
-        }
-        return [...prev, id];
-      });
+  const onSelect = (item) => {
+    const isSelected = selected?.find((re) => re.id === item.id);
+    if (isSelected) {
+      setSelected(selected.filter((record) => record.id !== item.id));
+    } else {
+      if ((selected?.length || 0) < 24) {
+        setSelected([...selected, item]);
+      }
     }
   };
+
   return {
     selected,
     onSelect,

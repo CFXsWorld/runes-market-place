@@ -10,13 +10,13 @@ import { APIs } from '@/app/services/request';
 import { getMyOldCFXsList } from '@/app/services';
 import useOldCFXsContract from '@/app/hooks/useOldCFXsContract';
 import useBridgeContract from '@/app/hooks/useBridgeContract';
-import { useWalletStore } from "@/app/store/wallet";
+import { useWalletStore } from '@/app/store/wallet';
 
 const useClaim = ({ open }) => {
   const [selected, setSelected] = useState([]);
   const { browserProvider } = useWallet();
   const { contract: CFXsContract } = useCFXsContract();
-  const account = useWalletStore(state=>state.account);
+  const account = useWalletStore((state) => state.account);
   const [dataSource, setDataSource] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [noMore, setNoMore] = useState(false);
@@ -88,13 +88,13 @@ const useClaim = ({ open }) => {
     setSelected([]);
   };
   const onSelect = (item) => {
-    if ((selected?.length || 0) < 32) {
-      setSelected((prev) => {
-        if (prev.find((re) => re.id === item.id)) {
-          return prev.filter((record) => record.id !== item.id);
-        }
-        return [...prev, item];
-      });
+    const isSelected = selected?.find((re) => re.id === item.id);
+    if (isSelected) {
+      setSelected(selected.filter((record) => record.id !== item.id));
+    } else {
+      if ((selected?.length || 0) < 32) {
+        setSelected([...selected, item]);
+      }
     }
   };
 

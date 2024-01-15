@@ -128,13 +128,13 @@ const useList = () => {
   };
 
   const onSelect = (item) => {
-    if ((selected?.length || 0) < 24) {
-      setSelected((prev) => {
-        if (prev.find((re) => re.id === item.id)) {
-          return prev.filter((record) => record.id !== item.id);
-        }
-        return [...prev, item];
-      });
+    const isSelected = selected?.find((re) => re.id === item.id);
+    if (isSelected) {
+      setSelected(selected.filter((record) => record.id !== item.id));
+    } else {
+      if ((selected?.length || 0) < 24) {
+        setSelected([...selected, item]);
+      }
     }
   };
 
