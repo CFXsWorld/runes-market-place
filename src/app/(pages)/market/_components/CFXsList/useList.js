@@ -5,7 +5,7 @@ import useSWRMutation from 'swr/mutation';
 import { APIs } from '@/app/services/request';
 import { getMarketCFXsList } from '@/app/services';
 import { pageItemCount } from '@/app/utils';
-import { isNumber, omit, uniqBy } from 'lodash';
+import { omit, uniqBy } from 'lodash';
 
 const useList = () => {
   const [checkAll, setCheckAll] = useState(false);
