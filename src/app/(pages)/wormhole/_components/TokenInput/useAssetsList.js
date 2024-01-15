@@ -1,41 +1,15 @@
-import useWallet from '@/app/hooks/useWallet';
-import useCFXsContract from '@/app/hooks/useCFXsContract';
-import { toast } from 'react-toastify';
 import { getAddress } from 'ethers';
 import { useEffect, useMemo, useState } from 'react';
 import { pageItemCount } from '@/app/utils';
 import { uniqBy } from 'lodash';
-import useSWRMutation from 'swr/mutation';
-import { APIs } from '@/app/services/request';
-import { getMyOldCFXsList } from '@/app/services';
-import useOldCFXsContract from '@/app/hooks/useOldCFXsContract';
-import useBridgeContract from '@/app/hooks/useBridgeContract';
-
-const useClaim = ({ open }) => {
+import useWallet from '@/app/hooks/useWallet';
+const useAssetsList = ({ open, getData }) => {
   const [selected, setSelected] = useState([]);
-  const { browserProvider, useAccount } = useWallet();
-  const { contract: CFXsContract } = useCFXsContract();
-  const account = useAccount();
   const [dataSource, setDataSource] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [noMore, setNoMore] = useState(false);
-
-  const { contract: oldCFXsContract } = useOldCFXsContract();
-  const { contract: bridgeContract } = useBridgeContract();
-
-  const { data: balance, trigger: getBalance } = useSWRMutation(
-    'balanceOf',
-    () => oldCFXsContract.balanceOf(account)
-  );
-
-  const {
-    data,
-    isMutating,
-    trigger: getData,
-  } = useSWRMutation(APIs.MY_CFXs_ORDER_LIST, getMyOldCFXsList);
-  const claimableTotal = useMemo(() => {
-    return data?.count || 0;
-  }, [data]);
+  const { useAccount } = useWallet();
+  const account = useAccount();
   const transformedFilter = useMemo(() => {
     return {
       size: pageItemCount,
@@ -45,11 +19,10 @@ const useClaim = ({ open }) => {
   }, [account]);
 
   useEffect(() => {
-    if (account && open) {
+    if (open) {
       refresh();
-      getBalance();
     }
-  }, [account, open]);
+  }, [open]);
 
   const refresh = () => {
     setNoMore(false);
@@ -86,7 +59,7 @@ const useClaim = ({ open }) => {
   const clearAll = () => {
     setSelected([]);
   };
-  const onSelect = (item) => {
+  const onSelectItem = (item) => {
     if ((selected?.length || 0) < 32) {
       setSelected((prev) => {
         if (prev.find((re) => re.id === item.id)) {
@@ -105,25 +78,7 @@ const useClaim = ({ open }) => {
     }
   };
 
-  const claim = async () => {
-    if (selected?.length > 0 && account) {
-      try {
-        const signer = await browserProvider.getSigner();
-        const contractWithSigner = bridgeContract.connect(signer);
-        const ids = selected.map((item) => item.id);
-        const tx = await contractWithSigner.ExTestToMain(ids);
-        await tx.wait();
-        refresh();
-        toast.success('Claim success !');
-      } catch (e) {
-        console.log(e);
-        toast.error('Claim failed !');
-      }
-    }
-  };
-
   return {
-    claim,
     clearAll,
     selectAll,
     selected,
@@ -131,11 +86,8 @@ const useClaim = ({ open }) => {
     refresh,
     loadMore,
     noMore,
-    onSelect,
-    isMutating,
-    balance,
-    claimableTotal,
+    onSelectItem,
   };
 };
 
-export default useClaim;
+export default useAssetsList;

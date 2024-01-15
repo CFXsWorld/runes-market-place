@@ -9,19 +9,19 @@ const useTokenInput = ({ type, token }) => {
   const onSelectCFXs = (amount) => {};
 
   const disabled = useMemo(() => {
-    if (type === 'TO' || !token.type) {
+    if (type === 'TO') {
       return true;
     }
     return token.type !== TOKEN_TYPE.Coin;
-  }, [type]);
+  }, [type, token]);
 
   const showSelect = useMemo(() => {
     return type === 'FROM' && token.type && token.type !== TOKEN_TYPE.Coin;
-  }, [token]);
+  }, [token, type]);
 
   const showBalance = useMemo(() => {
     return type === 'FROM' && token.type && token.type === TOKEN_TYPE.Coin;
-  }, [token]);
+  }, [token, type]);
 
   return {
     openNFT,

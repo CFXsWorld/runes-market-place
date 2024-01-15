@@ -5,6 +5,8 @@ import TokenTypeSelector from '@/app/(pages)/wormhole/_components/TokenInput/Tok
 import { cn } from '@/app/utils/classnames';
 import useTokenInput from '@/app/(pages)/wormhole/_components/TokenInput/useTokenInput';
 import { Button } from 'flowbite-react';
+import CFXsModal from '@/app/(pages)/wormhole/_components/TokenInput/CFXsModal';
+import NFTModal from '@/app/(pages)/wormhole/_components/TokenInput/NFTModal';
 
 const TokenInput = ({
   label,
@@ -32,12 +34,24 @@ const TokenInput = ({
         <div className="flex-center">
           <span className="pr-[10px]"> {label}</span>
           {showSelect && (
-            <Button
-              color="outline"
-              className="ml-[10px] max-sm:text-[12px] btn btn-outline btn-primary max-sm:h-[26px] max-sm:min-h-[26px] h-[30px] min-h-[30px] text-[12px] font-normal line-clamp-1 ml-[3px]"
-            >
-              Select
-            </Button>
+            <>
+              <CFXsModal onOpen={onOpenCFXs} open={openCFXs} />
+              <NFTModal onOpen={onOpenNFT} open={openNFT} />
+              <Button
+                color="outline"
+                className="ml-[10px] max-sm:text-[12px] btn btn-outline btn-primary max-sm:h-[26px] max-sm:min-h-[26px] h-[30px] min-h-[30px] text-[12px] font-normal line-clamp-1 ml-[3px]"
+                onClick={() => {
+                  if (token?.type === 'NFT') {
+                    onOpenNFT(true);
+                  }
+                  if (token?.type === 'CFXs') {
+                    onOpenCFXs(true);
+                  }
+                }}
+              >
+                Select
+              </Button>
+            </>
           )}
         </div>
         {showBalance && (
@@ -65,8 +79,10 @@ const TokenInput = ({
             { 'bg-transparent': disabled }
           )}
           placeholder="0"
-          onChange={(e) => {
-            onTokenChange({ ...token, amount: e.target.value });
+          onChange={(value) => {
+            if (/^\d+(\.\d*)?$/g.test(value) || !value) {
+              onTokenChange({ ...token, amount: value });
+            }
           }}
         />
         <div>
