@@ -8,6 +8,8 @@ const create = (initProps = {}) =>
   createStore(
     immer((set) => ({
       open: false,
+      openTx: false,
+      txId: '',
       walletProvider: null,
       status: null,
       chainId: null,
@@ -44,6 +46,13 @@ const create = (initProps = {}) =>
       onOpen: (value) => {
         set((state) => {
           state.open = value;
+        });
+      },
+      onOpenTx: (value, txId) => {
+        set((state) => {
+          console.log(txId);
+          state.openTx = value;
+          state.txId = txId;
         });
       },
       updateWalletProvider: (wallet) =>

@@ -95,6 +95,7 @@ export default function CFXsList() {
         onOpen={onPurchaseOpen}
         purchaseOrder={purchaseOrder}
         getUSDTBalance={getUSDTBalance}
+        refresh={refresh}
         onBuy={onBuy}
       />
     </div>

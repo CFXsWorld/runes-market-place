@@ -7,8 +7,9 @@ const useWallet = () => {
 
   const browserProvider = useMemo(
     () => wallet?.provider && new BrowserProvider(wallet.provider),
-    [wallet]
+    [wallet?.provider]
   );
+
   return { ...wallet, browserProvider };
 };
 

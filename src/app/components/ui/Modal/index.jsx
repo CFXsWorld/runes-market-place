@@ -1,27 +1,42 @@
 'use client';
 
-import {  forwardRef } from 'react';
-import { cn } from '@/app/utils/classnames';
+import { Button, Modal as OriginalMdal } from 'flowbite-react';
 
-const Modal =forwardRef( ({  outside = false, className, children },ref) => {
-
+const Modal = ({
+  children,
+  cancelText = 'CANCEL',
+  okText = 'CONFIRM',
+  title,
+  onCancel,
+  onOk,
+  dismissible = false,
+}) => {
   return (
-    <dialog className="modal sm:modal-middl" ref={ref}>
-      <div className={cn('modal-box', className)}>
-        <form method="dialog">
-          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-            ✕
-          </button>
-        </form>
-        {children}
-      </div>
-      {outside && (
-        <form method="dialog" className="modal-backdrop">
-          <button>close</button>
-        </form>
-      )}
-    </dialog>
+    <OriginalMdal
+      show={open}
+      onClose={() => onOpen(false)}
+      dismissible={dismissible}
+    >
+      <OriginalMdal.Header>{title}</OriginalMdal.Header>
+      <OriginalMdal.Body>
+        <div className="p-6 flex flex-col">{children}</div>
+      </OriginalMdal.Body>
+      <OriginalMdal.Footer>
+        <div className="flex gap-[12px]">
+          {cancelText && (
+            <Button color="outline" className="flex-1" onClick={onCancel}>
+              {cancelText}
+            </Button>
+          )}
+          <Button color="primary" className="flex-1" onClick={onOk}>
+            {okText}
+          </Button>
+        </div>
+      </OriginalMdal.Footer>
+    </OriginalMdal>
   );
-});
+};
+
+function renderModal(props) {}
 
 export default Modal;

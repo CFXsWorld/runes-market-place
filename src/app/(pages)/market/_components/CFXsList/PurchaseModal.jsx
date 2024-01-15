@@ -10,7 +10,7 @@ import { usdtDecimal } from '@/app/utils';
 import WithAuth from '@/app/components/Wallet/WithAuth';
 
 const PurchaseModal = forwardRef(
-  ({ purchaseOrder, onBuy, getUSDTBalance, onOpen, open }, ref) => {
+  ({ purchaseOrder, onBuy, getUSDTBalance, onOpen, open, refresh }, ref) => {
     const { trigger, loading } = usePromiseLoading(onBuy);
     const { data = 0, trigger: getBalance } = useSWRMutation('balance', () =>
       getUSDTBalance()
@@ -21,7 +21,7 @@ const PurchaseModal = forwardRef(
     }, [purchaseOrder]);
 
     const USDTAmount = useMemo(() => {
-      return Math.ceil(formatUnits(data, usdtDecimal));
+      return formatUnits(data, usdtDecimal);
     }, [data]);
     return (
       <Modal show={open} onClose={() => onOpen(false)}>
@@ -45,7 +45,6 @@ const PurchaseModal = forwardRef(
                 <span className="bg-fill-e-secondary w-[1px] h-[16px] flex mx-[5px]" />
                 {purchaseOrder.quantity || 0}
                 <span className="text-tc-secondary text-[12px] pl-[2px]">
-                  {' '}
                   CFXs
                 </span>
               </span>
@@ -68,7 +67,7 @@ const PurchaseModal = forwardRef(
             <div className="flex mt-[12px]">
               <span>Balance:</span>
               <span className="text-theme pl-[6px]">
-                {Number(USDTAmount || 0).toFixed(2)} USDT
+                {Number(USDTAmount || 0).toFixed(4)} USDT
               </span>
             </div>
           </div>

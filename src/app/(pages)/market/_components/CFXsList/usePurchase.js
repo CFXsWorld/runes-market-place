@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import useCFXsContract from '@/app/hooks/useCFXsContract';
 import { useWalletStore } from '@/app/store/wallet';
 
-const usePurchase = ({ selected = [], clearAll }) => {
+const usePurchase = ({ selected = [], clearAll, refresh }) => {
   const [currentOrder, setCurrentOrder] = useState(null);
 
   const [approveOpen, onApproveOpen] = useState(false);
@@ -18,6 +18,7 @@ const usePurchase = ({ selected = [], clearAll }) => {
   const { browserProvider } = useWallet();
   const { newContractAddress } = useEnv();
   const account = useWalletStore((state) => state.account);
+  const onopenTx = useWalletStore((state) => state.onOpenTx);
 
   const selectedAmount = useMemo(() => {
     return selected.reduce((a, b) => a + Number(b.amount), 0).toFixed(4);
@@ -64,21 +65,29 @@ const usePurchase = ({ selected = [], clearAll }) => {
   };
 
   const onBuy = async () => {
-    try {
-      const signer = await browserProvider.getSigner();
-      const contractWithSigner = CFXsContract.connect(signer);
-      const ids = purchaseOrder.items.map((item) => item.id);
-      const tokenTypes = purchaseOrder.items.map((c) => 0);
-      const amounts = purchaseOrder.items.map((c) => parseUnits(c.amount, 18));
-      const tx = await contractWithSigner.UnlockingScriptbatch(
-        ids,
-        tokenTypes,
-        amounts
-      );
-      await tx.wait();
-      toast.success('Purchase success !');
-    } catch (e) {
-      toast.error('Purchase failed !');
+    if (account) {
+      try {
+        const signer = await browserProvider.getSigner();
+        const contractWithSigner = CFXsContract.connect(signer);
+        const ids = purchaseOrder.items.map((item) => item.id);
+        const tokenTypes = purchaseOrder.items.map((c) => 0);
+        const amounts = purchaseOrder.items.map((c) =>
+          parseUnits(c.amount, 18)
+        );
+        const tx = await contractWithSigner.UnlockingScriptbatch(
+          ids,
+          tokenTypes,
+          amounts
+        );
+        await tx.wait();
+        onopenTx(true, tx.hash);
+        onPurchaseOpen(false);
+        refresh();
+        toast.success('Purchase success !');
+      } catch (e) {
+        console.log(e);
+        toast.error('Purchase failed !');
+      }
     }
   };
 

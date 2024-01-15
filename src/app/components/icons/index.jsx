@@ -39,6 +39,7 @@ import CoinToken from './svgs/CoinToken.svg';
 import NFTToken from './svgs/NFTToken.svg';
 import Tips from './svgs/Tips.svg';
 import ArrowDownLine from './svgs/arrowDownLine.svg';
+import Success from './svgs/success.svg';
 
 export const Icon = ({ className, style, children, ...props }) => {
   return (
@@ -254,5 +255,10 @@ export const CoinTokenIcon = (props) => (
 export const ArrowDownLineIcon = (props) => (
   <Icon {...props}>
     <ArrowDownLine />
+  </Icon>
+);
+export const SuccessIcon = (props) => (
+  <Icon {...props}>
+    <Success />
   </Icon>
 );
