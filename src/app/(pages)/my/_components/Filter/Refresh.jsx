@@ -7,7 +7,7 @@ const Refresh = ({ className, reload, total }) => {
   return (
     <div className={cn('flex-center', className)}>
       <span className="text-tc-secondary flex-shrink-0">
-        Balance: {total || 0}
+        Slots: {total || 0}
       </span>
       <RefreshIcon
         className="mx-[16px] cursor-pointer hover:opacity-80 max-md:mr-0"
