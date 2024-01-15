@@ -11,6 +11,7 @@ import useHandleModal from '@/app/(pages)/my/_components/MyCFXsList/useHandleMod
 import { useWalletStore } from '@/app/store/wallet';
 
 const useList = () => {
+  const [checkAll, setCheckAll] = useState(false);
   const [listingOrder, setListingOrder] = useState(null);
   const [splitOrder, setSplitOrder] = useState(null);
   const [selected, setSelected] = useState([]);
@@ -68,7 +69,8 @@ const useList = () => {
   const refresh = () => {
     setNoMore(false);
     setDataSource(null);
-    setCurrentPage(0);
+    setSelected([]);
+    setCheckAll(false);
     getData({ ...transformedFilter, index: 0 }).then((res) => {
       setDataSource({ [0]: res.rows || [] });
     });
@@ -109,8 +111,10 @@ const useList = () => {
 
   const clearAll = () => {
     setSelected([]);
+    setCheckAll(false);
   };
   const selectAll = (checked) => {
+    setCheckAll(checked);
     if (checked) {
       setSelected((source || []).slice(0, 24));
     } else {
@@ -156,6 +160,8 @@ const useList = () => {
     setSplitOrder,
     handleSplit,
     account,
+    checkAll,
+    setCheckAll,
   };
 };
 

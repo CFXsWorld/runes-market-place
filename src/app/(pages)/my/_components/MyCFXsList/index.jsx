@@ -39,6 +39,7 @@ export default function MyCFXsList() {
     handleSplit,
     splitOrder,
     account,
+    checkAll
   } = useList();
 
   return (
@@ -109,6 +110,7 @@ export default function MyCFXsList() {
             selected={selected}
             clearAll={clearAll}
             selectAll={selectAll}
+            checkAll={checkAll}
             onMerge={() => {
               onOpenMerge(true);
             }}

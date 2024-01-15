@@ -48,9 +48,10 @@ const SelectedCount = ({ selected }) => {
   );
 };
 
-const CheckBox = ({ onChange }) => {
+const CheckBox = ({ onChange, value }) => {
   return (
     <Checkbox
+      value={value}
       onChange={onChange}
       className="md:mr-[32px] md:ml-[8px] text-tc-secondary max-md:text-[12px] max-md:mr-[16px]"
     >
@@ -66,6 +67,7 @@ const MultiHandleBar = ({
   onMerge,
   onTransfer,
   onBatchListing,
+  checkAll,
 }) => {
   return (
     <div
@@ -78,7 +80,7 @@ const MultiHandleBar = ({
       <div className="md:hidden w-full flex flex-col items-start">
         <div className="flex items-start justify-start flex-col">
           <div className="flex items-center">
-            <CheckBox onChange={selectAll} />
+            <CheckBox onChange={selectAll} value={checkAll} />
             <SelectedCount selected={selected} />
           </div>
         </div>
@@ -92,7 +94,7 @@ const MultiHandleBar = ({
       <div className="md:max-w-[1368px] w-full flex-center-between max-md:hidden">
         <div className="flex-center text-tc-secondary">
           <SelectedCount selected={selected} />
-          <CheckBox onChange={selectAll} />
+          <CheckBox onChange={selectAll} value={checkAll} />
           <span className="text-theme cursor-pointer" onClick={clearAll}>
             Clear
           </span>
