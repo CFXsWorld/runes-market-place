@@ -12,7 +12,7 @@ const useAssetsList = ({ open, getData }) => {
   const account = useAccount();
   const transformedFilter = useMemo(() => {
     return {
-      size: pageItemCount,
+      size: 30,
       index: 0,
       owner: account ? getAddress(account) : undefined,
     };
@@ -60,7 +60,7 @@ const useAssetsList = ({ open, getData }) => {
     setSelected([]);
   };
   const onSelectItem = (item) => {
-    if ((selected?.length || 0) < 32) {
+    if ((selected?.length || 0) < 24) {
       setSelected((prev) => {
         if (prev.find((re) => re.id === item.id)) {
           return prev.filter((record) => record.id !== item.id);
@@ -72,7 +72,7 @@ const useAssetsList = ({ open, getData }) => {
 
   const selectAll = (checked) => {
     if (checked) {
-      setSelected((source || []).slice(0, 32));
+      setSelected((source || []).slice(0, 24));
     } else {
       setSelected([]);
     }
