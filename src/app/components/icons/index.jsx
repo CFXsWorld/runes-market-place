@@ -34,6 +34,11 @@ import Plus from './svgs/plus.svg';
 import Warning from './svgs/warning.svg';
 import Refresh2 from './svgs/refresh2.svg';
 import Docs from './svgs/docs.svg';
+import CFXsToken from './svgs/CFXsToken.svg';
+import CoinToken from './svgs/CoinToken.svg';
+import NFTToken from './svgs/NFTToken.svg';
+import Tips from './svgs/Tips.svg';
+import ArrowDownLine from './svgs/arrowDownLine.svg';
 
 export const Icon = ({ className, style, children, ...props }) => {
   return (
@@ -220,5 +225,34 @@ export const Refresh2Icon = (props) => (
 export const DocsIcon = (props) => (
   <Icon {...props}>
     <Docs />
+  </Icon>
+);
+
+export const TipsIcon = (props) => (
+  <Icon {...props}>
+    <Tips />
+  </Icon>
+);
+
+export const CFXsTokenIcon = (props) => (
+  <Icon {...props}>
+    <CFXsToken />
+  </Icon>
+);
+
+export const NFTTokenIcon = (props) => (
+  <Icon {...props}>
+    <NFTToken />
+  </Icon>
+);
+
+export const CoinTokenIcon = (props) => (
+  <Icon {...props}>
+    <CoinToken />
+  </Icon>
+);
+export const ArrowDownLineIcon = (props) => (
+  <Icon {...props}>
+    <ArrowDownLine />
   </Icon>
 );

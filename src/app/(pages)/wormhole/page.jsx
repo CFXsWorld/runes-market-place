@@ -1,6 +1,6 @@
 'use client';
 
-import Transform from "@/app/(pages)/wormhole/_component/Transform";
+import Transform from "@/app/(pages)/wormhole/_components/Transform";
 
 export default function Wormhole() {
   return (

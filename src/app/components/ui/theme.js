@@ -1,6 +1,6 @@
 export default {
   button: {
-    base: 'outline-none border border-transparent flex-center',
+    base: 'outline-none border border-transparent flex-center focus:ring-transparent',
     color: {
       primary:
         'bg-theme text-black hover:opacity-95 focus:outline-none h-[48px]',
@@ -10,6 +10,7 @@ export default {
         'text-theme bg-fill-e-secondary focus:outline-none  hover:opacity-95 h-[48px]',
       outlineGray:
         'broder bg-transparent border-fill-separator text-tc-secondary h-[48px]',
+      pure: 'border-none focus:ring-transparent',
     },
     disabled: 'cursor-not-allowed border-none',
     pill: {
@@ -210,5 +211,26 @@ export default {
     root: {
       base: 'h-4 w-4 border border-them focus:ring-theme focus:ring-theme text-theme bg-transparent',
     },
+  },
+  tooltip: {
+    target: 'w-fit flex-center',
+    animation: 'transition-opacity',
+    arrow: {
+      base: 'absolute z-10 h-2 w-2 rotate-45 bg-fill-separator',
+      style: {
+        dark: 'bg-fill-separator',
+        light: 'bg-fill-separator',
+        auto: 'bg-fill-separator',
+      },
+      placement: '-4px',
+    },
+    base: 'absolute inline-block z-10 rounded-lg  text-sm font-medium shadow-sm rounded-[4px]',
+    hidden: 'invisible opacity-0',
+    style: {
+      dark: 'bg-gray-900 text-white dark:bg-gray-700',
+      light: 'border border-gray-200 bg-white text-gray-900',
+      auto: 'border border-gray-200 bg-white text-gray-900 dark:border-none dark:bg-gray-700 dark:text-white',
+    },
+    content: 'relative z-20 bg-fill-separator p-0 py-2 px-3',
   },
 };
