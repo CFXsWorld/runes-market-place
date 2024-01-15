@@ -11,7 +11,7 @@ const Input = forwardRef(
         className={cn(
           `flex w-full h-[48px] rounded-[4px] px-2 py-2   border border-fill-separator  bg-transparent
       focus:outline-none focus:ring-theme focus:ring-1  focus:border-theme focus:border-[1px]
-      disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
+      disabled:bg-transparent disabled:text-slate-500 disabled:border-transparent disabled:shadow-none disabled:opacity-60
       invalid:border-red-500 invalid:text-red-600
       invalid:ring-2
       invalid:ring-offset-2
