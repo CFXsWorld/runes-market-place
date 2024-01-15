@@ -1,7 +1,6 @@
 'use client';
 
 import Checkbox from '@/app/components/ui/Checkbox';
-import ClaimableList from '@/app/(pages)/my/_components/Attention/claim/ClaimableList';
 import { Button } from 'flowbite-react';
 import useAssetsList from '@/app/(pages)/wormhole/_components/TokenInput/useAssetsList';
 import { cn } from '@/app/utils/classnames';
@@ -16,7 +15,7 @@ const AssetsList = ({ onConfirm, open, getData, isMutating }) => {
     loadMore,
     noMore,
     selected = [],
-    onSelectItem,
+    onSelect,
   } = useAssetsList({ open, getData });
   return (
     <div className="px-6  pb-6 flex flex-col">

@@ -2,13 +2,13 @@ import { getAddress } from 'ethers';
 import { useEffect, useMemo, useState } from 'react';
 import { pageItemCount } from '@/app/utils';
 import { uniqBy } from 'lodash';
-import { useWalletStore } from "@/app/store/wallet";
+import { useWalletStore } from '@/app/store/wallet';
 const useAssetsList = ({ open, getData }) => {
   const [selected, setSelected] = useState([]);
   const [dataSource, setDataSource] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [noMore, setNoMore] = useState(false);
-  const account = useWalletStore(state=>state.account);
+  const account = useWalletStore((state) => state.account);
   const transformedFilter = useMemo(() => {
     return {
       size: 30,
@@ -58,14 +58,15 @@ const useAssetsList = ({ open, getData }) => {
   const clearAll = () => {
     setSelected([]);
   };
-  const onSelectItem = (item) => {
-    if ((selected?.length || 0) < 24) {
-      setSelected((prev) => {
-        if (prev.find((re) => re.id === item.id)) {
-          return prev.filter((record) => record.id !== item.id);
-        }
-        return [...prev, item];
-      });
+
+  const onSelect = (item) => {
+    const isSelected = selected?.find((re) => re.id === item.id);
+    if (isSelected) {
+      setSelected(selected.filter((record) => record.id !== item.id));
+    } else {
+      if ((selected?.length || 0) < 24) {
+        setSelected([...selected, item]);
+      }
     }
   };
 
@@ -85,7 +86,7 @@ const useAssetsList = ({ open, getData }) => {
     refresh,
     loadMore,
     noMore,
-    onSelectItem,
+    onSelect,
   };
 };
 
