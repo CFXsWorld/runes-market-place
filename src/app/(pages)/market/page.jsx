@@ -7,6 +7,7 @@ import useSWRMutation from 'swr/mutation';
 import { APIs } from '@/app/services/request';
 import { getMarketStatistics } from '@/app/services';
 import { useEffect, useState } from 'react';
+import { parseUnits } from 'ethers';
 
 export default function Market() {
   const [data, setData] = useState({});
@@ -15,13 +16,13 @@ export default function Market() {
     getMarketStatistics,
     {
       onSuccess: (res) => {
-        setData(
-          Object.keys(res || {}).reduce((prev, next) => {
-            prev[next] =
-              res[next] === '--' || !res[next] ? 0 : Number(res[next]);
-            return prev;
-          }, {})
-        );
+        setData({
+          ...res,
+          totalSupply: 0,
+          percentage: 0,
+          floor: parseFloat(res.floor),
+          unitPrice: parseFloat(res.unitPrice),
+        });
       },
     }
   );
