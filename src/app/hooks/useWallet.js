@@ -1,12 +1,14 @@
-import { useCFXsWallet } from '@/app/components/Wallet';
 import { useWalletStore } from '@/app/store/wallet';
 import { BrowserProvider } from 'ethers';
+import { useMemo } from 'react';
 
 const useWallet = () => {
-  const currentWallet = useWalletStore((state) => state.walletProvider);
-  const wallets = useCFXsWallet();
-  const wallet = wallets[currentWallet];
-  const browserProvider = new BrowserProvider(wallet.provider);
+  const wallet = useWalletStore((state) => state.wallet);
+
+  const browserProvider = useMemo(
+    () => wallet?.provider && new BrowserProvider(wallet.provider),
+    [wallet]
+  );
   return { ...wallet, browserProvider };
 };
 

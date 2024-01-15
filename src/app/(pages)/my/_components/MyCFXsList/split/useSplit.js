@@ -4,6 +4,7 @@ import { isAddress, getAddress } from 'ethers';
 import { toast } from 'react-toastify';
 import useCFXsContract from '@/app/hooks/useCFXsContract';
 import { omit, uniqueId } from 'lodash';
+import { useWalletStore } from "@/app/store/wallet";
 
 export const SPLIT_TYPE = {
   CUSTOM: 'CUSTOM',
@@ -25,9 +26,9 @@ const useSplit = ({ reload, onOpen, splitOrder }) => {
     { ...DEFAULT_OUTPUT, id: `${TEMP_ID}${uniqueId()}` },
   ]);
   const [shareCount, setShareCount] = useState();
-  const { browserProvider, useAccount } = useWallet();
+  const { browserProvider } = useWallet();
   const { contract: CFXsContract } = useCFXsContract();
-  const account = useAccount();
+  const account = useWalletStore(state=>state.account);
 
   const shareItems = useMemo(() => {
     if (/^[1-9]\d*$/.test(shareCount) && splitOrder && isAddress(account)) {

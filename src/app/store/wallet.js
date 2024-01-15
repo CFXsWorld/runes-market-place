@@ -1,28 +1,75 @@
-import { create } from 'zustand';
+import { createContext, useContext, useRef } from 'react';
 import { immer } from 'zustand/middleware/immer';
-import createContext from 'zustand/context';
-const { Provider, useStore } = createContext();
+import { createStore, useStore } from 'zustand';
 
-const createStore = () =>
-  create(
+const context = createContext(null);
+
+const create = (initProps = {}) =>
+  createStore(
     immer((set) => ({
-      walletProvider: 'Fluent',
-      isConnect: false,
+      open: false,
+      walletProvider: null,
+      status: null,
+      chainId: null,
+      account: null,
+      balance: null,
+      wallet: null,
+      updateStatus: (status) => {
+        set((state) => {
+          state.status = status;
+        });
+      },
+      updateChainId: (chainId) => {
+        set((state) => {
+          state.chainId = chainId;
+        });
+      },
 
+      updateAccount: (account) => {
+        set((state) => {
+          state.account = account;
+        });
+      },
+      updateBalance: (balance) => {
+        set((state) => {
+          state.balance = balance;
+        });
+      },
+
+      updateWalletFn: (wallet) => {
+        set((state) => {
+          state.wallet = wallet;
+        });
+      },
+      onOpen: (value) => {
+        set((state) => {
+          state.open = value;
+        });
+      },
       updateWalletProvider: (wallet) =>
         set((state) => {
           state.walletProvider = wallet;
         }),
-      updateIsConnect: (val) =>
-        set((state) => {
-          state.isConnect = val;
-        }),
+      ...initProps,
     }))
   );
 
-const WalletProvider = ({ children }) => {
-  return <Provider createStore={createStore}>{children}</Provider>;
+const WalletProvider = ({ children, store }) => {
+  const storeRef = useRef();
+  if (!storeRef.current) {
+    storeRef.current = create(store);
+  }
+  return (
+    <context.Provider value={storeRef.current}> {children}</context.Provider>
+  );
 };
 
-export const useWalletStore = useStore;
+export const useWalletStore = (selector) => {
+  const store = useContext(context);
+  if (!store) {
+    throw new Error('Missing WalletProvider !');
+  }
+  return useStore(store, selector);
+};
+
 export default WalletProvider;

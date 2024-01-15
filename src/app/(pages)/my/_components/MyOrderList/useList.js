@@ -7,14 +7,13 @@ import useSWRMutation from 'swr/mutation';
 import { APIs } from '@/app/services/request';
 import { getMarketCFXsList } from '@/app/services';
 import { getAddress } from 'ethers';
-import useWallet from '@/app/hooks/useWallet';
+import { useWalletStore } from "@/app/store/wallet";
 
 const useList = () => {
   const [orders, setOrders] = useState(null);
   const [open, onOpen] = useState(false);
   const mounted = useMounted();
-  const { useAccount } = useWallet();
-  const account = useAccount();
+  const account = useWalletStore(state=>state.account);
   const { count } = useResponsive(
     { min: 200, max: 300, gap: 24, H5Min: 160 },
     mounted && typeof document !== 'undefined'

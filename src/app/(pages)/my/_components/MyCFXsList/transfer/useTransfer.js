@@ -3,12 +3,13 @@ import useCFXsContract from '@/app/hooks/useCFXsContract';
 import { toast } from 'react-toastify';
 import { getAddress, isAddress } from 'ethers';
 import { useMemo, useState } from 'react';
+import { useWalletStore } from "@/app/store/wallet";
 
 const useTransfer = ({ selected, onOpen, reload }) => {
   const [address, setAddress] = useState();
-  const { browserProvider, useAccount } = useWallet();
+  const { browserProvider } = useWallet();
   const { contract: CFXsContract } = useCFXsContract();
-  const account = useAccount();
+  const account = useWalletStore(state=>state.account);
 
   const isValid = useMemo(() => {
     try {

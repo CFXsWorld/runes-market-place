@@ -2,14 +2,13 @@ import { getAddress } from 'ethers';
 import { useEffect, useMemo, useState } from 'react';
 import { pageItemCount } from '@/app/utils';
 import { uniqBy } from 'lodash';
-import useWallet from '@/app/hooks/useWallet';
+import { useWalletStore } from "@/app/store/wallet";
 const useAssetsList = ({ open, getData }) => {
   const [selected, setSelected] = useState([]);
   const [dataSource, setDataSource] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [noMore, setNoMore] = useState(false);
-  const { useAccount } = useWallet();
-  const account = useAccount();
+  const account = useWalletStore(state=>state.account);
   const transformedFilter = useMemo(() => {
     return {
       size: 30,

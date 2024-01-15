@@ -34,7 +34,7 @@ const AssetsList = ({ onConfirm, open, getData, isMutating }) => {
             <div
               key={item.id}
               className={cn(
-                'min-w-[85px] max-w-[120px] flex flex-col cursor-pointer overflow-hidden',
+                'min-w-[85px] max-w-[140px] flex flex-col cursor-pointer overflow-hidden',
                 'bg-fill-secondary h-[68px] border-[2px] border-fill-e-primary p-[12px]',
                 'rounded-[8px]',
                 {

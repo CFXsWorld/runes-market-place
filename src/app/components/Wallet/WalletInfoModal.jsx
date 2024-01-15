@@ -27,9 +27,7 @@ const items = [
   },
 ];
 
-const ConnectModal = forwardRef((_, ref) => {
-  const onOpen = useWalletStore((state) => state.onOpen);
-  const open = useWalletStore((state) => state.open);
+const ConnectModal = forwardRef(({ open, onOpen }, ref) => {
   const updateWalletProvider = useWalletStore(
     (state) => state.updateWalletProvider
   );

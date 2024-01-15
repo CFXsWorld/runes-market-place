@@ -10,12 +10,13 @@ import { APIs } from '@/app/services/request';
 import { getMyOldCFXsList } from '@/app/services';
 import useOldCFXsContract from '@/app/hooks/useOldCFXsContract';
 import useBridgeContract from '@/app/hooks/useBridgeContract';
+import { useWalletStore } from "@/app/store/wallet";
 
 const useClaim = ({ open }) => {
   const [selected, setSelected] = useState([]);
-  const { browserProvider, useAccount } = useWallet();
+  const { browserProvider } = useWallet();
   const { contract: CFXsContract } = useCFXsContract();
-  const account = useAccount();
+  const account = useWalletStore(state=>state.account);
   const [dataSource, setDataSource] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [noMore, setNoMore] = useState(false);

@@ -5,6 +5,7 @@ import useEnv from '@/app/hooks/useEnv';
 import { parseUnits } from 'ethers';
 import { toast } from 'react-toastify';
 import useCFXsContract from '@/app/hooks/useCFXsContract';
+import { useWalletStore } from '@/app/store/wallet';
 
 const usePurchase = ({ selected = [], clearAll }) => {
   const [currentOrder, setCurrentOrder] = useState(null);
@@ -14,9 +15,9 @@ const usePurchase = ({ selected = [], clearAll }) => {
 
   const USDTContract = useUSDTContract();
   const { contract: CFXsContract } = useCFXsContract();
-  const { useAccount, browserProvider } = useWallet();
+  const { browserProvider } = useWallet();
   const { newContractAddress } = useEnv();
-  const account = useAccount();
+  const account = useWalletStore((state) => state.account);
 
   const selectedAmount = useMemo(() => {
     return selected.reduce((a, b) => a + Number(b.amount), 0).toFixed(4);

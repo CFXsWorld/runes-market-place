@@ -23,7 +23,7 @@ const Header = () => {
         <LogoMDIcon />
         <ConnectButton />
       </div>
-      <div className="md:max-w-[1368px] w-full flex-center-between max-md:hidden">
+      <div className="md:max-w-[1368px] w-full flex-center-between max-md:hidden relative">
         <div className="flex-center">
           <div className="flex-center mr-[85px]">
             <LogoIcon />

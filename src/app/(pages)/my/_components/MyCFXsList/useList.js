@@ -6,9 +6,9 @@ import { APIs } from '@/app/services/request';
 import { getMyCFXsList } from '@/app/services';
 import { pageItemCount } from '@/app/utils';
 import { uniqBy } from 'lodash';
-import useWallet from '@/app/hooks/useWallet';
 import { getAddress } from 'ethers';
 import useHandleModal from '@/app/(pages)/my/_components/MyCFXsList/useHandleModal';
+import { useWalletStore } from "@/app/store/wallet";
 
 const useList = () => {
   const [listingOrder, setListingOrder] = useState(null);
@@ -16,8 +16,7 @@ const useList = () => {
   const [selected, setSelected] = useState([]);
   const [dataSource, setDataSource] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const { useAccount } = useWallet();
-  const account = useAccount();
+  const account = useWalletStore(state=>state.account);
   const [noMore, setNoMore] = useState(false);
   const {
     openListing,

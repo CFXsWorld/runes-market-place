@@ -7,6 +7,7 @@ import { LoadingIcon } from '@/app/components/icons';
 import useSWRMutation from 'swr/mutation';
 import { formatUnits } from 'ethers';
 import { usdtDecimal } from '@/app/utils';
+import WithAuth from '@/app/components/Wallet/WithAuth';
 
 const PurchaseModal = forwardRef(
   ({ purchaseOrder, onBuy, getUSDTBalance, onOpen, open }, ref) => {
@@ -38,28 +39,37 @@ const PurchaseModal = forwardRef(
               <span className="text-tc-secondary">For</span>
               <span className="text-white font-medium text-[14px] flex items-end">
                 {purchaseOrder?.count || 0}
-                <span className="text-tc-secondary text-[12px] pl-[2px]">SLOTS</span>
-                <span className='bg-fill-e-secondary w-[1px] h-[16px] flex mx-[5px]'/>
+                <span className="text-tc-secondary text-[12px] pl-[2px]">
+                  SLOTS
+                </span>
+                <span className="bg-fill-e-secondary w-[1px] h-[16px] flex mx-[5px]" />
                 {purchaseOrder.quantity || 0}
-                <span className="text-tc-secondary text-[12px] pl-[2px]"> CFXs</span>
+                <span className="text-tc-secondary text-[12px] pl-[2px]">
+                  {' '}
+                  CFXs
+                </span>
               </span>
             </div>
             <div className="text-tc-secondary text-[14px] mt-[32px] mb-[24px] pt-[12px] border border-transparent border-t-fill-e-primary">
               {/*You will be asked to approve this purchase from your wallet.*/}
             </div>
-            <Button
-              color="primary"
-              className="btn btn-primary w-full"
-              disabled={!purchaseOrder || loading}
-              onClick={() => {
-                trigger();
-              }}
-            >
-              {loading ? <LoadingIcon /> : 'BUY'}
-            </Button>
+            <WithAuth>
+              <Button
+                color="primary"
+                className="btn btn-primary w-full"
+                disabled={!purchaseOrder || loading}
+                onClick={() => {
+                  trigger();
+                }}
+              >
+                {loading ? <LoadingIcon /> : 'BUY'}
+              </Button>
+            </WithAuth>
             <div className="flex mt-[12px]">
               <span>Balance:</span>
-              <span className="text-theme pl-[6px]">{Number(USDTAmount||0).toFixed(2)} USDT</span>
+              <span className="text-theme pl-[6px]">
+                {Number(USDTAmount || 0).toFixed(2)} USDT
+              </span>
             </div>
           </div>
         </Modal.Body>
