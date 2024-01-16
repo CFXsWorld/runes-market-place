@@ -20,7 +20,7 @@ const TxModal = () => {
       <Modal.Header>
         <div className="flex-center">
           <SuccessIcon className="mr-[10px]" />
-          Write Contract
+          Transaction Hash
         </div>
       </Modal.Header>
       <Modal.Body>
