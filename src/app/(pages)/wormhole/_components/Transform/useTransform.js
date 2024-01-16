@@ -22,6 +22,7 @@ const useTransform = () => {
   const { browserProvider } = useWallet();
   const account = useWalletStore((state) => state.account);
   const { contract: ERCBridgeContract } = useERCBridgeContract();
+
   useEffect(() => {
     if (toToken.type) {
       setToToken({ ...toToken, amount: fromToken.amount });
@@ -30,7 +31,7 @@ const useTransform = () => {
 
   const calcFee = useMemo(() => {
     if (fromToken.type === TOKEN_TYPE.NFT && toToken.type === TOKEN_TYPE.CFXs) {
-      return Number(fromToken.amount || 0) * 0.02;
+      return (Number(fromToken.amount || 0) * 0.02).toFixed(2);
     }
     if (
       fromToken.type === TOKEN_TYPE.Coin &&
@@ -42,10 +43,10 @@ const useTransform = () => {
       fromToken.type === TOKEN_TYPE.CFXs &&
       toToken.type === TOKEN_TYPE.Coin
     ) {
-      return Number(fromToken.amount || 0) * 0.01;
+      return (Number(fromToken.amount || 0) * 0.01).toFixed(2);
     }
     if (fromToken.type === TOKEN_TYPE.CFXs && toToken.type === TOKEN_TYPE.NFT) {
-      return Number(fromToken.amount || 0) * 0.1;
+      return (Number(fromToken.amount || 0) * 0.1).toFixed(2);
     }
     return 0;
   }, [fromToken, toToken]);
@@ -59,7 +60,7 @@ const useTransform = () => {
         const tx = await contractWithSigner.ExchangeCFXsForOnlyECR20(ids, {
           value: parseUnits(calcFee.toString(), 18),
         });
-        await tx.wait()
+        await tx.wait();
         toast.success('Transform success');
       } catch (e) {
         console.log(e);

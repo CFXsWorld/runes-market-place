@@ -1,25 +1,21 @@
 import { useEffect, useMemo, useState } from 'react';
 import { TOKEN_TYPE } from '@/app/(pages)/wormhole/_components/TokenInput/TokenTypeSelector';
-import { getAddress, isAddress, parseUnits, formatUnits } from 'ethers';
+import { getAddress, isAddress, formatUnits } from 'ethers';
 import useERC20Contract from '@/app/hooks/useERC20Contract';
 import useWallet from '@/app/hooks/useWallet';
 import { useWalletStore } from '@/app/store/wallet';
 
-const useTokenInput = ({ type, token }) => {
+const useTokenInput = ({ type, token, loading }) => {
   const [openNFT, onOpenNFT] = useState(false);
   const [openCFXs, onOpenCFXs] = useState(false);
   const [coinsBalance, setCoinsBalance] = useState(0);
   const { contract: ERC20Contract } = useERC20Contract();
+
   const { browserProvider, provider } = useWallet();
   const account = useWalletStore((state) => state.account);
 
   useEffect(() => {
-    if (
-      isAddress(account) &&
-      browserProvider &&
-      type === 'FROM' &&
-      typeof window !== 'undefined'
-    ) {
+    if (isAddress(account) && type === 'FROM' && ERC20Contract) {
       browserProvider.getSigner().then((signer) => {
         const contractWithSigner = ERC20Contract.connect(signer);
         contractWithSigner
@@ -30,7 +26,7 @@ const useTokenInput = ({ type, token }) => {
           .catch((e) => {});
       });
     }
-  }, [browserProvider, account, type]);
+  }, [ERC20Contract, loading, account, type]);
 
   const disabled = useMemo(() => {
     if (type === 'TO') {

@@ -14,6 +14,7 @@ const TokenInput = ({
   tokenList,
   onTokenChange,
   type = 'FROM',
+                      loading,
 }) => {
   const {
     openNFT,
@@ -28,6 +29,7 @@ const TokenInput = ({
     type,
     token,
     onTokenChange,
+    loading,
   });
   return (
     <div className="w-full flex flex-col px-[20px] py-[16px] max-md:px-[12px] bg-fill-e-primary">

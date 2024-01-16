@@ -47,6 +47,7 @@ const Transform = () => {
           token={fromToken}
           tokenList={tokenList}
           onTokenChange={setFromToken}
+          loading={loading}
         />
         <div className="h-[42px] absolute-center bg-fill-e-secondary w-[42px] border-[1px] border-black rounded-[4px] flex-center">
           <ArrowDownLineIcon />
