@@ -66,7 +66,7 @@ const Transform = () => {
         <Button
           className="w-full mt-[42px]"
           color="primary"
-          disaebl={loading || fromToken.amount}
+          disabled={loading || !fromToken.amount || !toToken.amount}
           onClick={trigger}
         >
           {loading ? <LoadingIcon /> : 'CONFIRM TRANSFORM'}

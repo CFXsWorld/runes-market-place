@@ -15,7 +15,7 @@ const useMockMintCFXs = () => {
     if (contract && provider) {
       const signer = await provider.getSigner();
       const contractWithSigner = contract.connect(signer);
-      const tx = await contractWithSigner.MockMint('88', '5000');
+      const tx = await contractWithSigner.MockMint('89', '5000');
       console.log(tx.hash);
       await tx.wait();
     }

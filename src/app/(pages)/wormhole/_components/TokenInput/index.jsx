@@ -23,6 +23,7 @@ const TokenInput = ({
     disabled,
     showSelect,
     showBalance,
+    coinsBalance,
   } = useTokenInput({
     type,
     token,
@@ -35,8 +36,22 @@ const TokenInput = ({
           <span className="pr-[10px]"> {label}</span>
           {showSelect && (
             <>
-              <CFXsModal onOpen={onOpenCFXs} open={openCFXs} />
-              <NFTModal onOpen={onOpenNFT} open={openNFT} />
+              <CFXsModal
+                onOpen={onOpenCFXs}
+                open={openCFXs}
+                onSelect={(items) => {
+                  onTokenChange({ ...token, amount: items.length, items });
+                  onOpenCFXs(false);
+                }}
+              />
+              <NFTModal
+                onOpen={onOpenNFT}
+                open={openNFT}
+                onSelect={(items) => {
+                  onTokenChange({ ...token, amount: items.length, items });
+                  onOpenNFT(false);
+                }}
+              />
               <Button
                 color="outline"
                 className="ml-[10px] max-sm:text-[12px] btn btn-outline btn-primary max-sm:h-[26px] max-sm:min-h-[26px] h-[30px] min-h-[30px] text-[12px] font-normal line-clamp-1 ml-[3px]"
@@ -57,11 +72,14 @@ const TokenInput = ({
         {showBalance && (
           <div className="flex-center">
             <span className="text-tc-secondary text-[14px] mr-[10px]">
-              Balance:25000
+              Balance: {coinsBalance}
             </span>
             <Button
               color="secondary"
               className="text-[12px] h-[24px] bg-fill-separator  font-normal line-clamp-1 ml-[3px] px-0"
+              onClick={() => {
+                onTokenChange({ ...token, amount: coinsBalance });
+              }}
             >
               MAX
             </Button>
@@ -75,12 +93,12 @@ const TokenInput = ({
           value={token.amount}
           className={cn(
             'flex-1 border-none outline-none bg-transparent',
-            'focus:border-transparent focus:ring-transparent text-[24px] text-white',
+            'focus:border-transparent focus:ring-transparent text-[24px] text-white disabled:text-white',
             { 'bg-transparent': disabled }
           )}
           placeholder="0"
           onChange={(value) => {
-            if (/^\d+(\.\d*)?$/g.test(value) || !value) {
+            if (/^\d+$/g.test(value) || !value) {
               onTokenChange({ ...token, amount: value });
             }
           }}

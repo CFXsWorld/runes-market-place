@@ -7,7 +7,7 @@ import useSWRMutation from 'swr/mutation';
 import { APIs } from '@/app/services/request';
 import { getMyCFXsList } from '@/app/services';
 
-const CFXsModal = forwardRef(({ onOpen, open }, ref) => {
+const CFXsModal = forwardRef(({ onOpen, open, onSelect }, ref) => {
   const { isMutating, trigger: getData } = useSWRMutation(
     APIs.MY_CFXs_LIST,
     getMyCFXsList
@@ -18,7 +18,7 @@ const CFXsModal = forwardRef(({ onOpen, open }, ref) => {
       <Modal.Header>Select CFXs</Modal.Header>
       <Modal.Body>
         <AssetsList
-          onConfirm={() => {}}
+          onConfirm={onSelect}
           open={open}
           getData={getData}
           isMutating={isMutating}

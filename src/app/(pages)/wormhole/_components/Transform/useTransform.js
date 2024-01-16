@@ -1,25 +1,31 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import useERCBridgeContract from '@/app/hooks/useERCBridgeContract';
 import { TOKEN_TYPE } from '@/app/(pages)/wormhole/_components/TokenInput/TokenTypeSelector';
 import { useWalletStore } from '@/app/store/wallet';
 import useWallet from '@/app/hooks/useWallet';
 import { toast } from 'react-toastify';
+import { parseUnits } from 'ethers';
 
 const useTransform = () => {
   const [open, onOpen] = useState(false);
   const [fromToken, setFromToken] = useState({
-    amount: undefined,
-    type: undefined,
+    amount: null,
+    type: null,
     items: [],
   });
   const [toToken, setToToken] = useState({
-    amount: undefined,
-    type: undefined,
+    amount: null,
+    type: null,
     items: [],
   });
-  const { browserProvider } = useWallet();
+  const { browserProvider, provider } = useWallet();
   const account = useWalletStore((state) => state.account);
   const { contract: ERCBridgeContract } = useERCBridgeContract();
+  useEffect(() => {
+    if (toToken.type) {
+      setToToken({ ...toToken, amount: fromToken.amount });
+    }
+  }, [fromToken.amount, toToken.type]);
 
   const calcFee = useMemo(() => {
     if (fromToken.type === TOKEN_TYPE.NFT && toToken.type === TOKEN_TYPE.CFXs) {
@@ -38,7 +44,7 @@ const useTransform = () => {
       return Number(fromToken.amount || 0) * 0.01;
     }
     if (fromToken.type === TOKEN_TYPE.CFXs && toToken.type === TOKEN_TYPE.NFT) {
-      return Number(fromToken.amount || 0) * 0.01;
+      return Number(fromToken.amount || 0) * 0.1;
     }
     return 0;
   }, [fromToken, toToken]);
@@ -47,7 +53,10 @@ const useTransform = () => {
     if (account) {
       const signer = await browserProvider.getSigner();
       const contractWithSigner = ERCBridgeContract.connect(signer);
-      const tx = await contractWithSigner.ExchangeCFXsForOnlyECR20();
+      const ids = fromToken.items.map((v) => v.id);
+      const tx = await contractWithSigner.ExchangeCFXsForOnlyECR20(ids, {
+        value: parseUnits(calcFee.toString(), 18),
+      });
       await tx.wait();
     }
   };
@@ -55,7 +64,10 @@ const useTransform = () => {
     if (account) {
       const signer = await browserProvider.getSigner();
       const contractWithSigner = ERCBridgeContract.connect(signer);
-      const tx = await contractWithSigner.ExchangeCFXsForECR20721();
+      const ids = fromToken.items.map((v) => v.id);
+      const tx = await contractWithSigner.ExchangeCFXsForECR20721(ids, {
+        value: parseUnits(calcFee.toString(), 18),
+      });
       await tx.wait();
     }
   };
@@ -63,7 +75,12 @@ const useTransform = () => {
     if (account) {
       const signer = await browserProvider.getSigner();
       const contractWithSigner = ERCBridgeContract.connect(signer);
-      const tx = await contractWithSigner.ECR20RedemptionOfCFXs();
+      const tx = await contractWithSigner.ECR20RedemptionOfCFXs(
+        parseUnits(fromToken.amount.toString(), 18),
+        {
+          value: parseUnits(calcFee.toString(), 18),
+        }
+      );
       await tx.wait();
     }
   };
@@ -71,7 +88,10 @@ const useTransform = () => {
     if (account) {
       const signer = await browserProvider.getSigner();
       const contractWithSigner = ERCBridgeContract.connect(signer);
-      const tx = await contractWithSigner.ECR20721RedemptionOfCFXs();
+      const ids = fromToken.items.map((v) => v.id);
+      const tx = await contractWithSigner.ECR20721RedemptionOfCFXs([ids], {
+        value: parseUnits(calcFee.toString(), 18),
+      });
       await tx.wait();
     }
   };
@@ -106,7 +126,7 @@ const useTransform = () => {
       toast.success('Transform success');
     } catch (e) {
       console.log(e);
-      toast.error('Transform error');
+      toast.error('Transform fail');
     }
   };
 

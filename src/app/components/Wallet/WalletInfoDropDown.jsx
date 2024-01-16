@@ -49,11 +49,9 @@ const WalletInfoDropDown = ({ renderTrigger }) => {
               CFXs MARKET
             </Button>
           </Link>
-          <Link href="/wormhole">
-            <Button color="primary" className="w-full">
-              BUY COIN
-            </Button>
-          </Link>
+          <Button color="primary" className="w-full" disabled>
+            BUY COIN
+          </Button>
         </div>
         <div>
           <Tabs
