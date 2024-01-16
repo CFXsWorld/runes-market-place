@@ -13,7 +13,7 @@ const WithConnect = ({ children }) => {
   const { correctChainId, correctChainIdHex } = useEnv();
   const isActive = status === 'active';
   const isCorrectChain = correctChainId === chainId;
-  
+
   return children({
     isConnected,
     isActive,

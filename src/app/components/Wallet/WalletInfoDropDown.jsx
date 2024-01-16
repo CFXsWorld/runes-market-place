@@ -1,11 +1,13 @@
 'use client';
 
-import { Dropdown } from 'flowbite-react';
+import { Button, Dropdown } from 'flowbite-react';
+
 import { AvatarIcon, CopyIcon, LogoutIcon } from '@/app/components/icons';
 import { useWalletStore } from '@/app/store/wallet';
 import { addressFormat } from '@/app/utils';
 import { useCopy } from '@/app/hooks/useCopy';
 import useDisconnect from '@/app/components/Wallet/useDisconnect';
+import Link from 'next/link';
 
 const WalletInfoDropDown = ({ renderTrigger }) => {
   const account = useWalletStore((state) => state.account);
@@ -34,6 +36,19 @@ const WalletInfoDropDown = ({ renderTrigger }) => {
             className="text-tc-secondary hover:text-theme text-[24px] cursor-pointer"
             onClick={disconnect}
           />
+        </div>
+
+        <div className="flex flex-col gap-[12px] my-[24px]">
+          <Link href="/market">
+            <Button color="primary" className="w-full">
+              CFXs MARKET
+            </Button>
+          </Link>
+          <Link href="/wormhole">
+            <Button color="primary" className="w-full">
+              BUY COIN
+            </Button>
+          </Link>
         </div>
       </div>
     </Dropdown>
