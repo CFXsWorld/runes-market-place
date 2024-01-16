@@ -1,14 +1,18 @@
-
 import abi from '../contracts/ERC721.json';
 import useEnv from '@/app/hooks/useEnv';
 import useWallet from '@/app/hooks/useWallet';
-import { BrowserProvider, Contract } from 'ethers';
+import { Contract } from 'ethers';
+import { useMemo } from 'react';
 
 const useERC721Contract = () => {
   const { erc721ContractAddress } = useEnv();
-  const wallet = useWallet();
-  const provider = new BrowserProvider(wallet.provider);
-  const contract = new Contract(erc721ContractAddress, abi, provider);
+  const { browserProvider } = useWallet();
+
+  const contract = useMemo(() => {
+    return browserProvider && erc721ContractAddress
+      ? new Contract(erc721ContractAddress, abi, browserProvider)
+      : null;
+  }, [browserProvider, erc721ContractAddress]);
 
   return { contract };
 };

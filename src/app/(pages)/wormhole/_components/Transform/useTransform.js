@@ -59,7 +59,7 @@ const useTransform = () => {
         const tx = await contractWithSigner.ExchangeCFXsForOnlyECR20(ids, {
           value: parseUnits(calcFee.toString(), 18),
         });
-        await tx.wait();
+        await tx.wait()
         toast.success('Transform success');
       } catch (e) {
         console.log(e);

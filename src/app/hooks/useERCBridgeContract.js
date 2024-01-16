@@ -1,13 +1,18 @@
 import abi from '../contracts/ERC.json';
 import useEnv from '@/app/hooks/useEnv';
 import useWallet from '@/app/hooks/useWallet';
-import { BrowserProvider, Contract } from 'ethers';
+import { Contract } from 'ethers';
+import { useMemo } from 'react';
 
 const useERCBridgeContract = () => {
   const { ercBridgeContractAddress } = useEnv();
-  const wallet = useWallet();
-  const provider = new BrowserProvider(wallet.provider);
-  const contract = new Contract(ercBridgeContractAddress, abi, provider);
+  const { browserProvider } = useWallet();
+
+  const contract = useMemo(() => {
+    return browserProvider && ercBridgeContractAddress
+      ? new Contract(ercBridgeContractAddress, abi, browserProvider)
+      : null;
+  }, [browserProvider, ercBridgeContractAddress]);
 
   return { contract };
 };
