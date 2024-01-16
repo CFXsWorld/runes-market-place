@@ -98,28 +98,32 @@ const useList = () => {
   }, [dataSource]);
 
   const refresh = () => {
-    setNoMore(false);
-    setDataSource(null);
-    setSelected([]);
-    setCheckAll(false);
-    setCurrentPage(0);
-    getData({ ...transformedFilter, index: 0 }).then((res) => {
-      setDataSource({ [0]: res.rows });
-    });
+    loadMore(true);
   };
 
-  const loadMore = async () => {
-    getData({
-      ...transformedFilter,
-      index: currentPage * pageItemCount,
-    }).then((res) => {
-      if (res.rows && res.rows.length === 0 && currentPage > 0) {
-        setNoMore(true);
-      } else {
-        setCurrentPage(currentPage + 1);
-        setDataSource({ ...(dataSource || {}), [currentPage]: res.rows });
-      }
-    });
+  const loadMore = async (refreshing) => {
+    if (refreshing) {
+      setNoMore(false);
+      setDataSource(null);
+      setSelected([]);
+      setCheckAll(false);
+      setCurrentPage(0);
+      getData({ ...transformedFilter, index: 0 }).then((res) => {
+        setDataSource({ [0]: res.rows });
+      });
+    } else {
+      getData({
+        ...transformedFilter,
+        index: currentPage * pageItemCount,
+      }).then((res) => {
+        if (res.rows && res.rows.length === 0 && currentPage > 0) {
+          setNoMore(true);
+        } else {
+          setCurrentPage(currentPage + 1);
+          setDataSource({ ...(dataSource || {}), [currentPage]: res.rows });
+        }
+      });
+    }
   };
 
   const clearAll = () => {
