@@ -1,73 +1,36 @@
 'use client';
 
-import { useWalletStore } from '@/app/store/wallet';
-import useCFXsWallet from '@/app/hooks/useCFXsWallet';
 import { Modal } from 'flowbite-react';
-import { forwardRef } from 'react';
-import { cn } from '@/app/utils/classnames';
-import { FluentIcon, MetamaskIcon } from '@/app/components/icons';
+import WalletDetail from '@/app/components/Wallet/WalletDetail';
 
-const WalletProvider = {
-  Ethereum: 'Ethereum',
-  OKX: 'OKX',
-  Fluent: 'Fluent',
-  MetaMask: 'MetaMask',
+const theme = {
+  root: {
+    base: 'fixed bottom-0 right-0 left-0 z-[1000] h-screen overflow-y-auto overflow-x-hidden md:inset-0 md:h-full justify-start',
+    sizes: {
+      '2xl': 'max-w-[100vw]',
+    },
+  },
+  content: {
+    base: 'relative w-full p-0',
+    inner:
+      'relative rounded-[0] bg-fill-e-secondary shadow dark:bg-gray-700 flex flex-col h-auto left-0',
+  },
 };
 
-const items = [
-  {
-    name: 'Metamask',
-    icon: <MetamaskIcon />,
-    type: WalletProvider.MetaMask,
-  },
-  {
-    name: 'Fluent',
-    icon: <FluentIcon />,
-    type: WalletProvider.Fluent,
-  },
-];
-
-const ConnectModal = forwardRef(({ open, onOpen }, ref) => {
-  const updateWalletProvider = useWalletStore(
-    (state) => state.updateWalletProvider
-  );
-  const wallets = useCFXsWallet();
-  const connect = async (type) => {
-    const wallet = wallets[type];
-    const { connect } = wallet;
-    try {
-      await connect();
-    } catch (e) {
-    } finally {
-      updateWalletProvider(type);
-      localStorage.setItem('walletProvider', type);
-      onOpen(false);
-    }
-  };
-
+const WalletInfoModal = ({ open, onOpen }) => {
   return (
-    <Modal show={open} onClose={() => onOpen(false)} ref={ref} dismissible>
-      <Modal.Header>Connect a wallet</Modal.Header>
+    <Modal
+      show={open}
+      onClose={() => onOpen(false)}
+      dismissible
+      theme={theme}
+      position="bottom-center"
+    >
       <Modal.Body>
-        <div className="mt-6  px-6 flex flex-col">
-          {items.map((item) => (
-            <button
-              key={item.type}
-              onClick={() => connect(item.type)}
-              className={cn(
-                'px-[12px] btn w-full h-[60px] mb-[24px] rounded-[4px] bg-fill-e-primary border-none',
-                'hover:bg-theme hover:opacity-80 text-white hover:btn-primary',
-                'flex-center-between'
-              )}
-            >
-              <span>{item.name}</span>
-              {item.icon}
-            </button>
-          ))}
-        </div>
+        <WalletDetail />
       </Modal.Body>
     </Modal>
   );
-});
+};
 
-export default ConnectModal;
+export default WalletInfoModal;

@@ -8,6 +8,8 @@ import { addressFormat, addressFormatShort } from '@/app/utils';
 import { cn } from '@/app/utils/classnames';
 import { toast } from 'react-toastify';
 import WalletInfoDropDown from '@/app/components/Wallet/WalletInfoDropDown';
+import WalletInfoModal from '@/app/components/Wallet/WalletInfoModal';
+import { useState } from 'react';
 
 const PCConnect = ({
   isConnected,
@@ -83,9 +85,10 @@ const MobileConnect = ({
   account,
   isCorrectChain,
   switchChain,
-  correctChainIdHex
+  correctChainIdHex,
 }) => {
   const onOpen = useWalletStore((state) => state.onOpen);
+  const [openInfo, onOpenInfo] = useState(false);
   const switchNetwork = async () => {
     try {
       if (!isCorrectChain) {
@@ -112,13 +115,19 @@ const MobileConnect = ({
     }
 
     return (
-      <Button
-        color="secondary"
-        className="flex-center md:hidden bg-transparent relative"
-      >
-        <ActiveIcon />
-        <span className="ml-[5px]">{addressFormatShort(account)}</span>
-      </Button>
+      <>
+        <WalletInfoModal open={openInfo} onOpen={onOpenInfo} />
+        <Button
+          color="secondary"
+          className="flex-center md:hidden bg-transparent relative"
+          onClick={() => {
+            onOpenInfo(true);
+          }}
+        >
+          <ActiveIcon />
+          <span className="ml-[5px]">{addressFormatShort(account)}</span>
+        </Button>
+      </>
     );
   }
   return (
