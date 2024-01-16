@@ -239,7 +239,7 @@ export default {
       base: 'flex text-center',
       styles: {
         default: 'flex-wrap border-b border-gray-200 dark:border-gray-700',
-        underline: 'flex-wrap -mb-px border-b border-transparent',
+        underline: 'flex-wrap -mb-px border-b border-transparent px-[8px]',
         pills:
           'flex-wrap font-medium text-sm text-gray-500 dark:text-gray-400 space-x-2',
         fullWidth:

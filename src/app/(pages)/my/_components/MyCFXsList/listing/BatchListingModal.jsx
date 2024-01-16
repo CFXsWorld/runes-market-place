@@ -81,12 +81,9 @@ const BatchListingModal = forwardRef(
                   <div className="flex-center-between mt-[10px]">
                     <span className="text-tc-secondary">#{item.id}</span>
                     <span
-                      className={cn('text-theme font-medium', {
-                        'text-red-500':
-                          prices[item.id] && !isPrice(prices[item.id]),
-                      })}
+                      className={cn('text-theme font-medium')}
                     >
-                      {formatNumberWithCommas(prices[item.id] || 0)}
+                      {item.amount}
                     </span>
                   </div>
                 </div>

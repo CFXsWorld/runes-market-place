@@ -17,8 +17,8 @@ const WalletDetail = () => {
   const { copy } = useCopy();
   const { disconnect } = useDisconnect();
   return (
-    <div className="flex flex-col py-[32px] px-[24px] w-full">
-      <div className="flex-center-between">
+    <div className="flex flex-col py-[32px] w-full">
+      <div className="flex-center-between  px-[24px]">
         <div className="flex-center">
           <AvatarIcon />
           <div className="flex flex-col ml-[10px]">
@@ -40,7 +40,7 @@ const WalletDetail = () => {
         />
       </div>
 
-      <div className="flex flex-col gap-[12px] my-[24px]">
+      <div className="flex flex-col gap-[12px] my-[24px]  px-[24px]">
         <Link href="/market">
           <Button color="primary" className="w-full">
             CFXs MARKET
@@ -50,30 +50,28 @@ const WalletDetail = () => {
           BUY COIN
         </Button>
       </div>
-      <div>
-        <Tabs
-          aria-label="Default tabs"
-          style="underline"
-          value={activeTab}
-          onActiveTabChange={(tab) => setActiveTab(tab)}
-        >
-          <Tabs.Item active title="CFXs">
-            <div className="h-[300px] overflow-y-auto">
-              <CFXsList />
-            </div>
-          </Tabs.Item>
-          <Tabs.Item title="NFT">
-            <div className="h-[300px] overflow-y-auto">
-              <NFTList />
-            </div>
-          </Tabs.Item>
-          <Tabs.Item title="Coin">
-            <div className="h-[300px] overflow-y-auto">
-              <CoinList />
-            </div>
-          </Tabs.Item>
-        </Tabs>
-      </div>
+      <Tabs
+        aria-label="Default tabs"
+        style="underline"
+        value={activeTab}
+        onActiveTabChange={(tab) => setActiveTab(tab)}
+      >
+        <Tabs.Item active title="CFXs">
+          <div className="h-[300px] overflow-y-auto  px-[24px]">
+            <CFXsList />
+          </div>
+        </Tabs.Item>
+        <Tabs.Item title="NFT">
+          <div className="h-[300px] overflow-y-auto  px-[24px]">
+            <NFTList />
+          </div>
+        </Tabs.Item>
+        <Tabs.Item title="Coin">
+          <div className="h-[300px] overflow-y-auto px-[24px]">
+            <CoinList />
+          </div>
+        </Tabs.Item>
+      </Tabs>
     </div>
   );
 };
