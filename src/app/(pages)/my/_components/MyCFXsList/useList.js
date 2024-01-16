@@ -116,6 +116,15 @@ const useList = () => {
     setSelected([]);
     setCheckAll(false);
   };
+
+  useEffect(() => {
+    if (selected?.length === 24) {
+      setCheckAll(true);
+    } else {
+      setCheckAll(false);
+    }
+  }, [selected]);
+
   const selectAll = (checked) => {
     setCheckAll(checked);
     if (checked) {

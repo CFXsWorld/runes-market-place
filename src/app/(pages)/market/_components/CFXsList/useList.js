@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import useMounted from '@/app/hooks/useMounted';
 import useResponsive from '@/app/hooks/useResponsive';
 import useSWRMutation from 'swr/mutation';
@@ -137,6 +137,14 @@ const useList = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (selected?.length === 24) {
+      setCheckAll(true);
+    } else {
+      setCheckAll(false);
+    }
+  }, [selected]);
 
   const selectAll = (checked) => {
     setCheckAll(checked);
