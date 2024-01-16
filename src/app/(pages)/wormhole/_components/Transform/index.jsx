@@ -23,11 +23,12 @@ const Transform = () => {
     setFromToken,
     toToken,
     setToToken,
+    remountKey,
     shouldDisabled,
   } = useTransform();
   const { trigger, loading } = usePromiseLoading(transform);
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col" key={remountKey}>
       <DocsModal open={open} onOpen={onOpen} />
       <div className="flex-center-between">
         <span>Transform</span>

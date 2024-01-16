@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { parseUnits } from 'ethers';
 
 const useTransform = () => {
+  const [remountKey, setRemountKey] = useState(0);
   const [open, onOpen] = useState(false);
   const [fromToken, setFromToken] = useState({
     amount: null,
@@ -122,7 +123,7 @@ const useTransform = () => {
       ) {
         await CFXs2NFT();
       }
-
+      reset();
       toast.success('Transform success');
     } catch (e) {
       console.log(e);
@@ -139,6 +140,20 @@ const useTransform = () => {
     );
   };
 
+  const reset = () => {
+    setToToken({
+      amount: null,
+      type: toToken.type,
+      items: [],
+    });
+    setFromToken({
+      amount: null,
+      type: fromToken.type,
+      items: [],
+    });
+    setRemountKey?.(Date.now());
+  };
+
   return {
     fromToken,
     setFromToken,
@@ -149,6 +164,7 @@ const useTransform = () => {
     transform,
     calcFee,
     shouldDisabled,
+    remountKey,
   };
 };
 
