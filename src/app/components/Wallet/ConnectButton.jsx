@@ -7,6 +7,7 @@ import { ActiveIcon, ESpaceIcon, WalletIcon } from '@/app/components/icons';
 import { addressFormat, addressFormatShort } from '@/app/utils';
 import { cn } from '@/app/utils/classnames';
 import { toast } from 'react-toastify';
+import WalletInfoDropDown from '@/app/components/Wallet/WalletInfoDropDown';
 
 const PCConnect = ({
   isConnected,
@@ -50,10 +51,14 @@ const PCConnect = ({
             </span>
           )}
         </div>
-        <Button color="secondary" className="flex-center">
-          <ActiveIcon />
-          <div className="ml-[5px]">{addressFormat(account)}</div>
-        </Button>
+        <WalletInfoDropDown
+          renderTrigger={() => (
+            <Button color="secondary" className="flex-center">
+              <ActiveIcon />
+              <div className="ml-[5px]">{addressFormat(account)}</div>
+            </Button>
+          )}
+        />
       </div>
     );
   }
@@ -78,7 +83,7 @@ const MobileConnect = ({
   account,
   isCorrectChain,
   switchChain,
-  correctChainIdHex,
+  correctChainIdHex
 }) => {
   const onOpen = useWalletStore((state) => state.onOpen);
   const switchNetwork = async () => {
@@ -107,7 +112,10 @@ const MobileConnect = ({
     }
 
     return (
-      <Button color="secondary" className="flex-center md:hidden bg-transparent">
+      <Button
+        color="secondary"
+        className="flex-center md:hidden bg-transparent relative"
+      >
         <ActiveIcon />
         <span className="ml-[5px]">{addressFormatShort(account)}</span>
       </Button>

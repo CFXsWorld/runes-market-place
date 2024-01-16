@@ -40,6 +40,9 @@ import NFTToken from './svgs/NFTToken.svg';
 import Tips from './svgs/Tips.svg';
 import ArrowDownLine from './svgs/arrowDownLine.svg';
 import Success from './svgs/success.svg';
+import Avatar from './svgs/avatar.svg';
+import Logout from './svgs/logout.svg';
+import Copy from './svgs/copy.svg';
 
 export const Icon = ({ className, style, children, ...props }) => {
   return (
@@ -260,5 +263,20 @@ export const ArrowDownLineIcon = (props) => (
 export const SuccessIcon = (props) => (
   <Icon {...props}>
     <Success />
+  </Icon>
+);
+export const AvatarIcon = (props) => (
+  <Icon {...props}>
+    <Avatar />
+  </Icon>
+);
+export const LogoutIcon = (props) => (
+  <Icon {...props}>
+    <Logout />
+  </Icon>
+);
+export const CopyIcon = (props) => (
+  <Icon {...props}>
+    <Copy />
   </Icon>
 );
