@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Dropdown } from 'flowbite-react';
+import { Button, Dropdown, Tabs } from 'flowbite-react';
 
 import { AvatarIcon, CopyIcon, LogoutIcon } from '@/app/components/icons';
 import { useWalletStore } from '@/app/store/wallet';
@@ -8,8 +8,13 @@ import { addressFormat } from '@/app/utils';
 import { useCopy } from '@/app/hooks/useCopy';
 import useDisconnect from '@/app/components/Wallet/useDisconnect';
 import Link from 'next/link';
+import { useState } from 'react';
+import CFXsList from '@/app/components/Wallet/CFXsList';
+import NFTList from '@/app/components/Wallet/NFTList';
+import CoinList from '@/app/components/Wallet/CoinList';
 
 const WalletInfoDropDown = ({ renderTrigger }) => {
+  const [activeTab, setActiveTab] = useState(1);
   const account = useWalletStore((state) => state.account);
   const { copy } = useCopy();
   const { disconnect } = useDisconnect();
@@ -49,6 +54,30 @@ const WalletInfoDropDown = ({ renderTrigger }) => {
               BUY COIN
             </Button>
           </Link>
+        </div>
+        <div>
+          <Tabs
+            aria-label="Default tabs"
+            style="underline"
+            value={activeTab}
+            onActiveTabChange={(tab) => setActiveTab(tab)}
+          >
+            <Tabs.Item active title="CFXs">
+              <div className="h-[300px] overflow-y-auto">
+                <CFXsList />
+              </div>
+            </Tabs.Item>
+            <Tabs.Item title="NFT">
+              <div className="h-[300px] overflow-y-auto">
+                <NFTList />
+              </div>
+            </Tabs.Item>
+            <Tabs.Item title="Coin">
+              <div className="h-[300px] overflow-y-auto">
+                <CoinList />
+              </div>
+            </Tabs.Item>
+          </Tabs>
         </div>
       </div>
     </Dropdown>
