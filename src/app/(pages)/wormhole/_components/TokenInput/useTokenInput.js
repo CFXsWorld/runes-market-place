@@ -14,7 +14,12 @@ const useTokenInput = ({ type, token }) => {
   const account = useWalletStore((state) => state.account);
 
   useEffect(() => {
-    if (isAddress(account) && browserProvider && type === 'FROM') {
+    if (
+      isAddress(account) &&
+      browserProvider &&
+      type === 'FROM' &&
+      typeof window !== 'undefined'
+    ) {
       browserProvider.getSigner().then((signer) => {
         const contractWithSigner = ERC20Contract.connect(signer);
         contractWithSigner.balanceOf(getAddress(account)).then((res) => {

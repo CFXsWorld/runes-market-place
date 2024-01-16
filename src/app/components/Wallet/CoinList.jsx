@@ -15,7 +15,11 @@ export default function CoinList() {
   const account = useWalletStore((state) => state.account);
 
   useEffect(() => {
-    if (isAddress(account) && browserProvider) {
+    if (
+      isAddress(account) &&
+      browserProvider &&
+      typeof window !== 'undefined'
+    ) {
       browserProvider.getSigner().then((signer) => {
         const contractWithSigner = ERC20Contract.connect(signer);
         contractWithSigner.balanceOf(getAddress(account)).then((res) => {
