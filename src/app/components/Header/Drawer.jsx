@@ -49,7 +49,7 @@ const Drawer = ({ open, onOpen }) => {
                   className={cn(
                     'h-[48px]  bg-fill-e-primary rounded-[4px] mb-[16px]  flex items-center pl-[16px]',
                     {
-                      'text-theme': pathname === '/market',
+                      'text-theme': pathname.includes(menu.path),
                     }
                   )}
                   href={menu.path}
