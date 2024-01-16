@@ -43,29 +43,31 @@ const Selector = ({
       }
       dismissOnClick
     >
-      <div>
-        {options.map((option, index) => (
-          <div
-            key={index}
-            onClick={() => {
-              if (!option.disabled) {
-                onChange?.(option.value);
-              }
-            }}
-            className={cn(
-              'text-tc-secondary py-[12px] text-[16px] px-[16px] mb-1 cursor-pointer flex items-center',
-              { 'bg-theme text-[#000]': item?.value === option.value },
-              { 'hover:text-[#000] hover:bg-theme': !option.disabled },
-              { 'opacity-70': option.disabled }
-            )}
-          >
-            {option.icon && (
-              <span className="text-[20px] mr-[8px]">{option.icon}</span>
-            )}
-            <span>{option.label}</span>
-          </div>
-        ))}
-      </div>
+      <Dropdown.Item>
+        <div>
+          {options.map((option, index) => (
+            <div
+              key={index}
+              onClick={() => {
+                if (!option.disabled) {
+                  onChange?.(option.value);
+                }
+              }}
+              className={cn(
+                'text-tc-secondary py-[12px] text-[16px] px-[16px] mb-1 cursor-pointer flex items-center',
+                { 'bg-theme text-[#000]': item?.value === option.value },
+                { 'hover:text-[#000] hover:bg-theme': !option.disabled },
+                { 'opacity-70': option.disabled }
+              )}
+            >
+              {option.icon && (
+                <span className="text-[20px] mr-[8px]">{option.icon}</span>
+              )}
+              <span>{option.label}</span>
+            </div>
+          ))}
+        </div>
+      </Dropdown.Item>
     </Dropdown>
   );
 };

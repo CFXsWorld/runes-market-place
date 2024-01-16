@@ -1,4 +1,4 @@
-import { getAddress } from 'ethers';
+import { getAddress, isAddress } from 'ethers';
 import { isNumber } from 'lodash';
 
 export const maxSelectedItemsCount = 32;
@@ -8,7 +8,7 @@ export const defaultLockHours = 48;
 export const usdtDecimal = 18;
 
 export const addressFormat = (address) => {
-  return address
+  return isAddress(address)
     ? `${getAddress(address).substr(0, 4)}...${getAddress(address).substr(
         address.length - 4,
         4
@@ -39,8 +39,10 @@ export function formatNumber(number, precision = 2) {
 }
 
 export const addressFormatShort = (address) => {
-  return `${getAddress(address).substr(0, 3)}...${getAddress(address).substr(
-    address.length - 2,
-    2
-  )}`;
+  return isAddress(address)
+    ? `${getAddress(address).substr(0, 3)}...${getAddress(address).substr(
+        address.length - 2,
+        2
+      )}`
+    : '';
 };

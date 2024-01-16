@@ -83,7 +83,7 @@ export default {
       hidden: 'invisible opacity-0',
       item: {
         container: '',
-        base: 'flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer w-full hover:bg-gray-100 focus:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 focus:outline-none dark:hover:text-white dark:focus:bg-gray-600 dark:focus:text-white',
+        base: 'text-sm  cursor-pointer w-full',
         icon: 'mr-2 h-4 w-4',
       },
       style: {
@@ -239,8 +239,7 @@ export default {
       base: 'flex text-center',
       styles: {
         default: 'flex-wrap border-b border-gray-200 dark:border-gray-700',
-        underline:
-          'flex-wrap -mb-px border-b border-transparent',
+        underline: 'flex-wrap -mb-px border-b border-transparent',
         pills:
           'flex-wrap font-medium text-sm text-gray-500 dark:text-gray-400 space-x-2',
         fullWidth:

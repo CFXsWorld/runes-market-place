@@ -87,7 +87,7 @@ const usePurchase = ({ selected = [], clearAll, refresh }) => {
         console.log(e);
         toast.error('Purchase failed !');
       } finally {
-        refresh();
+        // refresh();
       }
     }
   };

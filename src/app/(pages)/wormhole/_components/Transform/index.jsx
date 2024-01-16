@@ -1,15 +1,31 @@
 'use client';
-import { ArrowDownLineIcon, DocsIcon } from '@/app/components/icons';
+import {
+  ArrowDownLineIcon,
+  DocsIcon,
+  LoadingIcon,
+} from '@/app/components/icons';
 import DocsModal from '@/app/(pages)/wormhole/_components/Transform/DocsModal';
 import useTransform from '@/app/(pages)/wormhole/_components/Transform/useTransform';
 import TokenInput from '@/app/(pages)/wormhole/_components/TokenInput';
 import Fee from '@/app/(pages)/wormhole/_components/Fee';
 import { Button } from 'flowbite-react';
 import { tokenList } from '@/app/(pages)/wormhole/_components/TokenInput/TokenTypeSelector';
+import WithAuth from '@/app/components/Wallet/WithAuth';
+import usePromiseLoading from '@/app/hooks/usePromiseLoading';
 
 const Transform = () => {
-  const { open, onOpen, fromToken, setFromToken, toToken, setToToken } =
-    useTransform();
+  const {
+    open,
+    calcFee,
+    transform,
+    onOpen,
+    fromToken,
+    setFromToken,
+    toToken,
+    setToToken,
+    shouldDisabled,
+  } = useTransform();
+  const { trigger, loading } = usePromiseLoading(transform);
   return (
     <div className="flex flex-col">
       <DocsModal open={open} onOpen={onOpen} />
@@ -27,10 +43,7 @@ const Transform = () => {
           label="Amount"
           type="FROM"
           token={fromToken}
-          tokenList={tokenList.map((token) => ({
-            ...token,
-            disabled: toToken.type === token.value,
-          }))}
+          tokenList={tokenList}
           onTokenChange={setFromToken}
         />
         <div className="h-[42px] absolute-center bg-fill-e-secondary w-[42px] border-[1px] border-black rounded-[4px] flex-center">
@@ -42,15 +55,23 @@ const Transform = () => {
           token={toToken}
           tokenList={tokenList.map((token) => ({
             ...token,
-            disabled: fromToken.type === token.value,
+            disabled: shouldDisabled(fromToken.type, token.value),
           }))}
           onTokenChange={setToToken}
         />
       </div>
-      <Fee />
-      <Button className="w-full mt-[42px]" color="primary" disabled>
-        CONFIRM TRANSFORM
-      </Button>
+      <Fee value={calcFee} />
+
+      <WithAuth>
+        <Button
+          className="w-full mt-[42px]"
+          color="primary"
+          disaebl={loading || fromToken.amount}
+          onClick={trigger}
+        >
+          {loading ? <LoadingIcon /> : 'CONFIRM TRANSFORM'}
+        </Button>
+      </WithAuth>
     </div>
   );
 };
