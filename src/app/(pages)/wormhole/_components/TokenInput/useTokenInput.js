@@ -12,8 +12,6 @@ const useTokenInput = ({ type, token }) => {
   const { contract: ERC20Contract } = useERC20Contract();
   const { browserProvider, provider } = useWallet();
   const account = useWalletStore((state) => state.account);
-  const onSelectNFT = (amount) => {};
-  const onSelectCFXs = (amount) => {};
 
   useEffect(() => {
     if (isAddress(account) && browserProvider && type === 'FROM') {
@@ -46,8 +44,6 @@ const useTokenInput = ({ type, token }) => {
     onOpenNFT,
     openCFXs,
     onOpenCFXs,
-    onSelectNFT,
-    onSelectCFXs,
     disabled,
     showSelect,
     showBalance,
