@@ -42,6 +42,7 @@ export default function MyCFXsList() {
     checkAll,
     filter,
     setFilter,
+    totalResult,
   } = useList();
 
   return (
@@ -81,7 +82,7 @@ export default function MyCFXsList() {
         />
 
         <Filter
-          total={source?.length || 0}
+          total={totalResult}
           reload={refresh}
           filter={filter}
           setFilter={setFilter}

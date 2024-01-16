@@ -56,6 +56,7 @@ const useClaim = ({ open }) => {
     setNoMore(false);
     setDataSource(null);
     setCurrentPage(0);
+    setSelected([]);
     getData({ ...transformedFilter, index: 0 }).then((res) => {
       setDataSource({ [0]: res.rows || [] });
     });

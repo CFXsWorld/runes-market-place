@@ -61,10 +61,13 @@ const useList = () => {
       : null
   );
 
-  const { isMutating, trigger: getData } = useSWRMutation(
-    APIs.MY_CFXs_LIST,
-    getMyCFXsList
-  );
+  const {
+    data,
+    isMutating,
+    trigger: getData,
+  } = useSWRMutation(APIs.MY_CFXs_LIST, getMyCFXsList);
+
+  const totalResult = useMemo(() => data?.count || 0, [data]);
 
   const refresh = () => {
     setNoMore(false);
@@ -164,6 +167,7 @@ const useList = () => {
     setCheckAll,
     filter,
     setFilter,
+    totalResult
   };
 };
 
