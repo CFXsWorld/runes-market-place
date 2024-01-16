@@ -59,6 +59,7 @@ const useTransform = () => {
         value: parseUnits(calcFee.toString(), 18),
       });
       await tx.wait();
+      toast.success('Transform success');
     }
   };
   const CFXs2NFT = async () => {
@@ -70,6 +71,7 @@ const useTransform = () => {
         value: parseUnits(calcFee.toString(), 18),
       });
       await tx.wait();
+      toast.success('Transform success');
     }
   };
   const token2CFXs = async () => {
@@ -83,6 +85,7 @@ const useTransform = () => {
         }
       );
       await tx.wait();
+      toast.success('Transform success');
     }
   };
   const nft2CFXs = async () => {
@@ -94,6 +97,7 @@ const useTransform = () => {
         value: parseUnits(calcFee.toString(), 18),
       });
       await tx.wait();
+      toast.success('Transform success');
     }
   };
 
@@ -124,7 +128,6 @@ const useTransform = () => {
         await CFXs2NFT();
       }
       reset();
-      toast.success('Transform success');
     } catch (e) {
       console.log(e);
       toast.error('Transform fail');
