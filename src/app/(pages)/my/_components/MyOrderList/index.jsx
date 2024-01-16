@@ -65,7 +65,9 @@ export default function MyOrderList() {
           </div>
           <Waypoint
             scrollableAncestor={typeof window !== 'undefined' ? window : null}
-            onEnter={loadMore}
+            onEnter={() => {
+              loadMore();
+            }}
           >
             <div className="w-full">
               <LoadMore

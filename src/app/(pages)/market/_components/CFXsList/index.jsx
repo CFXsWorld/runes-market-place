@@ -70,7 +70,9 @@ export default function CFXsList() {
         </div>
         <Waypoint
           scrollableAncestor={typeof window !== 'undefined' ? window : null}
-          onEnter={loadMore}
+          onEnter={() => {
+            loadMore();
+          }}
         >
           <div className="w-full">
             <LoadMore loading={isMutating} data={source} noMore={noMore} />
