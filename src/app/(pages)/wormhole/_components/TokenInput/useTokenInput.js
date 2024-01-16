@@ -22,9 +22,12 @@ const useTokenInput = ({ type, token }) => {
     ) {
       browserProvider.getSigner().then((signer) => {
         const contractWithSigner = ERC20Contract.connect(signer);
-        contractWithSigner.balanceOf(getAddress(account)).then((res) => {
-          setCoinsBalance(Math.ceil(Number(formatUnits(res, 18))));
-        });
+        contractWithSigner
+          .balanceOf(getAddress(account))
+          .then((res) => {
+            setCoinsBalance(Math.ceil(Number(formatUnits(res, 18))));
+          })
+          .catch((e) => {});
       });
     }
   }, [browserProvider, account, type]);

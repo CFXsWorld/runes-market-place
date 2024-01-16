@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Inter } from 'next/font/google';
 import PageLayout from '@/app/components/PageLayout';
 import { Flowbite } from 'flowbite-react';
@@ -29,6 +29,7 @@ const WalletStatus = ({ children, wallet }) => {
   const balance = useBalance();
 
   console.log('current status:', status);
+
   useEffect(() => {
     updateStatus(status);
   }, [status]);

@@ -52,7 +52,7 @@ const usePurchase = ({ selected = [], clearAll, refresh }) => {
   };
 
   const getUSDTBalance = async () => {
-    return USDTContract.balanceOf(account);
+    return USDTContract.balanceOf(account).catch(() => 0);
   };
   const handlePurchase = async (item) => {
     setCurrentOrder(item);

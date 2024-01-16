@@ -10,16 +10,16 @@ const useTransform = () => {
   const [remountKey, setRemountKey] = useState(0);
   const [open, onOpen] = useState(false);
   const [fromToken, setFromToken] = useState({
-    amount: null,
-    type: null,
+    amount: undefined,
+    type: undefined,
     items: [],
   });
   const [toToken, setToToken] = useState({
-    amount: null,
-    type: null,
+    amount: undefined,
+    type: undefined,
     items: [],
   });
-  const { browserProvider, provider } = useWallet();
+  const { browserProvider } = useWallet();
   const account = useWalletStore((state) => state.account);
   const { contract: ERCBridgeContract } = useERCBridgeContract();
   useEffect(() => {
@@ -52,52 +52,72 @@ const useTransform = () => {
 
   const CFXs2Token = async () => {
     if (account) {
-      const signer = await browserProvider.getSigner();
-      const contractWithSigner = ERCBridgeContract.connect(signer);
-      const ids = fromToken.items.map((v) => v.id);
-      const tx = await contractWithSigner.ExchangeCFXsForOnlyECR20(ids, {
-        value: parseUnits(calcFee.toString(), 18),
-      });
-      await tx.wait();
-      toast.success('Transform success');
+      try {
+        const signer = await browserProvider.getSigner();
+        const contractWithSigner = ERCBridgeContract.connect(signer);
+        const ids = fromToken.items.map((v) => v.id);
+        const tx = await contractWithSigner.ExchangeCFXsForOnlyECR20(ids, {
+          value: parseUnits(calcFee.toString(), 18),
+        });
+        await tx.wait();
+        toast.success('Transform success');
+      } catch (e) {
+        console.log(e);
+        toast.error('Transform fail');
+      }
     }
   };
   const CFXs2NFT = async () => {
     if (account) {
-      const signer = await browserProvider.getSigner();
-      const contractWithSigner = ERCBridgeContract.connect(signer);
-      const ids = fromToken.items.map((v) => v.id);
-      const tx = await contractWithSigner.ExchangeCFXsForECR20721(ids, {
-        value: parseUnits(calcFee.toString(), 18),
-      });
-      await tx.wait();
-      toast.success('Transform success');
+      try {
+        const signer = await browserProvider.getSigner();
+        const contractWithSigner = ERCBridgeContract.connect(signer);
+        const ids = fromToken.items.map((v) => v.id);
+        const tx = await contractWithSigner.ExchangeCFXsForECR20721(ids, {
+          value: parseUnits(calcFee.toString(), 18),
+        });
+        await tx.wait();
+        toast.success('Transform success');
+      } catch (e) {
+        console.log(e);
+        toast.error('Transform fail');
+      }
     }
   };
   const token2CFXs = async () => {
     if (account) {
-      const signer = await browserProvider.getSigner();
-      const contractWithSigner = ERCBridgeContract.connect(signer);
-      const tx = await contractWithSigner.ECR20RedemptionOfCFXs(
-        parseUnits(fromToken.amount.toString(), 18),
-        {
-          value: parseUnits(calcFee.toString(), 18),
-        }
-      );
-      await tx.wait();
-      toast.success('Transform success');
+      try {
+        const signer = await browserProvider.getSigner();
+        const contractWithSigner = ERCBridgeContract.connect(signer);
+        const tx = await contractWithSigner.ECR20RedemptionOfCFXs(
+          parseUnits(fromToken.amount.toString(), 18),
+          {
+            value: parseUnits(calcFee.toString(), 18),
+          }
+        );
+        await tx.wait();
+        toast.success('Transform success');
+      } catch (e) {
+        console.log(e);
+        toast.error('Transform fail');
+      }
     }
   };
   const nft2CFXs = async () => {
     if (account) {
-      const signer = await browserProvider.getSigner();
-      const contractWithSigner = ERCBridgeContract.connect(signer);
-      const ids = fromToken.items.map((v) => v.id);
-      const tx = await contractWithSigner.ECR20721RedemptionOfCFXs([ids], {
-        value: parseUnits(calcFee.toString(), 18),
-      });
-      await tx.wait();
-      toast.success('Transform success');
+      try {
+        const signer = await browserProvider.getSigner();
+        const contractWithSigner = ERCBridgeContract.connect(signer);
+        const ids = fromToken.items.map((v) => v.id);
+        const tx = await contractWithSigner.ECR20721RedemptionOfCFXs([ids], {
+          value: parseUnits(calcFee.toString(), 18),
+        });
+        await tx.wait();
+        toast.success('Transform success');
+      } catch (e) {
+        console.log(e);
+        toast.error('Transform fail');
+      }
     }
   };
 
@@ -128,10 +148,7 @@ const useTransform = () => {
         await CFXs2NFT();
       }
       reset();
-    } catch (e) {
-      console.log(e);
-      toast.error('Transform fail');
-    }
+    } catch (e) {}
   };
 
   const shouldDisabled = (prev, target) => {
@@ -145,12 +162,12 @@ const useTransform = () => {
 
   const reset = () => {
     setToToken({
-      amount: null,
+      amount: undefined,
       type: toToken.type,
       items: [],
     });
     setFromToken({
-      amount: null,
+      amount: undefined,
       type: fromToken.type,
       items: [],
     });

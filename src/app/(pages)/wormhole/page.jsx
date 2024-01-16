@@ -1,6 +1,7 @@
 'use client';
 
 import Transform from '@/app/(pages)/wormhole/_components/Transform';
+
 export default function Wormhole() {
   return (
     <div className="pt-[24px] flex-center pt-[70px]">

@@ -1,4 +1,5 @@
 'use client';
+
 import {
   ArrowDownLineIcon,
   DocsIcon,
@@ -23,12 +24,12 @@ const Transform = () => {
     setFromToken,
     toToken,
     setToToken,
-    remountKey,
+
     shouldDisabled,
   } = useTransform();
   const { trigger, loading } = usePromiseLoading(transform);
   return (
-    <div className="flex flex-col" key={remountKey}>
+    <div className="flex flex-col">
       <DocsModal open={open} onOpen={onOpen} />
       <div className="flex-center-between">
         <span>Transform</span>
@@ -68,7 +69,9 @@ const Transform = () => {
           className="w-full mt-[42px]"
           color="primary"
           disabled={loading || !fromToken.amount || !toToken.amount}
-          onClick={trigger}
+          onClick={() => {
+            trigger();
+          }}
         >
           {loading ? <LoadingIcon /> : 'CONFIRM TRANSFORM'}
         </Button>
