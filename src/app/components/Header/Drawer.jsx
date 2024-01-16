@@ -32,7 +32,7 @@ const Drawer = ({ open, onOpen }) => {
       position="center-left"
     >
       <Modal.Body>
-        <div className="drawer z-[999]">
+        <div className="drawer z-[999] h-full">
           <ul className="p-4 w-80 min-h-full bg-base-200 text-base-content bg-fill-secondary">
             <div className="flex flex-col text-[16px] font-[500] text-tc-secondary">
               <div

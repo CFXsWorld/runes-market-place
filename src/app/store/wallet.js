@@ -10,6 +10,7 @@ const create = (initProps = {}) =>
       open: false,
       openTx: false,
       txId: '',
+      refresh: null,
       walletProvider: null,
       status: null,
       chainId: null,
@@ -48,11 +49,12 @@ const create = (initProps = {}) =>
           state.open = value;
         });
       },
-      onOpenTx: (value, txId) => {
+      onOpenTx: (value, txId, refresh) => {
         set((state) => {
           console.log(txId);
           state.openTx = value;
           state.txId = txId;
+          state.refresh = refresh;
         });
       },
       updateWalletProvider: (wallet) =>

@@ -80,13 +80,14 @@ const usePurchase = ({ selected = [], clearAll, refresh }) => {
           amounts
         );
         await tx.wait();
-        onopenTx(true, tx.hash);
         onPurchaseOpen(false);
-        refresh();
+        onopenTx(true, tx.hash, refresh);
         toast.success('Purchase success !');
       } catch (e) {
         console.log(e);
         toast.error('Purchase failed !');
+      } finally {
+        refresh();
       }
     }
   };

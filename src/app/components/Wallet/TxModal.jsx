@@ -7,8 +7,16 @@ const TxModal = () => {
   const onOpen = useWalletStore((state) => state.onOpenTx);
   const open = useWalletStore((state) => state.openTx);
   const txId = useWalletStore((state) => state.txId);
+  const refresh = useWalletStore((state) => state.refresh);
   return (
-    <Modal show={open} onClose={() => onOpen(false)} key={txId}>
+    <Modal
+      show={open}
+      onClose={() => {
+        onOpen(false);
+        refresh?.();
+      }}
+      key={txId}
+    >
       <Modal.Header>
         <div className="flex-center">
           <SuccessIcon className="mr-[10px]" />
