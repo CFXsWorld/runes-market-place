@@ -17,12 +17,20 @@ export default function Market() {
     getMarketStatistics,
     {
       onSuccess: (res) => {
+        let _24hVolume = 0;
+        let _totalVolume = 0;
+        try {
+          _24hVolume = formatUnits(res['24hVolume'], usdtDecimal);
+          _totalVolume = formatUnits(res['totalVolume'], usdtDecimal);
+        } catch (e) {
+          console.log(e);
+        }
         setData({
           ...res,
           floor: parseFloat(res.floor),
           unitPrice: parseFloat(res.unitPrice),
-          '24hVolume': +formatUnits(res['24hVolume'], usdtDecimal),
-          totalVolume: +formatUnits(res['totalVolume'], usdtDecimal),
+          '24hVolume': _24hVolume,
+          totalVolume: _totalVolume,
         });
       },
     }
