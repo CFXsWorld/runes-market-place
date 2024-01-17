@@ -13,12 +13,12 @@ const Refresh = ({ className, reload, total }) => {
   const account = useWalletStore((state) => state.account);
 
   useEffect(() => {
-    if (isAddress(account)) {
+    if (isAddress(account) && contract) {
       contract.balanceOf(getAddress(account)).then((res) => {
         setBalance(res.toString());
       });
     }
-  }, [account]);
+  }, [account, contract]);
   return (
     <div className={cn('flex-center', className)}>
       <span className="text-tc-secondary flex-shrink-0 flex-center gap-[12px]">
