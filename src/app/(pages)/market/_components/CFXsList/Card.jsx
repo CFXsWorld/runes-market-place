@@ -21,7 +21,7 @@ const CFXsCard = ({ item, selected, onSelect, onBuy }) => {
     <div
       className={cn(
         'min-w-[200px] max-w-[300px]  max-sm:min-w-[160px]  max-sm:max-w-full flex flex-col cursor-pointer overflow-hidden',
-        'bg-fill-secondary h-[276px] max-sm:h-[254px] border-[2px] border-fill-e-secondary',
+        'bg-fill-secondary h-[276px] max-sm:h-[244px] border-[2px] border-fill-e-secondary',
         'rounded-[8px]',
         { 'border-theme': isSelected }
       )}
@@ -63,7 +63,7 @@ const CFXsCard = ({ item, selected, onSelect, onBuy }) => {
           </div>
         </div>
       </div>
-      <div className="flex-1 bg-fill-e-primary p-[16px] max-sm:p-[10px]">
+      <div className="flex-1 bg-fill-e-primary p-[16px] max-sm:p-[10px] flex flex-col justify-between">
         <div className="flex items-center justify-between">
           <div className="flex-center">
             <UsdtIcon className="text-[16px] mr-[4px] max-sm:text-[12px]" />
@@ -87,7 +87,9 @@ const CFXsCard = ({ item, selected, onSelect, onBuy }) => {
             {loading ? (
               <LoadingIcon />
             ) : (
-              <span className="line-clamp-1">Buy Now</span>
+              <span className="line-clamp-1">
+                Buy <span className="max-md:hidden">Now</span>
+              </span>
             )}
           </Button>
         </div>

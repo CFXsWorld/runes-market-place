@@ -20,9 +20,10 @@ export default function Market() {
       onSuccess: (res) => {
         let _24hVolume = 0;
         let _totalVolume = 0;
+
         try {
           _24hVolume = formatUnits(
-            new BigNumber(res['24hVolume'].toString()),
+            BigNumber(res['24hVolume']).toString(),
             usdtDecimal
           );
           _totalVolume = formatUnits(
