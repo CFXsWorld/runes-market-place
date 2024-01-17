@@ -110,7 +110,7 @@ const useTransform = () => {
         const signer = await browserProvider.getSigner();
         const contractWithSigner = ERCBridgeContract.connect(signer);
         const ids = fromToken.items.map((v) => v.id);
-        const tx = await contractWithSigner.ECR20721RedemptionOfCFXs([ids], {
+        const tx = await contractWithSigner.ECR20721RedemptionOfCFXs(ids, {
           value: parseUnits(calcFee.toString(), 18),
         });
         await tx.wait();

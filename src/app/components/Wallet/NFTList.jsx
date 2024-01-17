@@ -46,22 +46,11 @@ export default function NFTList() {
       if (res.rows && res.rows.length === 0 && currentPage > 0) {
         setNoMore(true);
       } else {
-        getValueByIds(res.rows.map((v) => v.tokenid))
-          .then((values) => {
-            console.log(values);
-            const data = values.map((value, index) => ({
-              ...res.rows[index],
-              value,
-            }));
-            setCurrentPage(currentPage + 1);
-            setDataSource({
-              ...(dataSource || {}),
-              [currentPage]: data || [],
-            });
-          })
-          .catch((e) => {
-            console.log(e);
-          });
+        setCurrentPage(currentPage + 1);
+        setDataSource({
+          ...(dataSource || {}),
+          [currentPage]: res.rows || [],
+        });
       }
     });
   };
@@ -91,7 +80,7 @@ export default function NFTList() {
               <NFTTokenIcon className="text-[40px]" />
               <span className="ml-[12px]">#{item.tokenid}</span>
             </div>
-            <span>value: {formatNumberWithCommas(item.value)}</span>
+            <span>value: {formatNumberWithCommas(item.amount)}</span>
           </div>
         ))}
       </div>

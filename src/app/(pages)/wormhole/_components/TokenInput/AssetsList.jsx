@@ -16,7 +16,7 @@ const AssetsList = ({ onConfirm, open, getData, isMutating, type }) => {
     noMore,
     selected = [],
     onSelect,
-  } = useAssetsList({ open, getData });
+  } = useAssetsList({ open, getData, type });
   return (
     <div className="px-6  pb-6 flex flex-col">
       <div className="flex mt-[12px] justify-end w-full mb-[12px]">
@@ -73,7 +73,7 @@ const AssetsList = ({ onConfirm, open, getData, isMutating, type }) => {
                 >
                   <div className="text-theme text-[14px]"> #{item.tokenid}</div>
                   <div className="text-tc-secondary text-[12px] mt-[5px]">
-                    value: {item.amount||1}
+                    value: {item.amount || 1}
                   </div>
                 </div>
               ))}

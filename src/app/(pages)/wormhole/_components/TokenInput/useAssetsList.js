@@ -1,10 +1,9 @@
-
 import { getAddress } from 'ethers';
 import { useEffect, useMemo, useState } from 'react';
 import { pageItemCount } from '@/app/utils';
 import { uniqBy } from 'lodash';
 import { useWalletStore } from '@/app/store/wallet';
-const useAssetsList = ({ open, getData }) => {
+const useAssetsList = ({ open, getData, type }) => {
   const [selected, setSelected] = useState([]);
   const [dataSource, setDataSource] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
@@ -51,7 +50,7 @@ const useAssetsList = ({ open, getData }) => {
         Object.keys(dataSource)
           .sort()
           .reduce((prev, next) => prev.concat(dataSource[next]), []),
-        (item) => item.id
+        (item) => (type === 'NFT' ? item.tokenid : item.id)
       );
     }
     return null;
