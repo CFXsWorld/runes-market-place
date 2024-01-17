@@ -21,7 +21,7 @@ const CFXsCard = ({ item, selected, onSelect, onBuy }) => {
     <div
       className={cn(
         'min-w-[200px] max-w-[300px]  max-sm:min-w-[160px]  max-sm:max-w-full flex flex-col cursor-pointer overflow-hidden',
-        'bg-fill-secondary h-[276px] max-sm:h-[234px] border-[2px] border-fill-e-secondary',
+        'bg-fill-secondary h-[276px] max-sm:h-[254px] border-[2px] border-fill-e-secondary',
         'rounded-[8px]',
         { 'border-theme': isSelected }
       )}

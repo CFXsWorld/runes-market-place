@@ -9,6 +9,7 @@ import { getMarketStatistics } from '@/app/services';
 import { useEffect, useState } from 'react';
 import { formatUnits } from 'ethers';
 import { usdtDecimal } from '@/app/utils';
+import BigNumber from 'bignumber.js';
 
 export default function Market() {
   const [data, setData] = useState({});
@@ -20,8 +21,14 @@ export default function Market() {
         let _24hVolume = 0;
         let _totalVolume = 0;
         try {
-          _24hVolume = formatUnits(res['24hVolume'], usdtDecimal);
-          _totalVolume = formatUnits(res['totalVolume'], usdtDecimal);
+          _24hVolume = formatUnits(
+            new BigNumber(res['24hVolume'].toString()),
+            usdtDecimal
+          );
+          _totalVolume = formatUnits(
+            new BigNumber(res['totalVolume']),
+            usdtDecimal
+          );
         } catch (e) {
           console.log(e);
         }
