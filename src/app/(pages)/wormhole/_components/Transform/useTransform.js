@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import useERCBridgeContract from '@/app/hooks/useERCBridgeContract';
 import { TOKEN_TYPE } from '@/app/(pages)/wormhole/_components/TokenInput/TokenTypeSelector';
 import { useWalletStore } from '@/app/store/wallet';
@@ -23,14 +23,11 @@ const useTransform = () => {
   const account = useWalletStore((state) => state.account);
   const { contract: ERCBridgeContract } = useERCBridgeContract();
 
-
   useEffect(() => {
     if (fromToken.amount) {
       setToToken({ ...toToken, amount: fromToken.amount });
     }
   }, [fromToken.amount]);
-
-
 
   const calcFee = useMemo(() => {
     if (fromToken.type === TOKEN_TYPE.NFT && toToken.type === TOKEN_TYPE.CFXs) {
@@ -55,7 +52,7 @@ const useTransform = () => {
   }, [fromToken, toToken]);
 
   const CFXs2Token = async () => {
-    if (account) {
+    if (ERCBridgeContract) {
       try {
         const signer = await browserProvider.getSigner();
         const contractWithSigner = ERCBridgeContract.connect(signer);
@@ -72,7 +69,7 @@ const useTransform = () => {
     }
   };
   const CFXs2NFT = async () => {
-    if (account) {
+    if (ERCBridgeContract) {
       try {
         const signer = await browserProvider.getSigner();
         const contractWithSigner = ERCBridgeContract.connect(signer);
@@ -89,7 +86,7 @@ const useTransform = () => {
     }
   };
   const token2CFXs = async () => {
-    if (account) {
+    if (ERCBridgeContract) {
       try {
         const signer = await browserProvider.getSigner();
         const contractWithSigner = ERCBridgeContract.connect(signer);
@@ -108,7 +105,7 @@ const useTransform = () => {
     }
   };
   const nft2CFXs = async () => {
-    if (account) {
+    if (ERCBridgeContract) {
       try {
         const signer = await browserProvider.getSigner();
         const contractWithSigner = ERCBridgeContract.connect(signer);
@@ -125,7 +122,7 @@ const useTransform = () => {
     }
   };
 
-  const transform = async () => {
+  const transform = useCallback(async () => {
     try {
       if (
         fromToken.type === TOKEN_TYPE.NFT &&
@@ -153,7 +150,7 @@ const useTransform = () => {
       }
       reset();
     } catch (e) {}
-  };
+  }, [ERCBridgeContract]);
 
   const shouldDisabled = (prev, target) => {
     return (

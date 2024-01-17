@@ -110,7 +110,11 @@ const TokenInput = ({
             value={token.type}
             options={tokenList}
             onChange={(v) => {
-              onTokenChange({ items: [], type: v, amount: undefined });
+              if (type === 'FROM') {
+                onTokenChange({ items: [], type: v, amount: undefined });
+              } else {
+                onTokenChange({ ...token, type: v });
+              }
             }}
           />
         </div>
