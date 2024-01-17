@@ -17,6 +17,11 @@ export const menus = [
     name: 'My',
     path: '/my',
   },
+  {
+    name: 'Documents',
+    path: 'https://docs.cfxs.world/',
+    target: '_blank',
+  },
 ];
 
 const Menu = () => {
@@ -27,6 +32,7 @@ const Menu = () => {
       {menus.map((menu) => (
         <Link
           key={menu.name}
+          target={menu.target || ''}
           className={cn(
             'border border-transparent mr-[32px] px-[20px] py-[6px]',
             {
