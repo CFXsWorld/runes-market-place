@@ -1,16 +1,17 @@
 import useWallet from '@/app/hooks/useWallet';
 import useCFXsContract from '@/app/hooks/useCFXsContract';
 import { toast } from 'react-toastify';
-import { getAddress } from 'ethers';
+import { getAddress, isAddress } from 'ethers';
 import { useEffect, useMemo, useState } from 'react';
 import { pageItemCount } from '@/app/utils';
 import { uniqBy } from 'lodash';
 import useSWRMutation from 'swr/mutation';
 import { APIs } from '@/app/services/request';
-import { getMyOldCFXsList } from '@/app/services';
+import { fetchSyncData, getMyOldCFXsList } from '@/app/services';
 import useOldCFXsContract from '@/app/hooks/useOldCFXsContract';
 import useBridgeContract from '@/app/hooks/useBridgeContract';
 import { useWalletStore } from '@/app/store/wallet';
+import { Toast } from 'flowbite-react';
 
 const useClaim = ({ open }) => {
   const [selected, setSelected] = useState([]);
@@ -34,6 +35,25 @@ const useClaim = ({ open }) => {
     isMutating,
     trigger: getData,
   } = useSWRMutation(APIs.MY_CFXs_ORDER_LIST, getMyOldCFXsList);
+
+  const { isMutating: syncLoading, trigger: syncData } = useSWRMutation(
+    APIs.CLAIM_SYNC_DATA,
+    fetchSyncData
+  );
+
+  const sync = () => {
+    if (isAddress(account)) {
+      syncData({ owner: account ? getAddress(account) : undefined })
+        .then((e) => {
+          toast('Data synced successfully, Once every 24 hours');
+        })
+        .catch((e) => {
+          console.log(e);
+          toast.warn('Frequent operation, Please try again later');
+        });
+    }
+  };
+
   const claimableTotal = useMemo(() => {
     return data?.count || 0;
   }, [data]);
@@ -137,6 +157,8 @@ const useClaim = ({ open }) => {
     isMutating,
     balance,
     claimableTotal,
+    sync,
+    syncLoading,
   };
 };
 

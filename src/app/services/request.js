@@ -6,6 +6,7 @@ export const APIs = {
   MY_CFXs_LIST: 'MY_CFXs_LIST',
   MY_CFXs_ORDER_LIST: 'MY_CFXs_ORDER_LIST',
   MY_OLD_CFXs_LIST: 'MY_OLD_CFXs_LIST',
+  CLAIM_SYNC_DATA: 'CLAIM_SYNC_DATA',
 };
 
 export const isTest = process.env.NEXT_PUBLIC_IsTest === 'true';
@@ -23,6 +24,7 @@ const productApi = {
   [APIs.MY_CFXs_ORDER_LIST]: '/api/shop/my',
   [APIs.MY_CFXs_LIST]: '/api/cfxs/my/new',
   [APIs.MY_OLD_CFXs_LIST]: '/api/cfxs/my/old',
+  [APIs.CLAIM_SYNC_DATA]: '/api/mint/mints',
 };
 
 const request = async (api, { params, ...rest } = {}) => {

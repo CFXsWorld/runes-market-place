@@ -23,7 +23,9 @@ const ClaimModal = forwardRef(({ onOpen, open }, ref) => {
     noMore,
     balance,
     claimableTotal,
-  } = useClaim({open});
+    sync,
+    syncLoading,
+  } = useClaim({ open });
 
   const { trigger, loading } = usePromiseLoading(claim);
   return (
@@ -78,16 +80,28 @@ const ClaimModal = forwardRef(({ onOpen, open }, ref) => {
                 Clear
               </span>
             </div>
-            <Button
-              color="primary"
-              disabled={!selected.length || loading}
-              className="w-[70px]"
-              onClick={() => {
-                trigger();
-              }}
-            >
-              {loading ? <LoadingIcon /> : 'CLAIM'}
-            </Button>
+            <div className="flex-center gap-[16px]">
+              <Button
+                color="outline"
+                disabled={syncLoading || loading}
+                className="w-[70px]"
+                onClick={() => {
+                  sync();
+                }}
+              >
+                {loading || syncLoading ? <LoadingIcon /> : 'SYNC'}
+              </Button>
+              <Button
+                color="primary"
+                disabled={!selected.length || loading}
+                className="w-[70px]"
+                onClick={() => {
+                  trigger();
+                }}
+              >
+                {loading ? <LoadingIcon /> : 'CLAIM'}
+              </Button>
+            </div>
           </div>
         </div>
       </Modal.Body>
