@@ -7,7 +7,7 @@ import useSWRMutation from 'swr/mutation';
 import { APIs } from '@/app/services/request';
 import { getMarketStatistics } from '@/app/services';
 import { useEffect, useState } from 'react';
-import { parseUnits, formatUnits } from 'ethers';
+import { formatUnits } from 'ethers';
 import { usdtDecimal } from '@/app/utils';
 
 export default function Market() {

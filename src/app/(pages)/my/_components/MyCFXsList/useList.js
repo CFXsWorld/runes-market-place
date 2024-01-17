@@ -78,6 +78,7 @@ const useList = () => {
       setDataSource(null);
       setSelected([]);
       setCheckAll(false);
+      setCurrentPage(0);
       getData({ ...transformedFilter, index: 0 }).then((res) => {
         setDataSource({ [0]: res.rows || [] });
       });
