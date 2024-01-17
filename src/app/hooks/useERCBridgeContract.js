@@ -2,7 +2,7 @@ import abi from '../contracts/ERC.json';
 import useEnv from '@/app/hooks/useEnv';
 import useWallet from '@/app/hooks/useWallet';
 import { Contract } from 'ethers';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 
 const useERCBridgeContract = () => {
   const { ercBridgeContractAddress } = useEnv();

@@ -52,7 +52,7 @@ const useTransform = () => {
   }, [fromToken, toToken]);
 
   const CFXs2Token = async () => {
-    if (ERCBridgeContract) {
+    if (account) {
       try {
         const signer = await browserProvider.getSigner();
         const contractWithSigner = ERCBridgeContract.connect(signer);
@@ -69,7 +69,7 @@ const useTransform = () => {
     }
   };
   const CFXs2NFT = async () => {
-    if (ERCBridgeContract) {
+    if (account) {
       try {
         const signer = await browserProvider.getSigner();
         const contractWithSigner = ERCBridgeContract.connect(signer);
@@ -86,7 +86,7 @@ const useTransform = () => {
     }
   };
   const token2CFXs = async () => {
-    if (ERCBridgeContract) {
+    if (account) {
       try {
         const signer = await browserProvider.getSigner();
         const contractWithSigner = ERCBridgeContract.connect(signer);
@@ -105,7 +105,7 @@ const useTransform = () => {
     }
   };
   const nft2CFXs = async () => {
-    if (ERCBridgeContract) {
+    if (account) {
       try {
         const signer = await browserProvider.getSigner();
         const contractWithSigner = ERCBridgeContract.connect(signer);
@@ -122,7 +122,7 @@ const useTransform = () => {
     }
   };
 
-  const transform = useCallback(async () => {
+  const transform = async () => {
     try {
       if (
         fromToken.type === TOKEN_TYPE.NFT &&
@@ -150,7 +150,7 @@ const useTransform = () => {
       }
       reset();
     } catch (e) {}
-  }, [ERCBridgeContract]);
+  }
 
   const shouldDisabled = (prev, target) => {
     return (
