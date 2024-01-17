@@ -21,8 +21,8 @@ export default function Market() {
           ...res,
           floor: parseFloat(res.floor),
           unitPrice: parseFloat(res.unitPrice),
-          '24hVolume': Math.ceil(+formatUnits(res['24hVolume'], usdtDecimal)),
-          totalVolume: Math.ceil(+formatUnits(res['24hVolume'], usdtDecimal)),
+          '24hVolume': +formatUnits(res['24hVolume'], usdtDecimal),
+          totalVolume: +formatUnits(res['totalVolume'], usdtDecimal),
         });
       },
     }
