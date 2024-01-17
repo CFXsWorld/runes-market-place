@@ -14,7 +14,7 @@ const TokenInput = ({
   tokenList,
   onTokenChange,
   type = 'FROM',
-                      loading,
+  loading,
 }) => {
   const {
     openNFT,
@@ -110,7 +110,7 @@ const TokenInput = ({
             value={token.type}
             options={tokenList}
             onChange={(v) => {
-              onTokenChange({ ...token, type: v });
+              onTokenChange({ items: [], type: v, amount: undefined });
             }}
           />
         </div>

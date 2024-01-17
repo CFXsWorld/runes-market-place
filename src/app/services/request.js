@@ -7,6 +7,7 @@ export const APIs = {
   MY_CFXs_ORDER_LIST: 'MY_CFXs_ORDER_LIST',
   MY_OLD_CFXs_LIST: 'MY_OLD_CFXs_LIST',
   CLAIM_SYNC_DATA: 'CLAIM_SYNC_DATA',
+  MY_NFT_LIST: 'CLAIM_SYNC_DATA',
 };
 
 export const isTest = process.env.NEXT_PUBLIC_IsTest === 'true';
@@ -25,6 +26,7 @@ const productApi = {
   [APIs.MY_CFXs_LIST]: '/api/cfxs/my/new',
   [APIs.MY_OLD_CFXs_LIST]: '/api/cfxs/my/old',
   [APIs.CLAIM_SYNC_DATA]: '/api/mint/mints',
+  [APIs.MY_NFT_LIST]: '/api/cfxs/my/nft',
 };
 
 const request = async (api, { params, ...rest } = {}) => {

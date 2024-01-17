@@ -5,12 +5,12 @@ import { forwardRef } from 'react';
 import AssetsList from '@/app/(pages)/wormhole/_components/TokenInput/AssetsList';
 import useSWRMutation from 'swr/mutation';
 import { APIs } from '@/app/services/request';
-import { getMyCFXsList } from '@/app/services';
+import { getMyNFTList } from '@/app/services';
 
 const NFTModal = forwardRef(({ onOpen, open, onSelect }, ref) => {
   const { isMutating, trigger: getData } = useSWRMutation(
-    APIs.MY_CFXs_LIST,
-    getMyCFXsList
+    APIs.MY_NFT_LIST,
+    getMyNFTList
   );
   return (
     <Modal show={open} onClose={() => onOpen(false)}>
@@ -21,6 +21,7 @@ const NFTModal = forwardRef(({ onOpen, open, onSelect }, ref) => {
           open={open}
           getData={getData}
           isMutating={isMutating}
+          type="NFT"
         />
       </Modal.Body>
     </Modal>

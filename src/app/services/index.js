@@ -12,6 +12,9 @@ export const getMarketStatistics = () => {
 export const getMyCFXsList = (_, { arg }) => {
   return request(APIs.MY_CFXs_LIST, { method: 'get', params: arg });
 };
+export const getMyNFTList = (_, { arg }) => {
+  return request(APIs.MY_NFT_LIST, { method: 'get', params: arg });
+};
 
 export const getMyOldCFXsList = (_, { arg }) => {
   return request(APIs.MY_OLD_CFXs_LIST, { method: 'get', params: arg });

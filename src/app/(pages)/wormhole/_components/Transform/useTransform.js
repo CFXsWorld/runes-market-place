@@ -23,11 +23,14 @@ const useTransform = () => {
   const account = useWalletStore((state) => state.account);
   const { contract: ERCBridgeContract } = useERCBridgeContract();
 
+
   useEffect(() => {
-    if (toToken.type) {
+    if (fromToken.amount) {
       setToToken({ ...toToken, amount: fromToken.amount });
     }
-  }, [fromToken.amount, toToken.type]);
+  }, [fromToken.amount]);
+
+
 
   const calcFee = useMemo(() => {
     if (fromToken.type === TOKEN_TYPE.NFT && toToken.type === TOKEN_TYPE.CFXs) {

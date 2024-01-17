@@ -7,7 +7,7 @@ import { cn } from '@/app/utils/classnames';
 import { Waypoint } from 'react-waypoint';
 import LoadMore from '@/app/components/LoadMore';
 
-const AssetsList = ({ onConfirm, open, getData, isMutating }) => {
+const AssetsList = ({ onConfirm, open, getData, isMutating, type }) => {
   const {
     clearAll,
     selectAll,
@@ -29,29 +29,54 @@ const AssetsList = ({ onConfirm, open, getData, isMutating }) => {
       </div>
       <div className="h-[400px] overflow-y-auto mt-[10px]">
         <div className="grid w-full gap-[10px] grid-cols-3 max-sm:grid-cols-2">
-          {(source || []).map((item) => (
-            <div
-              key={item.id}
-              className={cn(
-                'min-w-[85px] max-w-[140px] flex flex-col cursor-pointer overflow-hidden',
-                'bg-fill-secondary h-[68px] border-[2px] border-fill-e-primary p-[12px]',
-                'rounded-[8px]',
-                {
-                  'border-theme': selected.find(
-                    (record) => record.id === item.id
-                  ),
-                }
-              )}
-              onClick={() => {
-                onSelect(item);
-              }}
-            >
-              <div className="text-theme text-[14px]">CFXs</div>
-              <div className="text-tc-secondary text-[12px] mt-[5px]">
-                #{item.id}
-              </div>
-            </div>
-          ))}
+          {type === 'CFXs'
+            ? (source || []).map((item) => (
+                <div
+                  key={item.id}
+                  className={cn(
+                    'min-w-[85px] max-w-[140px] flex flex-col cursor-pointer overflow-hidden',
+                    'bg-fill-secondary h-[68px] border-[2px] border-fill-e-primary p-[12px]',
+                    'rounded-[8px]',
+                    {
+                      'border-theme': selected.find(
+                        (record) => record.id === item.id
+                      ),
+                    }
+                  )}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelect(item);
+                  }}
+                >
+                  <div className="text-theme text-[14px]">#{item.id}</div>
+                  <div className="text-tc-secondary text-[12px] mt-[5px]">
+                    {item.amount}
+                  </div>
+                </div>
+              ))
+            : (source || []).map((item) => (
+                <div
+                  key={item.tokenid}
+                  className={cn(
+                    'min-w-[85px] max-w-[140px] flex flex-col cursor-pointer overflow-hidden',
+                    'bg-fill-secondary h-[68px] border-[2px] border-fill-e-primary p-[12px]',
+                    'rounded-[8px]',
+                    {
+                      'border-theme': selected.find(
+                        (record) => record.id === item.tokenid
+                      ),
+                    }
+                  )}
+                  onClick={() => {
+                    onSelect({ ...item, id: item.tokenid });
+                  }}
+                >
+                  <div className="text-theme text-[14px]"> #{item.tokenid}</div>
+                  <div className="text-tc-secondary text-[12px] mt-[5px]">
+                    value: {item.amount||1}
+                  </div>
+                </div>
+              ))}
         </div>
         <Waypoint onEnter={loadMore}>
           <div className="w-full">

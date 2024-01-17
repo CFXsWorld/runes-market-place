@@ -6,6 +6,7 @@ import AssetsList from '@/app/(pages)/wormhole/_components/TokenInput/AssetsList
 import useSWRMutation from 'swr/mutation';
 import { APIs } from '@/app/services/request';
 import { getMyCFXsList } from '@/app/services';
+import { cn } from '@/app/utils/classnames';
 
 const CFXsModal = forwardRef(({ onOpen, open, onSelect }, ref) => {
   const { isMutating, trigger: getData } = useSWRMutation(
@@ -22,6 +23,7 @@ const CFXsModal = forwardRef(({ onOpen, open, onSelect }, ref) => {
           open={open}
           getData={getData}
           isMutating={isMutating}
+          type="CFXs"
         />
       </Modal.Body>
     </Modal>

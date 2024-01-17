@@ -79,7 +79,7 @@ export default function CFXsList() {
           </div>
         ))}
       </div>
-      <Waypoint onEnter={loadMore}>
+      <Waypoint onEnter={loadMore} key='cfx'>
         <div className="w-full">
           <LoadMore loading={isMutating} data={source} noMore={noMore} />
         </div>

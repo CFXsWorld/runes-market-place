@@ -14,7 +14,11 @@ const useERC721Contract = () => {
       : null;
   }, [browserProvider, erc721ContractAddress]);
 
-  return { contract };
+  const getValueByIds = (ids) => {
+    const calls = ids.map((id) => contract.userIDamount(id));
+    return Promise.all(calls);
+  };
+  return { contract, getValueByIds };
 };
 
 export default useERC721Contract;

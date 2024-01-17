@@ -4,23 +4,25 @@ import { Waypoint } from 'react-waypoint';
 import LoadMore from '@/app/components/LoadMore';
 import useSWRMutation from 'swr/mutation';
 import { APIs } from '@/app/services/request';
-import { getMyCFXsList } from '@/app/services';
+import { getMyNFTList } from '@/app/services';
 import { useMemo, useState } from 'react';
 import { formatNumberWithCommas, pageItemCount } from '@/app/utils';
 import { uniqBy } from 'lodash';
 import { getAddress } from 'ethers';
 import { useWalletStore } from '@/app/store/wallet';
-import { CFXsIcon, CFXsTokenIcon, NFTTokenIcon } from "@/app/components/icons";
+import { NFTTokenIcon } from '@/app/components/icons';
+import useERC721Contract from '@/app/hooks/useERC721Contract';
 
 export default function NFTList() {
   const [currentPage, setCurrentPage] = useState(0);
   const [noMore, setNoMore] = useState(false);
   const [dataSource, setDataSource] = useState(null);
+  const { getValueByIds } = useERC721Contract();
   const {
     data,
     isMutating,
     trigger: getData,
-  } = useSWRMutation(APIs.MY_CFXs_LIST, getMyCFXsList);
+  } = useSWRMutation(APIs.MY_NFT_LIST, getMyNFTList);
   const account = useWalletStore((state) => state.account);
 
   const [filter] = useState({
@@ -44,8 +46,22 @@ export default function NFTList() {
       if (res.rows && res.rows.length === 0 && currentPage > 0) {
         setNoMore(true);
       } else {
-        setCurrentPage(currentPage + 1);
-        setDataSource({ ...(dataSource || {}), [currentPage]: res.rows || [] });
+        getValueByIds(res.rows.map((v) => v.tokenid))
+          .then((values) => {
+            console.log(values);
+            const data = values.map((value, index) => ({
+              ...res.rows[index],
+              value,
+            }));
+            setCurrentPage(currentPage + 1);
+            setDataSource({
+              ...(dataSource || {}),
+              [currentPage]: data || [],
+            });
+          })
+          .catch((e) => {
+            console.log(e);
+          });
       }
     });
   };
@@ -55,7 +71,7 @@ export default function NFTList() {
         Object.keys(dataSource)
           .sort()
           .reduce((prev, next) => prev.concat(dataSource[next]), []),
-        (item) => item.id
+        (item) => item.tokenid
       );
     }
     return null;
@@ -70,16 +86,16 @@ export default function NFTList() {
         }}
       >
         {(source || []).map((item) => (
-          <div key={item.id} className="flex-center-between">
-            <div className='flex-center'>
-              <NFTTokenIcon className='text-[40px]' />
-              <span className='ml-[12px]'>#{item.id}</span>
+          <div key={item.tokenid} className="flex-center-between">
+            <div className="flex-center">
+              <NFTTokenIcon className="text-[40px]" />
+              <span className="ml-[12px]">#{item.tokenid}</span>
             </div>
-            <span>value: {formatNumberWithCommas(item.amount)}</span>
+            <span>value: {formatNumberWithCommas(item.value)}</span>
           </div>
         ))}
       </div>
-      <Waypoint onEnter={loadMore}>
+      <Waypoint onEnter={loadMore} key="nft">
         <div className="w-full">
           <LoadMore loading={isMutating} data={source} noMore={noMore} />
         </div>
