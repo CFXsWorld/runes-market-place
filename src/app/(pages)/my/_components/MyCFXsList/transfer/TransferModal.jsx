@@ -13,9 +13,15 @@ const TransferModal = forwardRef(({ selected, onOpen, open, reload }, ref) => {
     onOpen,
   });
 
-  const { trigger, loading } = usePromiseLoading(transfer);
+  const { trigger, loading, setLoading } = usePromiseLoading(transfer);
   return (
-    <Modal show={open} onClose={() => onOpen(false)}>
+    <Modal
+      show={open}
+      onClose={() => {
+        onOpen(false);
+        setLoading(false);
+      }}
+    >
       <Modal.Header>Transfer Items</Modal.Header>
       <Modal.Body>
         <div className="px-6 pb-6 flex flex-col">

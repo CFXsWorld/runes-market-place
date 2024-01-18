@@ -2,7 +2,7 @@
 
 import { cn } from '@/app/utils/classnames';
 import Checkbox from '@/app/components/ui/Checkbox';
-import { MergeIcon, SplitIcon, TransferIcon } from "@/app/components/icons";
+import { MergeIcon, TransferIcon } from "@/app/components/icons";
 import { Button } from 'flowbite-react';
 
 const Action = ({ selected, onMerge, onTransfer, onBatchListing }) => {

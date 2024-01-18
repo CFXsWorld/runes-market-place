@@ -23,10 +23,16 @@ const ListingModal = forwardRef(
       isPrice,
     } = useListing({ listingOrder, reload, onOpen });
 
-    const { trigger, loading } = usePromiseLoading(listing);
+    const { trigger, loading, setLoading } = usePromiseLoading(listing);
 
     return (
-      <Modal show={open} onClose={() => onOpen(false)}>
+      <Modal
+        show={open}
+        onClose={() => {
+          onOpen(false);
+          setLoading(false);
+        }}
+      >
         <Modal.Header>Quick List</Modal.Header>
         <Modal.Body>
           <div className="px-6 pb-3 flex flex-col">

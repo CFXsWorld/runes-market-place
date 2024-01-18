@@ -11,7 +11,7 @@ import WithAuth from '@/app/components/Wallet/WithAuth';
 
 const PurchaseModal = forwardRef(
   ({ purchaseOrder, onBuy, getUSDTBalance, onOpen, open, refresh }, ref) => {
-    const { trigger, loading } = usePromiseLoading(onBuy);
+    const { trigger, loading, setLoading } = usePromiseLoading(onBuy);
     const { data = 0, trigger: getBalance } = useSWRMutation('balance', () =>
       getUSDTBalance()
     );
@@ -24,7 +24,13 @@ const PurchaseModal = forwardRef(
       return formatUnits(data, usdtDecimal);
     }, [data]);
     return (
-      <Modal show={open} onClose={() => onOpen(false)}>
+      <Modal
+        show={open}
+        onClose={() => {
+          onOpen(false);
+          setLoading(false);
+        }}
+      >
         <Modal.Header>Purchase</Modal.Header>
         <Modal.Body>
           <div className="p-6 flex flex-col">

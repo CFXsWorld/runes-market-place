@@ -18,7 +18,7 @@ const usePromiseLoading = (fn, { onSuccess, onError } = {}) => {
       });
   };
 
-  return { trigger, loading };
+  return { trigger, loading, setLoading };
 };
 
 export default usePromiseLoading;

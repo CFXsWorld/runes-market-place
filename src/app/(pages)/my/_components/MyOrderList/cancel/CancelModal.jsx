@@ -9,9 +9,15 @@ import useCancel from '@/app/(pages)/my/_components/MyOrderList/cancel/useCancel
 const CancelModal = forwardRef(({ orders, onOpen, open, reload }, ref) => {
   const { cancel } = useCancel({ reload, orders, onOpen });
 
-  const { trigger, loading } = usePromiseLoading(cancel);
+  const { trigger, loading, setLoading } = usePromiseLoading(cancel);
   return (
-    <Modal show={open} onClose={() => onOpen(false)}>
+    <Modal
+      show={open}
+      onClose={() => {
+        onOpen(false);
+        setLoading(false);
+      }}
+    >
       <Modal.Header>Merge Items</Modal.Header>
       <Modal.Body>
         <div className="p-6 flex flex-col">

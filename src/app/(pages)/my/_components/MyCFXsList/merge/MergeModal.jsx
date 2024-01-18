@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, Modal } from 'flowbite-react';
-import { forwardRef } from 'react';
+import { forwardRef, useEffect } from 'react';
 import usePromiseLoading from '@/app/hooks/usePromiseLoading';
 import { LoadingIcon } from '@/app/components/icons';
 import useMerge from '@/app/(pages)/my/_components/MyCFXsList/merge/useMerge';
@@ -9,11 +9,17 @@ import useMerge from '@/app/(pages)/my/_components/MyCFXsList/merge/useMerge';
 const MergeModal = forwardRef(({ selected, onOpen, open, reload }, ref) => {
   const { merge } = useMerge({ reload, selected, onOpen });
 
-  const { trigger, loading } = usePromiseLoading(merge);
+  const { trigger, loading, setLoading } = usePromiseLoading(merge);
 
   const total = (selected || []).reduce((a, b) => a + b.amount, 0);
   return (
-    <Modal show={open} onClose={() => onOpen(false)}>
+    <Modal
+      show={open}
+      onClose={() => {
+        onOpen(false);
+        setLoading(false);
+      }}
+    >
       <Modal.Header>Merge Items</Modal.Header>
       <Modal.Body>
         <div className="p-6 flex flex-col">
@@ -36,12 +42,12 @@ const MergeModal = forwardRef(({ selected, onOpen, open, reload }, ref) => {
           <Button
             color="primary"
             className="btn btn-primary w-full"
-            disabled={!selected || loading}
+            disabled={!selected || (loading && open)}
             onClick={() => {
               trigger();
             }}
           >
-            {loading ? <LoadingIcon /> : 'CONFIRM MERGE'}
+            {loading && open ? <LoadingIcon /> : 'CONFIRM MERGE'}
           </Button>
         </div>
       </Modal.Body>

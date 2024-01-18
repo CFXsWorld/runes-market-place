@@ -37,10 +37,16 @@ const SplitModal = forwardRef(({ reload, onOpen, open, splitOrder }, ref) => {
     isValidAmount,
   } = useSplit({ splitOrder, reload, onOpen });
 
-  const { trigger, loading } = usePromiseLoading(split);
+  const { trigger, loading, setLoading } = usePromiseLoading(split);
 
   return (
-    <Modal show={open} onClose={() => onOpen(false)}>
+    <Modal
+      show={open}
+      onClose={() => {
+        onOpen(false);
+        setLoading(false);
+      }}
+    >
       <Modal.Header>Split</Modal.Header>
       <Modal.Body>
         <div className="px-6 pb-3 flex flex-col">
