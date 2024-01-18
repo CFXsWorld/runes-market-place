@@ -10,7 +10,7 @@ import ApproveModal from '@/app/(pages)/market/_components/CFXsList/ApproveModal
 import PurchaseModal from '@/app/(pages)/market/_components/CFXsList/PurchaseModal';
 import usePurchase from '@/app/(pages)/market/_components/CFXsList/usePurchase';
 
-export default function CFXsList() {
+export default function CFXsList({ refreshFloor }) {
   const {
     source,
     isMutating,
@@ -46,7 +46,10 @@ export default function CFXsList() {
     <div>
       <Filter
         total={totalResult}
-        reload={refresh}
+        reload={() => {
+          refresh();
+          refreshFloor();
+        }}
         filter={filter}
         setFilter={setFilter}
       />

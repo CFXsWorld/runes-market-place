@@ -51,8 +51,8 @@ export default function Market() {
   return (
     <div className="pt-[24px] w-full">
       <CFXsInfo percentage={data?.percentage} totalSupply={data?.totalSupply} />
-      <PriceList data={data} />
-      <CFXsList />
+      <PriceList data={data}  />
+      <CFXsList refreshFloor={getStatistics}/>
     </div>
   );
 }

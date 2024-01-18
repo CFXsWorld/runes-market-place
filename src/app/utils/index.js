@@ -21,13 +21,14 @@ export function formatNumberWithCommas(number) {
 }
 
 export function formatNumber(number, precision = 2) {
-  if (!number) return 0;
+  if (!isNumber(number)) return 0;
   const abbreviations = ['', 'K', 'M', 'B', 'T'];
 
-  const format = (num, precision) =>
-    (num % 1 === 0 ? num : num.toFixed(precision))
+  const format = (num, precision) => {
+    return (num % 1 === 0 ? num : num.toFixed(precision))
       .toString()
       .replace(/\.0+$/, '');
+  };
 
   let abbreviationIndex = 0;
 

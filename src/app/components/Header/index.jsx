@@ -5,6 +5,7 @@ import Menu from '@/app/components/Header/Menu';
 import { ConnectButton } from '@/app/components/Wallet';
 import Drawer from '@/app/components/Header/Drawer';
 import { useState } from 'react';
+import Link from 'next/link';
 
 const Header = () => {
   const [open, onOpen] = useState(false);
@@ -20,13 +21,18 @@ const Header = () => {
             }}
           />
         </div>
-        <LogoMDIcon />
+        <Link href="/">
+          <LogoMDIcon />
+        </Link>
         <ConnectButton />
       </div>
       <div className="md:max-w-[1368px] w-full flex-center-between max-md:hidden relative">
         <div className="flex-center">
           <div className="flex-center mr-[85px]">
-            <LogoIcon />
+            <Link href="/">
+              {' '}
+              <LogoIcon />
+            </Link>
           </div>
           <Menu />
         </div>
