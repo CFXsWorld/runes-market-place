@@ -10,14 +10,14 @@ const Attention = () => {
   const [openClaim, onOpenClaim] = useState(false);
 
   return (
-    <div className="w-full border border-theme-non-opaque rounded-[8px] mb-[32px] max-md:mb-[16px]  p-[24px] flex items-start">
+    <div className="w-full border border-theme-non-opaque rounded-[8px] mb-[32px] max-md:mb-[16px]  p-[24px] flex items-start max-md:p-[12px]">
       <ClaimModal open={openClaim} onOpen={onOpenClaim} />
       <div className="pt-[5px] mr-[12px] max-md:hidden">
         <FlagIcon />
       </div>
       <div className="flex flex-col">
         <div className="flex">
-          <span className="text-theme text-[24px] font-bold mr-[24px] flex-center max-md:text-[20px] max-md:mb-[8px]">
+          <span className="text-theme text-[24px] font-bold mr-[24px] flex-center max-md:text-[16px] max-md:mb-[8px]">
             <div className="pt-[5px] mr-[12px] md:hidden">
               <FlagIcon />
             </div>
@@ -33,7 +33,7 @@ const Attention = () => {
             CHECK ON eSPACE
           </Button>
         </div>
-        <div className="text-tc-secondary pt-[10px]">
+        <div className="text-tc-secondary pt-[10px] max-md:text-[12px]">
           Please claim the CFXs from the
           <Link
             href={`https://evm.confluxscan.io/address/0xc6e865c213c89ca42a622c5572d19f00d84d7a16`}
@@ -62,7 +62,7 @@ const Attention = () => {
         </div>
         <Button
           color="primary"
-          className="btn btn-primary  rounded-[4px] md:hidden mt-[16px]"
+          className="btn btn-primary  rounded-[4px] md:hidden mt-[16px] h-[32px] max-h-[32px] text-[14px]"
           onClick={() => {
             onOpenClaim(true);
           }}
