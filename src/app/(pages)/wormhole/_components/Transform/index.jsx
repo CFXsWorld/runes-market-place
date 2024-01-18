@@ -7,12 +7,13 @@ import {
 } from '@/app/components/icons';
 import DocsModal from '@/app/(pages)/wormhole/_components/Transform/DocsModal';
 import useTransform from '@/app/(pages)/wormhole/_components/Transform/useTransform';
-import TokenInput from '@/app/(pages)/wormhole/_components/TokenInput';
 import Fee from '@/app/(pages)/wormhole/_components/Fee';
 import { Button } from 'flowbite-react';
 import { tokenList } from '@/app/(pages)/wormhole/_components/TokenInput/TokenTypeSelector';
 import WithAuth from '@/app/components/Wallet/WithAuth';
 import usePromiseLoading from '@/app/hooks/usePromiseLoading';
+import FromInput from '@/app/(pages)/wormhole/_components/TokenInput/FromInput';
+import ToInput from '@/app/(pages)/wormhole/_components/TokenInput/ToInput';
 
 const Transform = () => {
   const {
@@ -41,9 +42,7 @@ const Transform = () => {
         />
       </div>
       <div className="flex flex-col mt-[24px] gap-[16px] relative">
-        <TokenInput
-          label="Amount"
-          type="FROM"
+        <FromInput
           token={fromToken}
           tokenList={tokenList}
           onTokenChange={setFromToken}
@@ -52,9 +51,7 @@ const Transform = () => {
         <div className="h-[42px] absolute-center bg-fill-e-secondary w-[42px] border-[1px] border-black rounded-[4px] flex-center">
           <ArrowDownLineIcon />
         </div>
-        <TokenInput
-          label="Will Receive"
-          type="TO"
+        <ToInput
           token={toToken}
           tokenList={tokenList.map((token) => ({
             ...token,
@@ -69,7 +66,13 @@ const Transform = () => {
         <Button
           className="w-full mt-[42px]"
           color="primary"
-          disabled={loading || !fromToken.amount || !toToken.amount}
+          disabled={
+            loading ||
+            !fromToken.amount ||
+            !toToken.amount ||
+            !fromToken.type ||
+            !toToken.type
+          }
           onClick={() => {
             trigger();
           }}

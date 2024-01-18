@@ -11,12 +11,14 @@ const useTransform = () => {
   const [open, onOpen] = useState(false);
   const [fromToken, setFromToken] = useState({
     amount: undefined,
+    balance: undefined,
     type: undefined,
     items: [],
   });
   const [toToken, setToToken] = useState({
     amount: undefined,
     type: undefined,
+    balance: undefined,
     items: [],
   });
   const { browserProvider } = useWallet();
@@ -24,14 +26,19 @@ const useTransform = () => {
   const { contract: ERCBridgeContract } = useERCBridgeContract();
 
   useEffect(() => {
-    if (fromToken.amount) {
-      setToToken({ ...toToken, amount: fromToken.amount });
+    if (fromToken) {
+      setToToken({
+        ...toToken,
+        type: toToken.type === fromToken.type ? undefined : toToken.type,
+        balance: fromToken.balance,
+        amount: fromToken.amount,
+      });
     }
-  }, [fromToken.amount]);
+  }, [fromToken]);
 
   const calcFee = useMemo(() => {
     if (fromToken.type === TOKEN_TYPE.NFT && toToken.type === TOKEN_TYPE.CFXs) {
-      return (Number(fromToken.amount || 0) * 0.02).toFixed(2);
+      return (Number(fromToken.balance || 0) * 0.02).toFixed(2);
     }
     if (
       fromToken.type === TOKEN_TYPE.Coin &&
@@ -43,10 +50,10 @@ const useTransform = () => {
       fromToken.type === TOKEN_TYPE.CFXs &&
       toToken.type === TOKEN_TYPE.Coin
     ) {
-      return (Number(fromToken.amount || 0) * 0.01).toFixed(2);
+      return (Number(fromToken.balance || 0) * 0.01).toFixed(2);
     }
     if (fromToken.type === TOKEN_TYPE.CFXs && toToken.type === TOKEN_TYPE.NFT) {
-      return (Number(fromToken.amount || 0) * 0.1).toFixed(2);
+      return (Number(fromToken.balance || 0) * 0.1).toFixed(2);
     }
     return 0;
   }, [fromToken, toToken]);
@@ -150,7 +157,7 @@ const useTransform = () => {
       }
       reset();
     } catch (e) {}
-  }
+  };
 
   const shouldDisabled = (prev, target) => {
     return (
@@ -165,10 +172,12 @@ const useTransform = () => {
     setToToken({
       amount: undefined,
       type: toToken.type,
+      balance: undefined,
       items: [],
     });
     setFromToken({
       amount: undefined,
+      balance: undefined,
       type: fromToken.type,
       items: [],
     });

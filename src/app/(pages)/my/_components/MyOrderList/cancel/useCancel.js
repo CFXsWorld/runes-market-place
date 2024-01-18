@@ -1,7 +1,6 @@
 import useWallet from '@/app/hooks/useWallet';
 import useCFXsContract from '@/app/hooks/useCFXsContract';
 import { toast } from 'react-toastify';
-import { getAddress } from 'ethers';
 import { useWalletStore } from "@/app/store/wallet";
 
 const useCancel = ({ orders, onOpen, reload }) => {
