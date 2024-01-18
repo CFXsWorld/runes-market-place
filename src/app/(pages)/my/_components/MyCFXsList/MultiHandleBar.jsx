@@ -2,7 +2,7 @@
 
 import { cn } from '@/app/utils/classnames';
 import Checkbox from '@/app/components/ui/Checkbox';
-import { SplitIcon, TransferIcon } from '@/app/components/icons';
+import { MergeIcon, SplitIcon, TransferIcon } from "@/app/components/icons";
 import { Button } from 'flowbite-react';
 
 const Action = ({ selected, onMerge, onTransfer, onBatchListing }) => {
@@ -15,7 +15,7 @@ const Action = ({ selected, onMerge, onTransfer, onBatchListing }) => {
           className="max-md:text-[12px] btn btn-outline btn-primary  px-[8px] text-[14px] font-normal max-md:flex-1"
           onClick={onMerge}
         >
-          <SplitIcon />
+          <MergeIcon className='mr-[4px]'/>
           MERGE
         </Button>
         <Button
@@ -24,7 +24,7 @@ const Action = ({ selected, onMerge, onTransfer, onBatchListing }) => {
           className="max-md:text-[12px] btn btn-outline btn-primary px-[8px] text-[14px] font-normal max-md:flex-1"
           onClick={onTransfer}
         >
-          <TransferIcon />
+          <TransferIcon className='mr-[4px]'/>
           TRANSFER
         </Button>
       </div>
