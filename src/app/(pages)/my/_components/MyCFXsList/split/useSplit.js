@@ -4,7 +4,7 @@ import { isAddress, getAddress } from 'ethers';
 import { toast } from 'react-toastify';
 import useCFXsContract from '@/app/hooks/useCFXsContract';
 import { omit, uniqueId } from 'lodash';
-import { useWalletStore } from "@/app/store/wallet";
+import { useWalletStore } from '@/app/store/wallet';
 
 export const SPLIT_TYPE = {
   CUSTOM: 'CUSTOM',
@@ -28,11 +28,13 @@ const useSplit = ({ reload, onOpen, splitOrder }) => {
   const [shareCount, setShareCount] = useState();
   const { browserProvider } = useWallet();
   const { contract: CFXsContract } = useCFXsContract();
-  const account = useWalletStore(state=>state.account);
+  const account = useWalletStore((state) => state.account);
 
   const shareItems = useMemo(() => {
     if (/^[1-9]\d*$/.test(shareCount) && splitOrder && isAddress(account)) {
-      const quotient = Math.floor(Number(splitOrder.amount) / Number(shareCount));
+      const quotient = Math.floor(
+        Number(splitOrder.amount) / Number(shareCount)
+      );
       const remainder = Number(splitOrder.amount) % Number(shareCount);
       return [...new Array(Number(shareCount))].map((_, index) => ({
         owner: getAddress(account),
@@ -110,7 +112,10 @@ const useSplit = ({ reload, onOpen, splitOrder }) => {
     }
 
     return (
-      splitOrder && /^[1-9]\d*$/.test(shareCount) && Number(shareCount) <= 24
+      splitOrder &&
+      /^[1-9]\d*$/.test(shareCount) &&
+      Number(shareCount) <= 24 &&
+      Number(splitOrder.amount) >= Number(shareCount)
     );
   }, [customTotal, splitOrder, splitType, shareCount, items]);
 

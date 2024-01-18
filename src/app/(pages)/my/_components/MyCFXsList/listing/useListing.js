@@ -17,7 +17,7 @@ const useListing = ({ listingOrder, reload, onOpen }) => {
   }, [duration]);
 
   const listing = async () => {
-    if (isValid && listingOrder) {
+    if (isValid && listingOrder && Number(listingOrder.amount) > 0) {
       try {
         const signer = await browserProvider.getSigner();
         const contractWithSigner = CFXsContract.connect(signer);

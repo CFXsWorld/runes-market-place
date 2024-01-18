@@ -22,7 +22,9 @@ const useBatchListing = ({ reload, onOpen, selected }) => {
       try {
         const signer = await browserProvider.getSigner();
         const contractWithSigner = CFXsContract.connect(signer);
-        const ids = selected.map((item) => item.id);
+        const ids = selected
+          .filter((i) => Number(i.amount) !== 0)
+          .map((item) => item.id);
         const orderTypes = ids.map(() => '0');
         const confirmedPrices = ids.map((id) => parseUnits(prices[id], 18));
         const tx = await contractWithSigner.LockingScriptbatch(
