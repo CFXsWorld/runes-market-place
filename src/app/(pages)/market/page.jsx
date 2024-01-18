@@ -22,12 +22,16 @@ export default function Market() {
         let _totalVolume = 0;
 
         try {
-          _24hVolume = formatUnits(
-            BigNumber(res['24hVolume']).toString(),
+          _totalVolume = formatUnits(
+            BigInt(res['totalVolume']).toString(),
             usdtDecimal
           );
-          _totalVolume = formatUnits(
-            new BigNumber(res['totalVolume']),
+        } catch (e) {
+          console.log(e);
+        }
+        try {
+          _24hVolume = formatUnits(
+            BigInt(res['24hVolume']).toString(),
             usdtDecimal
           );
         } catch (e) {
@@ -51,8 +55,8 @@ export default function Market() {
   return (
     <div className="pt-[24px] w-full">
       <CFXsInfo percentage={data?.percentage} totalSupply={data?.totalSupply} />
-      <PriceList data={data}  />
-      <CFXsList refreshFloor={getStatistics}/>
+      <PriceList data={data} />
+      <CFXsList refreshFloor={getStatistics} />
     </div>
   );
 }

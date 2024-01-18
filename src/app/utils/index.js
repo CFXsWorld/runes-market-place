@@ -20,8 +20,9 @@ export function formatNumberWithCommas(number) {
   return number ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 0;
 }
 
-export function formatNumber(number, precision = 2) {
-  if (!isNumber(number)) return 0;
+export function formatNumber(str, precision = 2) {
+  let number = Number(str);
+  if (!/^\d+(\.\d+)?$/g.test(number)) return 0;
   const abbreviations = ['', 'K', 'M', 'B', 'T'];
 
   const format = (num, precision) => {
