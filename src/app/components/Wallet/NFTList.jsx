@@ -13,7 +13,7 @@ import { useWalletStore } from '@/app/store/wallet';
 import { NFTTokenIcon } from '@/app/components/icons';
 import useERC721Contract from '@/app/hooks/useERC721Contract';
 
-export default function NFTList() {
+export default function NFTList({activeTab}) {
   const [currentPage, setCurrentPage] = useState(0);
   const [noMore, setNoMore] = useState(false);
   const [dataSource, setDataSource] = useState(null);
@@ -84,7 +84,7 @@ export default function NFTList() {
           </div>
         ))}
       </div>
-      <Waypoint onEnter={loadMore} key="nft">
+      <Waypoint onEnter={loadMore} key={activeTab}>
         <div className="w-full">
           <LoadMore loading={isMutating} data={source} noMore={noMore} />
         </div>

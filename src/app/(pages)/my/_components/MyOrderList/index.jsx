@@ -24,6 +24,7 @@ export default function MyOrderList() {
     open,
     orders,
     handleCancelAll,
+    refreshing,
   } = useList();
 
   return (
@@ -64,6 +65,7 @@ export default function MyOrderList() {
             ))}
           </div>
           <Waypoint
+            key={refreshing}
             scrollableAncestor={typeof window !== 'undefined' ? window : null}
             onEnter={() => {
               loadMore();

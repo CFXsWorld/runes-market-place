@@ -43,6 +43,7 @@ export default function MyCFXsList() {
     filter,
     setFilter,
     totalResult,
+    refreshing,
   } = useList();
 
   return (
@@ -106,7 +107,9 @@ export default function MyCFXsList() {
               />
             ))}
           </div>
+
           <Waypoint
+            key={refreshing}
             scrollableAncestor={typeof window !== 'undefined' ? window : null}
             onEnter={() => {
               loadMore();
@@ -116,6 +119,7 @@ export default function MyCFXsList() {
               <LoadMore loading={isMutating} data={source} noMore={noMore} />
             </div>
           </Waypoint>
+
           <MultiHandleBar
             selected={selected}
             clearAll={clearAll}

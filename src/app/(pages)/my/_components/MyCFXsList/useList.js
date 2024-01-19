@@ -11,6 +11,7 @@ import useHandleModal from '@/app/(pages)/my/_components/MyCFXsList/useHandleMod
 import { useWalletStore } from '@/app/store/wallet';
 
 const useList = () => {
+  const [refreshing, setRefreshing] = useState(0);
   const [checkAll, setCheckAll] = useState(false);
   const [listingOrder, setListingOrder] = useState(null);
   const [splitOrder, setSplitOrder] = useState(null);
@@ -70,34 +71,29 @@ const useList = () => {
   const totalResult = useMemo(() => data?.count || 0, [data]);
 
   const refresh = () => {
-    loadMore(true);
+    setRefreshing(Date.now());
+    setNoMore(false);
+    setDataSource(null);
+    setSelected([]);
+    setCheckAll(false);
+    setCurrentPage(0);
+    setDataSource({});
   };
-  const loadMore = async (refreshing) => {
-    if (refreshing) {
-      setNoMore(false);
-      setDataSource(null);
-      setSelected([]);
-      setCheckAll(false);
-      setCurrentPage(0);
-      getData({ ...transformedFilter, index: 0 }).then((res) => {
-        setDataSource({ [0]: res.rows || [] });
-      });
-    } else {
-      getData({
-        ...transformedFilter,
-        index: currentPage * pageItemCount,
-      }).then((res) => {
-        if (res.rows && res.rows.length === 0 && currentPage > 0) {
-          setNoMore(true);
-        } else {
-          setCurrentPage(currentPage + 1);
-          setDataSource({
-            ...(dataSource || {}),
-            [currentPage]: res.rows || [],
-          });
-        }
-      });
-    }
+  const loadMore = async () => {
+    getData({
+      ...transformedFilter,
+      index: currentPage * pageItemCount,
+    }).then((res) => {
+      if (res.rows && res.rows.length === 0 && currentPage > 0) {
+        setNoMore(true);
+      } else {
+        setCurrentPage(currentPage + 1);
+        setDataSource({
+          ...(dataSource || {}),
+          [currentPage]: res.rows || [],
+        });
+      }
+    });
   };
   const source = useMemo(() => {
     if (dataSource) {
@@ -185,6 +181,7 @@ const useList = () => {
     filter,
     setFilter,
     totalResult,
+    refreshing,
   };
 };
 

@@ -27,6 +27,7 @@ export default function CFXsList({ refreshFloor }) {
     noMore,
     checkAll,
     setCheckAll,
+    refreshing,
   } = useList();
 
   const {
@@ -72,6 +73,7 @@ export default function CFXsList({ refreshFloor }) {
           ))}
         </div>
         <Waypoint
+          key={refreshing}
           scrollableAncestor={typeof window !== 'undefined' ? window : null}
           onEnter={() => {
             loadMore();

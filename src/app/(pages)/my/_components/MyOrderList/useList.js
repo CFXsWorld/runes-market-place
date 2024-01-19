@@ -10,6 +10,8 @@ import { getAddress } from 'ethers';
 import { useWalletStore } from '@/app/store/wallet';
 
 const useList = () => {
+  const [refreshing, setRefreshing] = useState(0);
+  const [noMore, setNoMore] = useState(false);
   const [orders, setOrders] = useState(null);
   const [open, onOpen] = useState(false);
   const mounted = useMounted();
@@ -59,32 +61,24 @@ const useList = () => {
   }, [data]);
 
   const refresh = () => {
-    loadMore(true);
+    setRefreshing(Date.now());
+    setDataSource({});
+    setDataSource(null);
+    setCurrentPage(0);
   };
-  const loadMore = async (re) => {
-    if (re) {
-      setDataSource(null);
-      setCurrentPage(0);
-      getData({ ...transformedFilter, index: 0 }).then((res) => {
-        setDataSource({ [0]: res.rows });
-      });
-    } else {
-      getData({
-        ...transformedFilter,
-        index: currentPage * pageItemCount,
-      }).then((res) => {
-        if (res.rows && res.rows.length === 0 && currentPage > 0) {
-        } else {
-          setCurrentPage(currentPage + 1);
-          setDataSource({ ...(dataSource || {}), [currentPage]: res.rows });
-        }
-      });
-    }
+  const loadMore = async () => {
+    getData({
+      ...transformedFilter,
+      index: currentPage * pageItemCount,
+    }).then((res) => {
+      if (res.rows && res.rows.length === 0 && currentPage > 0) {
+        setNoMore(true);
+      } else {
+        setCurrentPage(currentPage + 1);
+        setDataSource({ ...(dataSource || {}), [currentPage]: res.rows });
+      }
+    });
   };
-
-  const noMore = useMemo(() => {
-    return source && source.length === totalResult;
-  }, [source, totalResult]);
 
   const handleCancel = (item) => {
     setOrders([item]);
@@ -114,6 +108,7 @@ const useList = () => {
     handleCancel,
     orders,
     setOrders,
+    refreshing,
   };
 };
 

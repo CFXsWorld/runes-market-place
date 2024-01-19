@@ -62,8 +62,8 @@ const WalletDetail = () => {
           </div>
         </Tabs.Item>
         <Tabs.Item title="NFT">
-          <div className="h-[300px] overflow-y-auto  px-[24px]">
-            <NFTList />
+          <div className="h-[300px] overflow-y-auto  px-[24px]" key={activeTab}>
+            <NFTList activeTab={activeTab}/>
           </div>
         </Tabs.Item>
         <Tabs.Item title="Coin">

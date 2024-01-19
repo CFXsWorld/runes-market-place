@@ -8,6 +8,7 @@ import { pageItemCount } from '@/app/utils';
 import { omit, uniqBy } from 'lodash';
 
 const useList = () => {
+  const [refreshing, setRefreshing] = useState(0);
   const [checkAll, setCheckAll] = useState(false);
   const [selected, setSelected] = useState([]);
   const [dataSource, setDataSource] = useState(null);
@@ -98,32 +99,27 @@ const useList = () => {
   }, [dataSource]);
 
   const refresh = () => {
-    loadMore(true);
+    setRefreshing(Date.now());
+    setNoMore(false);
+    setDataSource(null);
+    setSelected([]);
+    setCheckAll(false);
+    setCurrentPage(0);
+    setDataSource({});
   };
 
-  const loadMore = async (refreshing) => {
-    if (refreshing) {
-      setNoMore(false);
-      setDataSource(null);
-      setSelected([]);
-      setCheckAll(false);
-      setCurrentPage(0);
-      getData({ ...transformedFilter, index: 0 }).then((res) => {
-        setDataSource({ [0]: res.rows });
-      });
-    } else {
-      getData({
-        ...transformedFilter,
-        index: currentPage * pageItemCount,
-      }).then((res) => {
-        if (res.rows && res.rows.length === 0 && currentPage > 0) {
-          setNoMore(true);
-        } else {
-          setCurrentPage(currentPage + 1);
-          setDataSource({ ...(dataSource || {}), [currentPage]: res.rows });
-        }
-      });
-    }
+  const loadMore = async () => {
+    getData({
+      ...transformedFilter,
+      index: currentPage * pageItemCount,
+    }).then((res) => {
+      if (res.rows && res.rows.length === 0 && currentPage > 0) {
+        setNoMore(true);
+      } else {
+        setCurrentPage(currentPage + 1);
+        setDataSource({ ...(dataSource || {}), [currentPage]: res.rows });
+      }
+    });
   };
 
   const clearAll = () => {
@@ -164,6 +160,7 @@ const useList = () => {
   }, [data]);
 
   return {
+    refreshing,
     selected,
     onSelect,
     loadMore,
