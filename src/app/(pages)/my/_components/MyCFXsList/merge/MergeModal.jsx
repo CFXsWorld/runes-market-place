@@ -26,14 +26,14 @@ const MergeModal = forwardRef(({ selected, onOpen, open, reload }, ref) => {
           <div className="flex-center-between mb-[12px]">
             <span className="text-tc-secondary">You will merge</span>
             <span className="text-white font-medium">
-              {selected?.length || 0} CFXs
+              {selected?.length || 0} Slots
             </span>
           </div>
           <div className="flex-center-between">
             <span className="text-tc-secondary">
               The amount of new CFXs will be
             </span>
-            <span className="text-white font-medium">{total}</span>
+            <span className="text-white font-medium">{total} CFXs</span>
           </div>
           <div className="text-tc-secondary text-[14px] mt-[32px] mb-[24px] pt-[12px] border border-transparent border-t-fill-e-primary">
             The merged CFXs will generate a new CFXs ID. The amount of new CFXs
