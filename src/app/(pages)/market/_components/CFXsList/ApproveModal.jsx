@@ -1,10 +1,10 @@
 'use client';
 
-import { Button, Modal } from "flowbite-react";
+import { Button, Modal } from 'flowbite-react';
 import { forwardRef } from 'react';
 import usePromiseLoading from '@/app/hooks/usePromiseLoading';
 import { LoadingIcon } from '@/app/components/icons';
-import WithAuth from "@/app/components/Wallet/WithAuth";
+import WithAuth from '@/app/components/Wallet/WithAuth';
 
 const ApproveModal = forwardRef(
   ({ purchaseOrder, handleApprove, open, onOpen }, ref) => {
@@ -22,8 +22,12 @@ const ApproveModal = forwardRef(
             </div>
             <div className="flex-center-between">
               <span className="text-tc-secondary">For</span>
-              <span className="text-white font-medium">
-                {purchaseOrder?.count || 0} CFXs
+              <span className="text-white font-medium flex-center">
+                <span>{purchaseOrder?.count || 0}</span>
+                <span className='text-tc-secondary text-[14px]'>Slots</span>
+                <span className='px-[4px]'>|</span>
+                <span>{purchaseOrder?.amount || 0}</span>
+                <span className='text-tc-secondary text-[14px]'>CFXs</span>
               </span>
             </div>
             <div className="text-tc-secondary text-[14px] mt-[32px] mb-[24px] pt-[12px] border border-transparent border-t-fill-e-primary">
