@@ -57,7 +57,7 @@ const useBatchListing = ({ reload, onOpen, selected }) => {
   const calcEarning = useMemo(() => {
     if (isValid) {
       const total = Object.values(prices).reduce((a, b) => a + Number(b), 0);
-      return (Number(total) - Number(total) * 0.03).toFixed(4);
+      return (Number(total) - Number(total) * 0).toFixed(4);
     }
     return 0;
   }, [prices, isValid]);

@@ -94,7 +94,7 @@ const ListingModal = forwardRef(
             </div>
             <div className="flex-center-between mt-[24px]">
               <span className="text-tc-secondary">Market fee</span>
-              <span className="text-white font-medium">3%</span>
+              <span className="text-white font-medium">1%</span>
             </div>
             <div className="flex-center-between mt-[10px]">
               <span className="text-tc-secondary">

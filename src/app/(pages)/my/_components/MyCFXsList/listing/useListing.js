@@ -5,8 +5,9 @@ import { parseUnits } from 'ethers';
 import { toast } from 'react-toastify';
 import useCFXsContract from '@/app/hooks/useCFXsContract';
 
-const fee= 0;
 const useListing = ({ listingOrder, reload, onOpen }) => {
+  const fee= 0;
+
   const [price, setPrice] = useState();
   const [duration, setDuration] = useState(dayjs().add(2, 'day'));
   const dateFormate = (date) => dayjs(date).format('YYYY-MM-DD');
@@ -18,6 +19,7 @@ const useListing = ({ listingOrder, reload, onOpen }) => {
   }, [duration]);
 
   const listing = async () => {
+
     if (isValid && listingOrder && Number(listingOrder.amount) > 0) {
       try {
         const signer = await browserProvider.getSigner();
@@ -60,6 +62,7 @@ const useListing = ({ listingOrder, reload, onOpen }) => {
     listing,
     calcEarning,
     isPrice,
+    fee,
   };
 };
 export default useListing;
