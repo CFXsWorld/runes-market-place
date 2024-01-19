@@ -48,7 +48,7 @@ const PurchaseModal = forwardRef(
                 <span className="text-tc-secondary text-[12px] pl-[2px]">
                   SLOTS
                 </span>
-                <span className="bg-fill-e-secondary w-[1px] h-[16px] flex mx-[5px]" />
+                <span className="bg-fill-e-secondary  h-[16px] flex mx-[5px]" />
                 {purchaseOrder.quantity || 0}
                 <span className="text-tc-secondary text-[12px] pl-[2px]">
                   CFXs
