@@ -8,8 +8,8 @@ import { Button } from 'flowbite-react';
 
 const options = [
   { label: 'All', value: 0, icon: null },
-  { label: 'Only merged', value: 1, icon: <MergeIcon /> },
-  { label: 'Only fragments', value: 2, icon: <FragmentIcon /> },
+  { label: 'Only merged', value: 2, icon: <MergeIcon /> },
+  { label: 'Only fragments', value: 1, icon: <FragmentIcon /> },
 ];
 
 const Filter = ({ total, reload, filter, setFilter }) => {
