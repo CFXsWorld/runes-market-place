@@ -5,6 +5,7 @@ import { parseUnits } from 'ethers';
 import { toast } from 'react-toastify';
 import useCFXsContract from '@/app/hooks/useCFXsContract';
 
+const fee= 0;
 const useListing = ({ listingOrder, reload, onOpen }) => {
   const [price, setPrice] = useState();
   const [duration, setDuration] = useState(dayjs().add(2, 'day'));
@@ -45,7 +46,7 @@ const useListing = ({ listingOrder, reload, onOpen }) => {
   }, [price, durationHours]);
 
   const calcEarning = useMemo(() => {
-    return isValid ? Number(price) - Number(price) * 0.03 : 0;
+    return isValid ? Number(price) - Number(price) * fee : 0;
   }, [price, isValid]);
 
   return {
