@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import useCFXsContract from '@/app/hooks/useCFXsContract';
 
 const useListing = ({ listingOrder, reload, onOpen }) => {
-  const fee= 0;
+  const fee = 0;
 
   const [price, setPrice] = useState();
   const [duration, setDuration] = useState(dayjs().add(2, 'day'));
@@ -19,7 +19,6 @@ const useListing = ({ listingOrder, reload, onOpen }) => {
   }, [duration]);
 
   const listing = async () => {
-
     if (isValid && listingOrder && Number(listingOrder.amount) > 0) {
       try {
         const signer = await browserProvider.getSigner();
@@ -27,7 +26,7 @@ const useListing = ({ listingOrder, reload, onOpen }) => {
         const tx = await contractWithSigner.LockingScriptbatch(
           [listingOrder.id],
           ['0'],
-          [parseUnits(price, 18)],
+          [parseUnits(totalPrice.toString(), 18)],
           durationHours
         );
         await tx.wait();
@@ -41,17 +40,22 @@ const useListing = ({ listingOrder, reload, onOpen }) => {
     }
   };
 
-  const isPrice = (value) => /^\d+(\.\d+)?$/.test(value);
+  const isPrice = (value) => /^\d+(\.\d*)?$/.test(value);
 
   const isValid = useMemo(() => {
     return isPrice(price) && Number(price) > 0 && durationHours > 0;
   }, [price, durationHours]);
 
+  const totalPrice = useMemo(() => {
+    return isValid ? (parseFloat(price) || 0) * (listingOrder?.amount || 0) : 0;
+  }, [price, isValid, listingOrder]);
+
   const calcEarning = useMemo(() => {
-    return isValid ? Number(price) - Number(price) * fee : 0;
-  }, [price, isValid]);
+    return isValid ? totalPrice - totalPrice * fee : 0;
+  }, [isValid, totalPrice]);
 
   return {
+    totalPrice,
     price,
     setPrice,
     duration,

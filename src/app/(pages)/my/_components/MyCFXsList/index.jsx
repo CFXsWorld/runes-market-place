@@ -57,18 +57,21 @@ export default function MyCFXsList() {
           reload={refresh}
         />
         <MergeModal
+          key={`MergeModal${openMerge}`}
           open={openMerge}
           onOpen={onOpenMerge}
           selected={selected}
           reload={refresh}
         />
         <TransferModal
+          key={`TransferModal${openTransfer}`}
           open={openTransfer}
           onOpen={onOpenTransfer}
           selected={selected}
           reload={refresh}
         />
         <BatchListingModal
+          key={`BatchListingModal${openBatchListing}`}
           open={openBatchListing}
           onOpen={onOpenBatchListing}
           selected={selected}
@@ -76,6 +79,7 @@ export default function MyCFXsList() {
         />
 
         <SplitModal
+          key={`SplitModal${openSplit}`}
           open={openSplit}
           onOpen={onOpenSplit}
           splitOrder={splitOrder}

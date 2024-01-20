@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import useWallet from '@/app/hooks/useWallet';
 import { parseUnits } from 'ethers';
@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import useCFXsContract from '@/app/hooks/useCFXsContract';
 
 const useBatchListing = ({ reload, onOpen, selected }) => {
-  const [isSamePrice, setIsSamePrice] = useState(false);
+  const [isSamePrice, setIsSamePrice] = useState(true);
   const [prices, setPrices] = useState({});
   const [duration, setDuration] = useState(dayjs().add(2, 'day'));
   const dateFormate = (date) => dayjs(date).format('YYYY-MM-DD');
@@ -26,7 +26,9 @@ const useBatchListing = ({ reload, onOpen, selected }) => {
           .filter((i) => Number(i.amount) !== 0)
           .map((item) => item.id);
         const orderTypes = ids.map(() => '0');
-        const confirmedPrices = ids.map((id) => parseUnits(prices[id], 18));
+        const confirmedPrices = ids.map((id) =>
+          parseUnits(totalPricesMap[id].toString(), 18)
+        );
         const tx = await contractWithSigner.LockingScriptbatch(
           ids,
           orderTypes,
@@ -44,23 +46,37 @@ const useBatchListing = ({ reload, onOpen, selected }) => {
     }
   };
 
-  const isPrice = (value) => /^\d+(\.\d+)?$/.test(value);
+  const isPrice = (value) => /^\d+(\.\d*)?$/.test(value);
 
   const isValid = useMemo(() => {
     return (
-      Object.values(prices).some(
+      Object.values(prices).every(
         (price) => isPrice(price) && Number(price) > 0
       ) && durationHours > 0
     );
   }, [prices, durationHours]);
 
-  const calcEarning = useMemo(() => {
+  const totalPricesMap = useMemo(() => {
+    return Object.keys(prices).reduce((prev, next) => {
+      const item = selected.find((n) => n.id === next);
+      prev[next] = parseFloat(prices[next] || 0) * (item?.amount || 0);
+      return prev;
+    }, {});
+  }, [prices, selected]);
+
+  const totalPrice = useMemo(() => {
     if (isValid) {
-      const total = Object.values(prices).reduce((a, b) => a + Number(b), 0);
-      return (Number(total) - Number(total) * 0).toFixed(4);
+      return Object.values(totalPricesMap).reduce((a, b) => a + Number(b), 0);
     }
     return 0;
-  }, [prices, isValid]);
+  }, [totalPricesMap]);
+
+  const calcEarning = useMemo(() => {
+    if (isValid) {
+      return Number(totalPrice) - Number(totalPrice) * 0;
+    }
+    return 0;
+  }, [totalPrice, isValid]);
 
   const onSameChange = (checked) => {
     setIsSamePrice(checked);
@@ -90,6 +106,8 @@ const useBatchListing = ({ reload, onOpen, selected }) => {
     isSamePrice,
     equalize,
     isPrice,
+    totalPricesMap,
+    totalPrice,
   };
 };
 export default useBatchListing;

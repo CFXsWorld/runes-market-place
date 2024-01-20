@@ -21,6 +21,7 @@ const ListingModal = forwardRef(
       listing,
       calcEarning,
       isPrice,
+      totalPrice,
     } = useListing({ listingOrder, reload, onOpen });
 
     const { trigger, loading, setLoading } = usePromiseLoading(listing);
@@ -38,14 +39,15 @@ const ListingModal = forwardRef(
           <div className="px-6 pb-3 flex flex-col">
             <div className="flex flex-col gap-[8px]">
               <div className="flex justify-between">
-                <Label
-                  htmlFor="price"
-                  value="Set a price"
-                  className="text-tc-secondary"
-                />
+                <p className="text-tc-secondary">Set unit price</p>
+              </div>
+              <div className="flex-center-between mt-[10px]">
+                <span className="text-tc-secondary">#{listingOrder?.id}</span>
+                <span className={cn('font-medium')}>
+                  {formatNumberWithCommas(listingOrder?.amount || 0)}
+                </span>
               </div>
               <TextInput
-                id="price"
                 type="text"
                 rightIcon={() => (
                   <div className="flex-center gap-[8px]">
@@ -55,7 +57,12 @@ const ListingModal = forwardRef(
                 )}
                 value={price}
                 onChange={(e) => {
-                  setPrice(e.target.value);
+                  if (
+                    /^\d+(\.\d*)?$/g.test(e.target.value) ||
+                    !e.target.value
+                  ) {
+                    setPrice(e.target.value);
+                  }
                 }}
                 placeholder="0.00"
                 required
@@ -63,13 +70,13 @@ const ListingModal = forwardRef(
               />
             </div>
             <div className="flex-center-between mt-[10px]">
-              <span className="text-tc-secondary">#{listingOrder?.id}</span>
+              <span className="text-tc-secondary">Total price</span>
               <span
                 className={cn('text-theme font-medium', {
                   'text-red-500': price && !isPrice(price),
                 })}
               >
-                {formatNumberWithCommas(price || 0)}
+                {formatNumberWithCommas(totalPrice.toFixed(4))}
               </span>
             </div>
             <div className="flex flex-col gap-[8px] mt-[24px]">
@@ -92,16 +99,25 @@ const ListingModal = forwardRef(
               <span className="text-tc-secondary">Locked</span>
               <span className="text-theme font-medium">{durationHours} h</span>
             </div>
+
             <div className="flex-center-between mt-[24px]">
+              <span className="text-tc-secondary">Sale price</span>
+              <span className="text-white font-medium">
+                {formatNumberWithCommas(totalPrice.toFixed(4))} USDT
+              </span>
+            </div>
+            <div className="flex-center-between mt-[10px]">
               <span className="text-tc-secondary">Market fee</span>
-              <span className="text-tc-secondary font-medium line-through">0.3%</span>
+              <span className="text-tc-secondary font-medium line-through">
+                0.3%
+              </span>
             </div>
             <div className="flex-center-between mt-[10px]">
               <span className="text-tc-secondary">
                 Total potential earnings
               </span>
               <span className="text-white font-medium">
-                {formatNumberWithCommas(calcEarning)} USDT
+                {formatNumberWithCommas(calcEarning.toFixed(4))} USDT
               </span>
             </div>
             <Button

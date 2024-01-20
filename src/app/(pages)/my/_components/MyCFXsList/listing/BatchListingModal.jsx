@@ -25,6 +25,8 @@ const BatchListingModal = forwardRef(
       isSamePrice,
       equalize,
       isPrice,
+      totalPricesMap,
+      totalPrice,
     } = useBatchListing({ selected, reload, onOpen });
 
     const { trigger, loading, setLoading } = usePromiseLoading(listing);
@@ -46,21 +48,24 @@ const BatchListingModal = forwardRef(
               </span>
               <Checkbox
                 onChange={onSameChange}
+                value={isSamePrice}
                 className="text-tc-secondary text-[12px]"
               >
                 Same price
               </Checkbox>
             </div>
             <div className="max-h-[300px] overflow-y-auto p-[20px] bg-fill-e-primary mb-[24px] flex flex-col gap-[10px] rounded-[8px] mt-[5px]">
+              <div className="flex justify-between">
+                <p className="">Set unit price</p>
+              </div>
               {(selected || []).map((item) => (
                 <div key={item.id}>
                   <div className="flex flex-col gap-[8px]">
-                    <div className="flex justify-between">
-                      <Label
-                        htmlFor="price"
-                        value="Set a price"
-                        className="text-tc-secondary"
-                      />
+                    <div className="flex-center-between mt-[10px]">
+                      <span className="text-tc-secondary">#{item.id}</span>
+                      <span className={cn('font-medium')}>
+                        {formatNumberWithCommas(item?.amount || 0)}
+                      </span>
                     </div>
                     <TextInput
                       id="price"
@@ -73,10 +78,15 @@ const BatchListingModal = forwardRef(
                       )}
                       value={prices[item.id]}
                       onChange={(e) => {
-                        if (isSamePrice) {
-                          setPrices(equalize(e.target.value));
-                        } else {
-                          setPrices({ ...prices, [item.id]: e.target.value });
+                        if (
+                          /^\d+(\.\d*)?$/g.test(e.target.value) ||
+                          !e.target.value
+                        ) {
+                          if (isSamePrice) {
+                            setPrices(equalize(e.target.value));
+                          } else {
+                            setPrices({ ...prices, [item.id]: e.target.value });
+                          }
                         }
                       }}
                       placeholder="0.00"
@@ -85,9 +95,11 @@ const BatchListingModal = forwardRef(
                     />
                   </div>
                   <div className="flex-center-between mt-[10px]">
-                    <span className="text-tc-secondary">#{item.id}</span>
+                    <span className="text-tc-secondary">Total price</span>
                     <span className={cn('text-theme font-medium')}>
-                      {item.amount}
+                      {formatNumberWithCommas(
+                        (totalPricesMap[item.id] || 0).toFixed(4)
+                      )}
                     </span>
                   </div>
                 </div>
@@ -114,14 +126,24 @@ const BatchListingModal = forwardRef(
               <span className="text-theme font-medium">{durationHours} h</span>
             </div>
             <div className="flex-center-between mt-[24px]">
+              <span className="text-tc-secondary">Sale price</span>
+              <span className="text-white font-medium">
+                {formatNumberWithCommas(totalPrice.toFixed(4))} USDT
+              </span>
+            </div>
+            <div className="flex-center-between mt-[10px]">
               <span className="text-tc-secondary">Market fee</span>
-              <span className="text-tc-secondary font-medium line-through">0.3%</span>
+              <span className="text-tc-secondary font-medium line-through">
+                0.3%
+              </span>
             </div>
             <div className="flex-center-between mt-[10px]">
               <span className="text-tc-secondary">
                 Total potential earnings
               </span>
-              <span className="text-white font-medium">{calcEarning} USDT</span>
+              <span className="text-white font-medium">
+                {formatNumberWithCommas(calcEarning.toFixed(4))} USDT
+              </span>
             </div>
             <Button
               color="primary"
