@@ -81,16 +81,16 @@ const ClaimModal = forwardRef(({ onOpen, open }, ref) => {
               </span>
             </div>
             <div className="flex-center gap-[16px]">
-              {/*<Button*/}
-              {/*  color="outline"*/}
-              {/*  disabled={syncLoading || loading}*/}
-              {/*  className="w-[70px]"*/}
-              {/*  onClick={() => {*/}
-              {/*    sync();*/}
-              {/*  }}*/}
-              {/*>*/}
-              {/*  {loading || syncLoading ? <LoadingIcon /> : 'SYNC'}*/}
-              {/*</Button>*/}
+              <Button
+                color="outline"
+                disabled={syncLoading || loading}
+                className="h-[30px] max-h-[30px] text-[14px]"
+                onClick={() => {
+                  sync();
+                }}
+              >
+                {loading || syncLoading ? <LoadingIcon /> : 'SYNC DATA'}
+              </Button>
               <Button
                 color="primary"
                 disabled={!selected.length || loading}
