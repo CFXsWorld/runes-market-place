@@ -69,7 +69,7 @@ const CFXsCard = ({ item, selected, onSelect, onBuy }) => {
             <UsdtIcon className="text-[16px] mr-[4px] max-sm:text-[12px]" />
             <span className="text-[12px]">USDT</span>
           </div>
-          <span className="text-[16px] font-medium">${item.amount}</span>
+          <span className="text-[16px] font-medium">${parseFloat(item.amount).toFixed(3)}</span>
         </div>
         <div className="flex items-center justify-between mt-[15px] max-sm:mt-[8px]">
           <span className="text-tc-secondary text-[12px]">

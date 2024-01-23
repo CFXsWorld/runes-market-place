@@ -26,7 +26,7 @@ const ApproveModal = forwardRef(
                 <span>{purchaseOrder?.count || 0}</span>
                 <span className='text-tc-secondary text-[14px]'>Slots</span>
                 <span className='px-[4px]'></span>
-                <span>{purchaseOrder?.amount || 0}</span>
+                <span>{purchaseOrder?.quantity || 0}</span>
                 <span className='text-tc-secondary text-[14px]'>CFXs</span>
               </span>
             </div>

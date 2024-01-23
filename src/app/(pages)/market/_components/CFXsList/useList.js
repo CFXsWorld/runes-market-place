@@ -24,7 +24,7 @@ const useList = () => {
 
   const [filter, setFilter] = useState({
     recently: 0,
-    merged: 0,
+    merged: 1,
     owner: undefined,
     quantity_min: 0,
     unit_price_start: undefined,
@@ -34,7 +34,7 @@ const useList = () => {
     price_asc: 0,
     id: undefined,
     // hack
-    orderType: 'ASC',
+    orderType: 'MERGED',
     searchValue: '',
   });
 
