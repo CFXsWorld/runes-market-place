@@ -79,18 +79,18 @@ const ClaimModal = forwardRef(({ onOpen, open }, ref) => {
               <span className="text-theme cursor-pointer" onClick={clearAll}>
                 Clear
               </span>
-            </div>
-            <div className="flex-center gap-[16px]">
               <Button
                 color="outline"
                 disabled={syncLoading || loading}
-                className="h-[30px] max-h-[30px] text-[14px]"
+                className="h-[30px] max-h-[30px] text-[14px] ml-[10px]"
                 onClick={() => {
                   sync();
                 }}
               >
-                {loading || syncLoading ? <LoadingIcon /> : 'SYNC DATA'}
+                {loading || syncLoading ? <LoadingIcon /> : 'SYNC'}
               </Button>
+            </div>
+            <div className="flex-center gap-[16px]">
               <Button
                 color="primary"
                 disabled={!selected.length || loading}
