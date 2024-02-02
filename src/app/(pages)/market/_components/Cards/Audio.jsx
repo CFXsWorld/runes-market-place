@@ -2,18 +2,23 @@
 
 import { cn } from '@/app/utils/classnames';
 import {
-  MergeIcon,
+  AudioPlayIcon,
+  AudioSoundIcon,
+  EyeIcon,
   FragmentIcon,
+  LoadingIcon,
+  MergeIcon,
   TimeIcon,
   UsdtIcon,
-  LoadingIcon,
 } from '@/app/components/icons';
 import { addressFormat } from '@/app/utils';
 import dayjs from 'dayjs';
 import usePromiseLoading from '@/app/hooks/usePromiseLoading';
 import { Button } from 'flowbite-react';
+import CFXImage from './cfx.png';
+import Image from 'next/image';
 
-const AudioCard = ({ item, selected, onSelect, onBuy }) => {
+const ImageCard = ({ item, selected, onSelect, onBuy }) => {
   const { trigger, loading } = usePromiseLoading(onBuy);
 
   const isSelected = selected.find((record) => record.id === item.id);
@@ -29,47 +34,51 @@ const AudioCard = ({ item, selected, onSelect, onBuy }) => {
         onSelect(item);
       }}
     >
-      <div className="p-[16px] max-sm:p-[10px]">
-        <div className="flex-center-between">
-          <div className="text-theme flex items-center">
-            <span className="text-[24px] mr-[8px] max-sm:text-[14px]">
-              {item.quantity === '1' ? <FragmentIcon /> : <MergeIcon />}
+      <div className="p-[5px] max-sm:p-[4px] relative h-[170px]">
+        <div className="relative z-[3] h-full flex flex-col justify-between">
+          <div className="flex-center-between z-[2]">
+            <div className="text-theme flex items-center">
+              <span className="text-[14px] mr-[8px] max-sm:text-[14px] bg-black w-[24px] h-[24px] rounded-[12px] flex-center text-white">
+                {item.quantity === '1' ? <FragmentIcon /> : <MergeIcon />}
+              </span>
+            </div>
+            <span className="text-[12px] bg-black px-[4px] rounded-[4px] flex-center">
+              x{item.quantity}
             </span>
-            <span className="max-sm:text-[12px]">CFXs</span>
           </div>
-          <span className="text-tc-secondary max-sm:text-[12px]">
-            #{item.id}
-          </span>
-        </div>
-        <div className="my-[16px] flex flex-col justify-center items-center max-sm:my-[12px]">
-          <span className="text-[24px] font-[500]">{item.quantity}</span>
-          <div className="mt-[4px] text-[14px] text-tc-secondary">
-            <span className="text-theme">
-              ${Number(item.unitprice).toFixed(4)}
+          <div className="flex-1 flex-center gap-[10px]">
+            <AudioPlayIcon />
+            <span className='flex-1'>
+              <AudioSoundIcon />
             </span>
-            <span className="px-[4px]">/</span>
-            <span>CFXs</span>
           </div>
-        </div>
-        <div className="inline-block text-tc-secondary bg-fill-e-secondary w-auto p-[4px] rounded-[2px]">
-          <div className="flex-center">
-            <TimeIcon className="text-[12px] mr-[4px]" />
-            <span className="text-[12px] line-clamp-1">
-              Expired:{' '}
-              {item.locktime
-                ? dayjs.unix(item.locktime).format('MM-DD HH:mm')
-                : '-'}
+
+          <div className="flex justify-between items-center">
+            <div className="inline-block text-tc-secondary bg-fill-e-secondary w-auto p-[4px] rounded-[4px]">
+              <div className="flex-center">
+                <TimeIcon className="text-[12px] mr-[4px]" />
+                <span className="text-[12px] line-clamp-1">
+                  {item.locktime
+                    ? dayjs.unix(item.locktime).format('MM-DD HH:mm')
+                    : '-'}
+                </span>
+              </div>
+            </div>
+            <span className="bg-black p-[2] rounded-[4px] w-[24px] h-[24px] flex-center">
+              <EyeIcon />
             </span>
           </div>
         </div>
       </div>
-      <div className="flex-1 bg-fill-e-primary p-[16px] max-sm:p-[10px] flex flex-col justify-between">
+      <div className="flex-1 bg-fill-e-primary p-[16px] max-sm:p-[10px] flex flex-col justify-between z-[2] relative">
         <div className="flex items-center justify-between">
           <div className="flex-center">
-            <UsdtIcon className="text-[16px] mr-[4px] max-sm:text-[12px]" />
-            <span className="text-[12px]">USDT</span>
+            <span className="text-tc-secondary text-[12px]">#{item.id}</span>
           </div>
-          <span className="text-[16px] font-medium">${parseFloat(item.amount).toFixed(3)}</span>
+          <span className="text-[14px] font-medium flex-center">
+            <UsdtIcon className="text-[16px] mr-[4px] max-sm:text-[12px]" />
+            {parseFloat(item.amount).toFixed(3)}
+          </span>
         </div>
         <div className="flex items-center justify-between mt-[15px] max-sm:mt-[8px]">
           <span className="text-tc-secondary text-[12px]">
@@ -98,4 +107,4 @@ const AudioCard = ({ item, selected, onSelect, onBuy }) => {
   );
 };
 
-export default AudioCard;
+export default ImageCard;

@@ -12,8 +12,9 @@ import { addressFormat } from '@/app/utils';
 import dayjs from 'dayjs';
 import usePromiseLoading from '@/app/hooks/usePromiseLoading';
 import { Button } from 'flowbite-react';
+import CFXImage from './cfx.png';
 
-const GeneralCard = ({ item, selected, onSelect, onBuy }) => {
+const ImageCard = ({ item, selected, onSelect, onBuy }) => {
   const { trigger, loading } = usePromiseLoading(onBuy);
 
   const isSelected = selected.find((record) => record.id === item.id);
@@ -37,9 +38,6 @@ const GeneralCard = ({ item, selected, onSelect, onBuy }) => {
             </span>
             <span className="max-sm:text-[12px]">CFXs</span>
           </div>
-          <span className="text-tc-secondary max-sm:text-[12px]">
-            #{item.id}
-          </span>
         </div>
         <div className="my-[16px] flex flex-col justify-center items-center max-sm:my-[12px]">
           <span className="text-[24px] font-[500]">{item.quantity}</span>
@@ -66,10 +64,14 @@ const GeneralCard = ({ item, selected, onSelect, onBuy }) => {
       <div className="flex-1 bg-fill-e-primary p-[16px] max-sm:p-[10px] flex flex-col justify-between">
         <div className="flex items-center justify-between">
           <div className="flex-center">
-            <UsdtIcon className="text-[16px] mr-[4px] max-sm:text-[12px]" />
-            <span className="text-[12px]">USDT</span>
+            <span className="text-tc-secondary text-[12px]">
+              #{item.id}
+            </span>
           </div>
-          <span className="text-[16px] font-medium">${parseFloat(item.amount).toFixed(3)}</span>
+          <span className="text-[14px] font-medium flex-center">
+            <UsdtIcon className="text-[16px] mr-[4px] max-sm:text-[12px]" />
+            {parseFloat(item.amount).toFixed(3)}
+          </span>
         </div>
         <div className="flex items-center justify-between mt-[15px] max-sm:mt-[8px]">
           <span className="text-tc-secondary text-[12px]">
@@ -98,4 +100,4 @@ const GeneralCard = ({ item, selected, onSelect, onBuy }) => {
   );
 };
 
-export default GeneralCard;
+export default ImageCard;

@@ -67,7 +67,8 @@ const MultiHandleBar = ({
       className={cn(
         'fixed right-0 left-0 bottom-0 flex-center  max-md:px-[16px] md:px-[24px]',
         'h-[78px] border border-fill-e-secondary',
-        'bg-[rgba(24,24,24,0.9)] backdrop-filter-[50px]'
+        'bg-[rgba(24,24,24,0.9)] backdrop-filter-[50px]',
+        'z-[3]'
       )}
     >
       <div className="md:hidden w-full flex items-center justify-between">

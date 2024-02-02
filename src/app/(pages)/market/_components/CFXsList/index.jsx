@@ -1,6 +1,9 @@
 'use client';
 
-import Card from './Card';
+import GeneralCard from '../Cards/General';
+import ImageCard from '../Cards/Image';
+import TextCard from '../Cards/Text';
+import AudioCard from '../Cards/Audio';
 import { Waypoint } from 'react-waypoint';
 import useList from './useList';
 import MultiHandleBar from '@/app/(pages)/market/_components/CFXsList/MultiHandleBar';
@@ -62,15 +65,51 @@ export default function CFXsList({ refreshFloor, type }) {
             gridTemplateColumns: `repeat(${count},1fr)`,
           }}
         >
-          {(source || []).map((item) => (
-            <Card
-              key={item.id}
-              item={item}
-              onSelect={onSelect}
-              selected={selected}
-              onBuy={handlePurchase}
-            />
-          ))}
+          {(source || []).map((item) => {
+            if (type === 1) {
+              return (
+                <ImageCard
+                  key={item.id}
+                  item={item}
+                  onSelect={onSelect}
+                  selected={selected}
+                  onBuy={handlePurchase}
+                />
+              );
+            }
+            if (type === 2) {
+              return (
+                <AudioCard
+                  key={item.id}
+                  item={item}
+                  onSelect={onSelect}
+                  selected={selected}
+                  onBuy={handlePurchase}
+                />
+              );
+            }
+            if (type === 3) {
+              return (
+                <TextCard
+                  key={item.id}
+                  item={item}
+                  onSelect={onSelect}
+                  selected={selected}
+                  onBuy={handlePurchase}
+                />
+              );
+            }
+
+            return (
+              <GeneralCard
+                key={item.id}
+                item={item}
+                onSelect={onSelect}
+                selected={selected}
+                onBuy={handlePurchase}
+              />
+            );
+          })}
         </div>
         <Waypoint
           key={refreshing}

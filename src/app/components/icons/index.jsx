@@ -43,6 +43,9 @@ import Success from './svgs/success.svg';
 import Avatar from './svgs/avatar.svg';
 import Logout from './svgs/logout.svg';
 import Copy from './svgs/copy.svg';
+import Eye from './svgs/eye.svg';
+import AudioPlay from './svgs/AudioPlay.svg';
+import AudioSound from './svgs/audioSound.svg';
 
 export const Icon = ({ className, style, children, ...props }) => {
   return (
@@ -54,6 +57,21 @@ export const Icon = ({ className, style, children, ...props }) => {
 export const ArrowDownIcon = (props) => (
   <Icon {...props}>
     <ArrowDown />
+  </Icon>
+);
+export const AudioSoundIcon = (props) => (
+  <Icon {...props}>
+    <AudioSound />
+  </Icon>
+);
+export const EyeIcon = (props) => (
+  <Icon {...props}>
+    <Eye />
+  </Icon>
+);
+export const AudioPlayIcon = (props) => (
+  <Icon {...props}>
+    <AudioPlay />
   </Icon>
 );
 
