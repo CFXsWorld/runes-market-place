@@ -10,7 +10,7 @@ import ApproveModal from '@/app/(pages)/market/_components/CFXsList/ApproveModal
 import PurchaseModal from '@/app/(pages)/market/_components/CFXsList/PurchaseModal';
 import usePurchase from '@/app/(pages)/market/_components/CFXsList/usePurchase';
 
-export default function CFXsList({ refreshFloor }) {
+export default function CFXsList({ refreshFloor, type }) {
   const {
     source,
     isMutating,
@@ -28,7 +28,7 @@ export default function CFXsList({ refreshFloor }) {
     checkAll,
     setCheckAll,
     refreshing,
-  } = useList();
+  } = useList(type);
 
   const {
     purchaseOrder,

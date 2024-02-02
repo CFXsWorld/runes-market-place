@@ -7,7 +7,7 @@ import { getMarketCFXsList } from '@/app/services';
 import { pageItemCount } from '@/app/utils';
 import { omit, uniqBy } from 'lodash';
 
-const useList = () => {
+const useList = (type) => {
   const [refreshing, setRefreshing] = useState(0);
   const [checkAll, setCheckAll] = useState(false);
   const [selected, setSelected] = useState([]);
@@ -23,6 +23,7 @@ const useList = () => {
   );
 
   const [filter, setFilter] = useState({
+    type: type,
     recently: 0,
     merged: 1,
     owner: undefined,

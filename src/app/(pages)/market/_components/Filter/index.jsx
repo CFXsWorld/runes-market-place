@@ -10,7 +10,7 @@ const Filter = ({ total, reload, filter, setFilter }) => {
   const { onFilterChange, formValues } = useFilter({ filter, setFilter });
   return (
     <div className="w-full">
-      <div className="my-[24px] text-theme test-[24px] flex items-center justify-between">
+      <div className="my-[10px] text-theme text-[14px] flex items-center justify-between">
         <div className="flex-center">
           <ListIcon />
           <span className="font-bold pl-[12px]">Listings</span>
