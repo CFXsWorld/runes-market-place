@@ -19,8 +19,13 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: '/market',
+        destination: '/market/general',
+        permanent: true,
+      },
+      {
         source: '/my',
-        destination: '/my/cfxs',
+        destination: '/my/general',
         permanent: true,
       },
     ];

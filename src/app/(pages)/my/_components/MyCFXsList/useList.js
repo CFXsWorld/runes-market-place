@@ -10,7 +10,7 @@ import { getAddress } from 'ethers';
 import useHandleModal from '@/app/(pages)/my/_components/MyCFXsList/useHandleModal';
 import { useWalletStore } from '@/app/store/wallet';
 
-const useList = () => {
+const useList = (type) => {
   const [refreshing, setRefreshing] = useState(0);
   const [checkAll, setCheckAll] = useState(false);
   const [listingOrder, setListingOrder] = useState(null);
@@ -39,6 +39,7 @@ const useList = () => {
     merged: 0,
     id: undefined,
     owner: undefined,
+    market: type,
   });
 
   useEffect(() => {

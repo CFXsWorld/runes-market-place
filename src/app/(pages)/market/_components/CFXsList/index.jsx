@@ -1,9 +1,5 @@
 'use client';
 
-import GeneralCard from '../Cards/General';
-import ImageCard from '../Cards/Image';
-import TextCard from '../Cards/Text';
-import AudioCard from '../Cards/Audio';
 import { Waypoint } from 'react-waypoint';
 import useList from './useList';
 import MultiHandleBar from '@/app/(pages)/market/_components/CFXsList/MultiHandleBar';
@@ -12,6 +8,7 @@ import Filter from '@/app/(pages)/market/_components/Filter';
 import ApproveModal from '@/app/(pages)/market/_components/CFXsList/ApproveModal';
 import PurchaseModal from '@/app/(pages)/market/_components/CFXsList/PurchaseModal';
 import usePurchase from '@/app/(pages)/market/_components/CFXsList/usePurchase';
+import CFXsMarketCard from '@/app/(pages)/market/_components/Cards';
 
 export default function CFXsList({ refreshFloor, type }) {
   const {
@@ -66,42 +63,8 @@ export default function CFXsList({ refreshFloor, type }) {
           }}
         >
           {(source || []).map((item) => {
-            if (type === 1) {
-              return (
-                <ImageCard
-                  key={item.id}
-                  item={item}
-                  onSelect={onSelect}
-                  selected={selected}
-                  onBuy={handlePurchase}
-                />
-              );
-            }
-            if (type === 2) {
-              return (
-                <AudioCard
-                  key={item.id}
-                  item={item}
-                  onSelect={onSelect}
-                  selected={selected}
-                  onBuy={handlePurchase}
-                />
-              );
-            }
-            if (type === 3) {
-              return (
-                <TextCard
-                  key={item.id}
-                  item={item}
-                  onSelect={onSelect}
-                  selected={selected}
-                  onBuy={handlePurchase}
-                />
-              );
-            }
-
             return (
-              <GeneralCard
+              <CFXsMarketCard
                 key={item.id}
                 item={item}
                 onSelect={onSelect}

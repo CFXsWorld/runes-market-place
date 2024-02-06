@@ -1,6 +1,5 @@
 'use client';
 
-import Card from './Card';
 import { Waypoint } from 'react-waypoint';
 import useList from './useList';
 import MultiHandleBar from './MultiHandleBar';
@@ -11,8 +10,9 @@ import MergeModal from '@/app/(pages)/my/_components/MyCFXsList/merge/MergeModal
 import TransferModal from '@/app/(pages)/my/_components/MyCFXsList/transfer/TransferModal';
 import BatchListingModal from '@/app/(pages)/my/_components/MyCFXsList/listing/BatchListingModal';
 import SplitModal from '@/app/(pages)/my/_components/MyCFXsList/split/SplitModal';
+import CFXsMyCard from "@/app/(pages)/my/_components/Cards";
 
-export default function MyCFXsList() {
+export default function MyCFXsList({ type }) {
   const {
     source,
     isMutating,
@@ -44,7 +44,7 @@ export default function MyCFXsList() {
     setFilter,
     totalResult,
     refreshing,
-  } = useList();
+  } = useList(type);
 
   return (
     account && (
@@ -100,16 +100,18 @@ export default function MyCFXsList() {
               gridTemplateColumns: `repeat(${count},1fr)`,
             }}
           >
-            {(source || []).map((item) => (
-              <Card
-                key={item.id}
-                item={item}
-                onSelect={onSelect}
-                selected={selected}
-                onListing={handleListing}
-                onSplit={handleSplit}
-              />
-            ))}
+            {(source || []).map((item) => {
+              return (
+                <CFXsMyCard
+                  key={item.id}
+                  item={item}
+                  onSelect={onSelect}
+                  selected={selected}
+                  onListing={handleListing}
+                  onSplit={handleSplit}
+                />
+              );
+            })}
           </div>
 
           <Waypoint

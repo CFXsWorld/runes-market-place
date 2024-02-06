@@ -55,6 +55,8 @@ const Drawer = ({ open, onOpen }) => {
                   href={menu.path}
                   onClick={() => {
                     onOpen(false);
+                    updateShowDetail(null)
+                    updateDetail(null)
                   }}
                 >
                   {menu.name}

@@ -15,6 +15,7 @@ const useList = (type) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [noMore, setNoMore] = useState(false);
   const mounted = useMounted();
+
   const { count } = useResponsive(
     { min: 200, max: 300, gap: 24, H5Min: 160 },
     mounted && typeof document !== 'undefined'
@@ -23,7 +24,7 @@ const useList = (type) => {
   );
 
   const [filter, setFilter] = useState({
-    type: type,
+    market: type,
     recently: 0,
     merged: 1,
     owner: undefined,
@@ -35,7 +36,7 @@ const useList = (type) => {
     price_asc: 0,
     id: undefined,
     // hack
-    orderType: 'MERGED',
+    orderType: type === 0 ? 'MERGED' : 'DESC',
     searchValue: '',
   });
 
@@ -113,12 +114,15 @@ const useList = (type) => {
     getData({
       ...transformedFilter,
       index: currentPage * pageItemCount,
-    }).then((res) => {
+    }).then(async (res) => {
       if (res.rows && res.rows.length === 0 && currentPage > 0) {
         setNoMore(true);
       } else {
         setCurrentPage(currentPage + 1);
-        setDataSource({ ...(dataSource || {}), [currentPage]: res.rows });
+        setDataSource({
+          ...(dataSource || {}),
+          [currentPage]: res.rows,
+        });
       }
     });
   };

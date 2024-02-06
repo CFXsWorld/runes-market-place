@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/app/utils/classnames';
+import useDetailStore from "@/app/store/detail";
 
 export const menus = [
   {
@@ -27,6 +28,9 @@ export const menus = [
 const Menu = () => {
   const pathname = usePathname();
 
+  const updateShowDetail = useDetailStore((state) => state.updateShowDetail);
+  const updateDetail = useDetailStore((state) => state.updateDetail);
+
   return (
     <div className="flex-center text-[16px] font-[500] text-tc-secondary">
       {menus.map((menu) => (
@@ -40,6 +44,10 @@ const Menu = () => {
             }
           )}
           href={menu.path}
+          onClick={()=>{
+            updateShowDetail(null)
+            updateDetail(null)
+          }}
         >
           {menu.name}
         </Link>
