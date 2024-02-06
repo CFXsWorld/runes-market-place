@@ -18,7 +18,7 @@ const AssetsList = ({ onConfirm, open, getData, isMutating, type }) => {
     onSelect,
   } = useAssetsList({ open, getData, type });
   return (
-    <div className="px-6  pb-6 flex flex-col">
+    <div className="px-6  pb-6 flex flex-col  bg-fill-e-secondary ">
       <div className="flex mt-[12px] justify-end w-full mb-[12px]">
         <Checkbox
           onChange={selectAll}

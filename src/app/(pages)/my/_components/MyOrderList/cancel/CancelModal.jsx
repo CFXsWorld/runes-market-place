@@ -20,7 +20,7 @@ const CancelModal = forwardRef(({ orders, onOpen, open, reload }, ref) => {
     >
       <Modal.Header>Merge Items</Modal.Header>
       <Modal.Body>
-        <div className="p-6 flex flex-col">
+        <div className="p-6 flex flex-col  bg-fill-e-secondary ">
           <div className="flex-center-between my-[24px]">
             <span className="text-tc-secondary">You will cancel</span>
             <span className="text-white font-medium">

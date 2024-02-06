@@ -49,7 +49,7 @@ const SplitModal = forwardRef(({ reload, onOpen, open, splitOrder }, ref) => {
     >
       <Modal.Header>Split</Modal.Header>
       <Modal.Body>
-        <div className="px-6 pb-3 flex flex-col">
+        <div className="px-6 pb-3 flex flex-col  bg-fill-e-secondary ">
           <div className="flex-center-between">
             <span className="text-[14px] text-tc-secondary">
               #{splitOrder?.id}

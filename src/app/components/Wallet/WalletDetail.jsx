@@ -17,7 +17,7 @@ const WalletDetail = () => {
   const { copy } = useCopy();
   const { disconnect } = useDisconnect();
   return (
-    <div className="flex flex-col py-[32px] w-full">
+    <div className="flex flex-col py-[32px] w-full  bg-fill-e-secondary ">
       <div className="flex-center-between  px-[24px]">
         <div className="flex-center">
           <AvatarIcon />

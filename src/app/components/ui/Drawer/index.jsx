@@ -9,7 +9,7 @@ const Drawer = forwardRef(({ open, onOpen, className }, ref) => {
     <Modal show={open} onClose={() => onOpen(false)} ref={ref} dismissible>
       <Modal.Header>Connect a wallet</Modal.Header>
       <Modal.Body>
-        <div className="mt-6  px-6 flex flex-col">
+        <div className="pt-6  px-6 flex flex-col  bg-fill-e-secondary ">
           {items.map((item) => (
             <button
               key={item.type}

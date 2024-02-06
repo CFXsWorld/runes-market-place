@@ -13,7 +13,7 @@ const ApproveModal = forwardRef(
       <Modal show={open} onClose={() => onOpen(false)}>
         <Modal.Header>Approve Purchase</Modal.Header>
         <Modal.Body>
-          <div className="p-6 flex flex-col">
+          <div className="p-6 flex flex-col  bg-fill-e-secondary ">
             <div className="flex-center-between mb-[12px]">
               <span className="text-tc-secondary">You will pay</span>
               <span className="text-white font-medium">

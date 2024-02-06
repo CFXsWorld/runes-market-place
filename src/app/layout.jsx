@@ -12,6 +12,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import './globals.css';
 import ConnectModal from '@/app/components/Wallet/ConnectModal';
 import TxModal from '@/app/components/Wallet/TxModal';
+import RewardButton from '@/app/components/Reward/RewardButton';
+import RewardModal from '@/app/components/Reward/RewardModal';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -81,6 +83,8 @@ const Dapp = ({ children }) => {
       <WithWallet>
         <ConnectModal />
         <TxModal />
+        <RewardButton />
+        <RewardModal />
         <Flowbite theme={{ theme }}>
           <ToastContainer
             position="bottom-left"

@@ -24,7 +24,7 @@ const TxModal = () => {
         </div>
       </Modal.Header>
       <Modal.Body>
-        <div className="px-6 pb-6 flex flex-col">
+        <div className="px-6 pb-6 flex flex-col  bg-fill-e-secondary ">
           <div className="text-tc-secondary text-[14px]  mb-[24px] pt-[12px] border border-transparent border-t-fill-e-primary min-h-[80px] break-all">
             {`${txId}`}
           </div>

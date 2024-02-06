@@ -8,7 +8,7 @@ const DocsModal = forwardRef(({ onOpen, open }, ref) => {
     <Modal show={open} onClose={() => onOpen(false)}>
       <Modal.Header>Wormhole</Modal.Header>
       <Modal.Body>
-        <div className="p-6 flex flex-col">
+        <div className="p-6 flex flex-col  bg-fill-e-secondary ">
           <p className="text-tc-secondary md:mb-[16px] max:md:mb-[8px] text-[14px]">
             Entering the CFXs world wormhole, the unique “Rosen Bridge” will
             transform CFXs into ERC20 or ERC721.

@@ -32,7 +32,7 @@ export default {
         off: 'hidden',
       },
       sizes: {
-        sm: 'max-w-sm',
+        sm: 'w-auto bg-transparent',
         md: 'max-w-md',
         lg: 'max-w-lg',
         xl: 'max-w-xl',
@@ -51,10 +51,10 @@ export default {
     content: {
       base: 'relative w-full  p-4 md:h-auto max-md:h-auto',
       inner:
-        'relative rounded-[4px] bg-fill-e-secondary shadow dark:bg-gray-700 flex flex-col max-h-[90vh]',
+        'relative rounded-[4px] shadow dark:bg-gray-700 flex flex-col max-h-[90vh]',
     },
     header: {
-      base: 'flex items-start justify-between rounded-t dark:border-gray-600  p-5',
+      base: 'flex items-start justify-between rounded-t dark:border-gray-600   bg-fill-e-secondary  p-5',
       title: 'text-white text-[20px] max-md:text-[18px] font-[500]',
       close: {
         base: 'ml-auto inline-flex items-center rounded-lg bg-transparent p-1.5 text-sm text-gray-400 hover:bg-fill-e-primary hover:text-black-900 dark:hover:bg-black-600 dark:hover:text-white',

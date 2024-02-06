@@ -11,7 +11,7 @@ const FilterModal = forwardRef(
       <Modal show={open} onClose={() => onOpen(false)} dismissible>
         <Modal.Header>Filter</Modal.Header>
         <Modal.Body>
-          <div className="flex flex-col gap-[20px] p-6">
+          <div className="flex flex-col gap-[20px] p-6  bg-fill-e-secondary ">
             <ReorderSelector
               value={formValues.orderType}
               onChange={(orderType) => {

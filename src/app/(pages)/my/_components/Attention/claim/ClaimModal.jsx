@@ -32,7 +32,7 @@ const ClaimModal = forwardRef(({ onOpen, open }, ref) => {
     <Modal show={open} onClose={() => onOpen(false)}>
       <Modal.Header>Check Claimable CFXs</Modal.Header>
       <Modal.Body>
-        <div className="px-6  pb-6 flex flex-col">
+        <div className="px-6  pb-6 flex flex-col  bg-fill-e-secondary ">
           <div className="flex-center-between mb-[12px]">
             <span className="text-tc-secondary">Old World CFXs</span>
             <span className="text-white font-medium">
