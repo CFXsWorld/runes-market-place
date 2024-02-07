@@ -8,6 +8,7 @@ import WithConnect from '@/app/components/Wallet/WithConnect';
 import { toast } from 'react-toastify';
 import { addressFormat } from '@/app/utils';
 import useReward from '@/app/components/Reward/useReward';
+import dayjs from "dayjs";
 const RewardConnect = ({
   isConnected,
   isActive,
@@ -132,6 +133,7 @@ const RewardModal = () => {
     >
       <Modal.Body>
         <div className="">
+          <p className='flex-center py-[10px] text-tc-secondary text-[12px]'>{dayjs.unix(1707393600).format()} start</p>
           {renderRedBg()}
 
           <WithConnect>

@@ -64,7 +64,7 @@ const useAssetsList = ({ open, getData, type }) => {
     if (isSelected) {
       setSelected(selected.filter((record) => record.id !== item.id));
     } else {
-      if ((selected?.length || 0) < 24) {
+      if ((selected?.length || 0) < 23) {
         setSelected([...selected, item]);
       }
     }
@@ -72,7 +72,7 @@ const useAssetsList = ({ open, getData, type }) => {
 
   const selectAll = (checked) => {
     if (checked) {
-      setSelected((source || []).slice(0, 24));
+      setSelected((source || []).slice(0, 23));
     } else {
       setSelected([]);
     }
