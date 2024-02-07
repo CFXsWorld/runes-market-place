@@ -62,7 +62,7 @@ const useReward = () => {
         );
         const signer = await browserProvider.getSigner();
         const contractWithSigner = RedContract.connect(signer);
-        const tx = await contractWithSigner.receiveRed();
+        const tx = await contractWithSigner.receiveRed({ gasLimit: 1561262 });
         const receipt = await tx.wait();
         console.log(
           'received',
