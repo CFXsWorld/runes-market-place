@@ -29,7 +29,7 @@ const useReward = () => {
           getAddress(account)
         );
         setCount(data + '');
-        if (data === 0) {
+        if (data == 0) {
           setStatus('closed');
         }
       } catch (e) {
@@ -43,6 +43,14 @@ const useReward = () => {
       getRemainCount();
     }
   }, [account, browserProvider]);
+
+  useEffect(() => {
+    if (account) {
+      setStatus('opening');
+      setAmount(0);
+    }
+  }, [account]);
+
   const openReward = async () => {
     if (account) {
       try {
@@ -56,7 +64,11 @@ const useReward = () => {
         const contractWithSigner = RedContract.connect(signer);
         const tx = await contractWithSigner.receiveRed();
         const receipt = await tx.wait();
-        const amount = formatUnits(receipt, 'ethers');
+        console.log(
+          'received',
+          formatUnits(BigInt(receipt.logs?.[1]?.args?.[1]))
+        );
+        const amount = formatUnits(BigInt(receipt.logs?.[1]?.args?.[1]));
         setAmount(amount);
         setStatus('opened');
         setCount((prev) => Number(prev) - 1);

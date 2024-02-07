@@ -80,7 +80,7 @@ const RewardModal = () => {
           >
             <div>
               <p className="text-[#9F7D54] text-[66px] mt-[66px]">{amount}</p>
-              <p className="text-[#9F7D54] ">CFXs</p>
+              <p className="text-[#9F7D54]  flex-center">CFXs</p>
             </div>
           </div>
 
@@ -88,6 +88,7 @@ const RewardModal = () => {
             className="w-full text-black bg-theme h-[44px] rounded-[22px] my-[32px] flex-center cursor-pointer"
             onClick={() => {
               if (Number(count) > 0) {
+                setStatus('opening');
                 openReward();
               } else {
                 setStatus('closed');
