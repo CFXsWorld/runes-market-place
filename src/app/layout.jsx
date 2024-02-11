@@ -8,12 +8,10 @@ import WalletProvider, { useWalletStore } from '@/app/store/wallet';
 import { ToastContainer } from 'react-toastify';
 import { useCFXsWallet } from '@/app/components/Wallet';
 import theme from '@/app/components/ui/theme';
-import 'react-toastify/dist/ReactToastify.css';
-import './globals.css';
 import ConnectModal from '@/app/components/Wallet/ConnectModal';
 import TxModal from '@/app/components/Wallet/TxModal';
-import RewardButton from '@/app/components/Reward/RewardButton';
-import RewardModal from '@/app/components/Reward/RewardModal';
+import 'react-toastify/dist/ReactToastify.css';
+import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -69,7 +67,7 @@ const WithWallet = ({ children }) => {
     }
   }, []);
 
-  console.log('current wallet:', walletProvider);
+  // console.log('current wallet:', walletProvider);
 
   if (!wallet) {
     return children;
@@ -81,11 +79,9 @@ const Dapp = ({ children }) => {
   return (
     <WalletProvider>
       <WithWallet>
-        <ConnectModal />
-        <TxModal />
-        <RewardButton />
-        <RewardModal />
         <Flowbite theme={{ theme }}>
+          <ConnectModal />
+          <TxModal />
           <ToastContainer
             position="bottom-left"
             theme={'dark'}
