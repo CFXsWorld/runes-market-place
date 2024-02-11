@@ -88,7 +88,8 @@ const Dapp = ({ children }) => {
             autoClose={2000}
             closeButton={false}
           />
-          <PageLayout>{children}</PageLayout>
+          {/*<PageLayout>{children}</PageLayout>*/}
+          维护中
         </Flowbite>
       </WithWallet>
     </WalletProvider>
