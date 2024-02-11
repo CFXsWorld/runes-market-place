@@ -100,8 +100,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <title>CFXs World</title>
       <body className={inter.className}>
-        {/*<Dapp>{children}</Dapp>*/}
-      
+        <Dapp>{children}</Dapp>
       </body>
     </html>
   );
