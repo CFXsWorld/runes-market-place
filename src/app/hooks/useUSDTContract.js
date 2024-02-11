@@ -1,14 +1,20 @@
 import useWallet from '@/app/hooks/useWallet';
 import { abiMulticall as usdtAbi } from '@/app/contracts/usdt.json';
-import { BrowserProvider, Contract } from 'ethers';
+import { Contract } from 'ethers';
 import useEnv from '@/app/hooks/useEnv';
+import { useMemo } from 'react';
 
 const useUSDTContract = () => {
-  const wallet = useWallet();
   const { USDTContractAddress } = useEnv();
-  const provider = new BrowserProvider(wallet.provider);
+  const { browserProvider } = useWallet();
 
-  return new Contract(USDTContractAddress, usdtAbi, provider);
+  const contract = useMemo(() => {
+    return browserProvider && USDTContractAddress
+      ? new Contract(USDTContractAddress, usdtAbi, browserProvider)
+      : null;
+  }, [browserProvider, USDTContractAddress]);
+
+  return contract;
 };
 
 export default useUSDTContract;

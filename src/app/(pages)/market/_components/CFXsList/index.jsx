@@ -29,19 +29,19 @@ export default function CFXsList({ refreshFloor, type }) {
     setCheckAll,
     refreshing,
   } = useList(type);
-  //
-  // const {
-  //   purchaseOrder,
-  //   handleApprove,
-  //   handlePurchase,
-  //   onBuy,
-  //   getUSDTBalance,
-  //   handleMultiPurchase,
-  //   approveOpen,
-  //   onApproveOpen,
-  //   purchaseOpen,
-  //   onPurchaseOpen,
-  // } = usePurchase({ selected, clearAll, refresh });
+
+  const {
+    purchaseOrder,
+    handleApprove,
+    handlePurchase,
+    onBuy,
+    getUSDTBalance,
+    handleMultiPurchase,
+    approveOpen,
+    onApproveOpen,
+    purchaseOpen,
+    onPurchaseOpen,
+  } = usePurchase({ selected, clearAll, refresh });
 
   return (
     <div>
@@ -69,7 +69,7 @@ export default function CFXsList({ refreshFloor, type }) {
                 item={item}
                 onSelect={onSelect}
                 selected={selected}
-                onBuy={()=>{}}
+                onBuy={handlePurchase}
               />
             );
           })}
@@ -85,28 +85,28 @@ export default function CFXsList({ refreshFloor, type }) {
             <LoadMore loading={isMutating} data={source} noMore={noMore} />
           </div>
         </Waypoint>
-        {/*<MultiHandleBar*/}
-        {/*  selected={selected}*/}
-        {/*  clearAll={clearAll}*/}
-        {/*  selectAll={selectAll}*/}
-        {/*  handleMultiPurchase={handleMultiPurchase}*/}
-        {/*  checkAll={checkAll}*/}
-        {/*/>*/}
+        <MultiHandleBar
+          selected={selected}
+          clearAll={clearAll}
+          selectAll={selectAll}
+          handleMultiPurchase={handleMultiPurchase}
+          checkAll={checkAll}
+        />
       </div>
-      {/*<ApproveModal*/}
-      {/*  open={approveOpen}*/}
-      {/*  onOpen={onApproveOpen}*/}
-      {/*  purchaseOrder={purchaseOrder}*/}
-      {/*  handleApprove={handleApprove}*/}
-      {/*/>*/}
-      {/*<PurchaseModal*/}
-      {/*  open={purchaseOpen}*/}
-      {/*  onOpen={onPurchaseOpen}*/}
-      {/*  purchaseOrder={purchaseOrder}*/}
-      {/*  getUSDTBalance={getUSDTBalance}*/}
-      {/*  refresh={refresh}*/}
-      {/*  onBuy={onBuy}*/}
-      {/*/>*/}
+      <ApproveModal
+        open={approveOpen}
+        onOpen={onApproveOpen}
+        purchaseOrder={purchaseOrder}
+        handleApprove={handleApprove}
+      />
+      <PurchaseModal
+        open={purchaseOpen}
+        onOpen={onPurchaseOpen}
+        purchaseOrder={purchaseOrder}
+        getUSDTBalance={getUSDTBalance}
+        refresh={refresh}
+        onBuy={onBuy}
+      />
     </div>
   );
 }
