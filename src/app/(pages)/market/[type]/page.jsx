@@ -114,7 +114,7 @@ export default function Market() {
           </div>
         </div>
       </div>
-      <CFXsList type={typeValue} />
+      {/*<CFXsList type={typeValue} />*/}
     </div>
   );
 }
