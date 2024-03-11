@@ -47,6 +47,8 @@ import Eye from './svgs/eye.svg';
 import AudioPlay from './svgs/AudioPlay.svg';
 import AudioSound from './svgs/audioSound.svg';
 import ArrowLeft from './svgs/arrow.svg';
+import GoldenLogo from './svgs/goldenLogo.svg';
+import CircleRight from './svgs/circleRight.svg';
 
 export const Icon = ({ className, style, children, ...props }) => {
   return (
@@ -302,5 +304,15 @@ export const LogoutIcon = (props) => (
 export const CopyIcon = (props) => (
   <Icon {...props}>
     <Copy />
+  </Icon>
+);
+export const GoldenLogoIcon = (props) => (
+  <Icon {...props}>
+    <GoldenLogo />
+  </Icon>
+);
+export const CircleRightIcon = (props) => (
+  <Icon {...props}>
+    <CircleRight />
   </Icon>
 );

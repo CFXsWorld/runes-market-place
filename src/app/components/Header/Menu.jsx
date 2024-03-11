@@ -17,6 +17,10 @@ export const menus = [
     name: 'My',
     path: '/my',
   },
+  // {
+  //   name: 'Inscribe',
+  //   path: '/inscribe',
+  // },
   {
     name: 'Documents',
     path: 'https://docs.cfxs.world/',

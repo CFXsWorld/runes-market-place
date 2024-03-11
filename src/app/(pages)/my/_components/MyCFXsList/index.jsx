@@ -4,7 +4,7 @@ import { Waypoint } from 'react-waypoint';
 import useList from './useList';
 import MultiHandleBar from './MultiHandleBar';
 import LoadMore from '@/app/components/LoadMore';
-import Filter from '@/app/(pages)/my/_components/Filter';
+import Filter from './Filter';
 import ListingModal from '@/app/(pages)/my/_components/MyCFXsList/listing/ListingModal';
 import MergeModal from '@/app/(pages)/my/_components/MyCFXsList/merge/MergeModal';
 import TransferModal from '@/app/(pages)/my/_components/MyCFXsList/transfer/TransferModal';

@@ -17,7 +17,9 @@ const PurchaseModal = forwardRef(
     );
 
     useEffect(() => {
-      getBalance();
+      if(getUSDTBalance){
+        getBalance();
+      }
     }, [purchaseOrder]);
 
     const USDTAmount = useMemo(() => {
