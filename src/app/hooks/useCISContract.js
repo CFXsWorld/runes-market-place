@@ -1,9 +1,7 @@
-import abi from '../contracts/cis.json';
+import { abi, address } from '../contracts/CFXsCISAndData.json';
 import useWallet from '@/app/hooks/useWallet';
 import { Contract } from 'ethers';
 import { useMemo } from 'react';
-
-const address = '0x431d4836b36a4a95eedc4c4c48ea3249bda26fe1';
 
 const useCISContract = () => {
   const { browserProvider } = useWallet();
