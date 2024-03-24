@@ -8,7 +8,7 @@ import { useState } from 'react';
 const STATUS = {
   '-2': 'Finalizing',
   1: 'Finalized',
-  0: 'Failed',
+  2: 'Failed',
 };
 
 const TYPES = {
