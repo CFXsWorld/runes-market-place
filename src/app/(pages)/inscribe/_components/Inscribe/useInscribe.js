@@ -10,7 +10,7 @@ import useCISContract from '@/app/hooks/useCISContract';
 const gatewayUrl = 'https://ipfs.4everland.io/ipfs/';
 
 const useInscribe = () => {
-  const { text, onTextChange } = useState('');
+  const [text, onTextChange] = useState('');
   const [type, setType] = useState('file');
   const [openCFXs, onOpenCFXs] = useState(false);
   const [selectedCFXs, onCFXsSelect] = useState(false);
@@ -26,7 +26,7 @@ const useInscribe = () => {
   const inscribe = async () => {
     if (account) {
       try {
-        let inscribeString = '';
+        let inscribeString = text;
         let inscribeType = 3;
         if (type === 'file') {
           const cid = await uploadIPFs(file);
@@ -37,6 +37,7 @@ const useInscribe = () => {
 
         const signer = await browserProvider.getSigner();
         const contractWithSigner = CFXsContract.connect(signer);
+        console.log('inscribeString', inscribeString);
         const tx1 = await contractWithSigner.inscribe(
           selectedCFXs.id,
           inscribeString
