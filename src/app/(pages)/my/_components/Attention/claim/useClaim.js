@@ -21,14 +21,17 @@ const useClaim = ({ open }) => {
   const [dataSource, setDataSource] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [noMore, setNoMore] = useState(false);
+  const [balance, setBalance] = useState(0);
 
   const { contract: oldCFXsContract } = useOldCFXsContract();
   const { contract: bridgeContract } = useBridgeContract();
 
-  const { data: balance, trigger: getBalance } = useSWRMutation(
-    'balanceOf',
-    () => oldCFXsContract.balanceOf(account)
-  );
+  const getBalance = async () => {
+    if (oldCFXsContract && account) {
+      return oldCFXsContract.balanceOf(account);
+    }
+    return 0;
+  };
 
   const {
     data,
@@ -68,7 +71,9 @@ const useClaim = ({ open }) => {
   useEffect(() => {
     if (account && open) {
       refresh();
-      getBalance();
+      getBalance().then((res) => {
+        setBalance(res);
+      });
     }
   }, [account, open]);
 
