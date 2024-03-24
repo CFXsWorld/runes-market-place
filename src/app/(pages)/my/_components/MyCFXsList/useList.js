@@ -6,7 +6,7 @@ import { APIs } from '@/app/services/request';
 import { getMyCFXsList } from '@/app/services';
 import { pageItemCount } from '@/app/utils';
 import { uniqBy } from 'lodash';
-import { getAddress } from 'ethers';
+import { getAddress, isAddress } from 'ethers';
 import useHandleModal from '@/app/(pages)/my/_components/MyCFXsList/useHandleModal';
 import { useWalletStore } from '@/app/store/wallet';
 
@@ -49,10 +49,16 @@ const useList = (type) => {
   }, [account]);
 
   const transformedFilter = useMemo(() => {
-    return {
-      ...filter,
-      owner: account ? getAddress(account) : undefined,
-    };
+    if (isAddress(account)) {
+      return {
+        ...filter,
+        owner: account ? getAddress(account) : undefined,
+      };
+    } else {
+      return {
+        ...filter,
+      };
+    }
   }, [account, filter]);
 
   const mounted = useMounted();

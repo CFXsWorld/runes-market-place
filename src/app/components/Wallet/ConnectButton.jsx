@@ -9,7 +9,9 @@ import { cn } from '@/app/utils/classnames';
 import { toast } from 'react-toastify';
 import WalletInfoDropDown from '@/app/components/Wallet/WalletInfoDropDown';
 import WalletInfoModal from '@/app/components/Wallet/WalletInfoModal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import useWallet from '@/app/hooks/useWallet';
+import useCISContract from '@/app/hooks/useCISContract';
 
 const PCConnect = ({
   isConnected,
@@ -20,6 +22,26 @@ const PCConnect = ({
   correctChainIdHex,
 }) => {
   const onOpen = useWalletStore((state) => state.onOpen);
+  const { browserProvider } = useWallet();
+  const { contract: CISContract } = useCISContract();
+  const [cis, setCIS] = useState('');
+
+  const getCISName = async () => {
+    try {
+      const signer = await browserProvider.getSigner();
+      const contractWithSigner = CISContract.connect(signer);
+      const data = await contractWithSigner.getAddrId(account);
+      if (data[0]) {
+        setCIS(data[1].toString());
+      }
+    } catch (e) {}
+  };
+  useEffect(() => {
+    if (account) {
+      getCISName();
+    }
+  }, [account]);
+
   const switchNetwork = async () => {
     try {
       if (!isCorrectChain) {
@@ -57,7 +79,9 @@ const PCConnect = ({
           renderTrigger={() => (
             <Button color="secondary" className="flex-center">
               <ActiveIcon />
-              <div className="ml-[5px]">{addressFormat(account)}</div>
+              <div className="ml-[5px]">
+                {cis && cis !== '0' ? `CIS:${cis}` : addressFormat(account)}
+              </div>
             </Button>
           )}
         />
@@ -89,6 +113,26 @@ const MobileConnect = ({
 }) => {
   const onOpen = useWalletStore((state) => state.onOpen);
   const [openInfo, onOpenInfo] = useState(false);
+  const { browserProvider } = useWallet();
+  const { contract: CISContract } = useCISContract();
+  const [cis, setCIS] = useState('');
+
+  const getCISName = async () => {
+    try {
+      const signer = await browserProvider.getSigner();
+      const contractWithSigner = CISContract.connect(signer);
+      const data = await contractWithSigner.getAddrId(account);
+      if (data[0]) {
+        setCIS(data[1].toString());
+      }
+    } catch (e) {}
+  };
+  useEffect(() => {
+    if (account) {
+      getCISName();
+    }
+  }, [account]);
+
   const switchNetwork = async () => {
     try {
       if (!isCorrectChain) {
@@ -125,7 +169,9 @@ const MobileConnect = ({
           }}
         >
           <ActiveIcon />
-          <span className="ml-[5px]">{addressFormatShort(account)}</span>
+          <span className="ml-[5px]">
+            {cis ? `CIS:${cis}` : addressFormatShort(account)}
+          </span>
         </Button>
       </>
     );
