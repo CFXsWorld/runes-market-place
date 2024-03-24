@@ -28,7 +28,7 @@ const useClaim = ({ open }) => {
 
   const getBalance = async () => {
     if (oldCFXsContract && account) {
-      return oldCFXsContract.balanceOf(account);
+      return oldCFXsContract?.balanceOf?.(account);
     }
     return 0;
   };
