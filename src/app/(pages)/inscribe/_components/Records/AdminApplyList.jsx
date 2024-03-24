@@ -1,9 +1,9 @@
-import CFXsPreview from "@/app/(pages)/inscribe/_components/Records/CFXsPreview";
-import { Button } from "flowbite-react";
-import { Waypoint } from "react-waypoint";
-import LoadMore from "@/app/components/LoadMore";
-import useMyRecordsList from "@/app/(pages)/inscribe/_components/Records/useRecord";
-import { useState } from "react";
+import CFXsPreview from '@/app/(pages)/inscribe/_components/Records/CFXsPreview';
+import { Button } from 'flowbite-react';
+import { Waypoint } from 'react-waypoint';
+import LoadMore from '@/app/components/LoadMore';
+import useApplyInscribe from '@/app/(pages)/inscribe/_components/Records/useApplyInscribe';
+import { useState } from 'react';
 
 const STATUS = {
   '-2': 'Finalizing',
@@ -16,9 +16,10 @@ const TYPES = {
   2: 'Audio',
   3: 'Text',
 };
-const MyRecordsList = () => {
-  const { source, refreshing, loadMore, isMutating, noMore, refresh } =
-    useMyRecordsList();
+
+const AdminApplyList = () => {
+  const { source, refreshing, loadMore, isMutating, noMore, refresh, apply } =
+    useApplyInscribe();
   const [open, onOpen] = useState(false);
   const [item, setItem] = useState(null);
   return (
@@ -54,13 +55,24 @@ const MyRecordsList = () => {
               <div className="flex-1">
                 {STATUS[item.allowed] || 'Finalizing'}
               </div>
-              <div className="w-[100px]">
+              <div className="w-[180px] flex items-center gap-[10px]">
                 <Button
                   color="outline"
                   className="max-sm:text-[12px] btn btn-outline btn-primary max-sm:h-[26px] max-sm:min-h-[26px] h-[30px] min-h-[30px] text-[12px] font-normal line-clamp-1 ml-[3px] w-full"
-                  disabled
+                  onClick={() => {
+                    apply(item, 2);
+                  }}
                 >
-                  Register
+                  Fail
+                </Button>
+                <Button
+                  color="outline"
+                  className="max-sm:text-[12px] btn btn-outline btn-primary max-sm:h-[26px] max-sm:min-h-[26px] h-[30px] min-h-[30px] text-[12px] font-normal line-clamp-1 ml-[3px] w-full"
+                  onClick={() => {
+                    apply(item, 1);
+                  }}
+                >
+                  Confirm
                 </Button>
               </div>
             </div>
@@ -88,4 +100,4 @@ const MyRecordsList = () => {
   );
 };
 
-export default MyRecordsList;
+export default AdminApplyList;

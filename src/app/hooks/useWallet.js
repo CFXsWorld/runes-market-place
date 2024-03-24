@@ -5,12 +5,10 @@ import { useMemo } from 'react';
 const useWallet = () => {
   const wallet = useWalletStore((state) => state.wallet);
 
-  const browserProvider = useMemo(
-    () => wallet?.provider && new BrowserProvider(wallet.provider),
-    [wallet?.provider]
-  );
-
-  return { ...wallet, browserProvider };
+  const browserProvider = useMemo(() => {
+    return wallet?.provider && new BrowserProvider(wallet.provider);
+  }, [wallet?.provider]);
+  return { ...wallet, browserProvider, wallet };
 };
 
 export default useWallet;
