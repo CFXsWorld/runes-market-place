@@ -28,7 +28,7 @@ const productApi = {
   [APIs.MY_OLD_CFXs_LIST]: '/api/cfxs/my/old',
   [APIs.CLAIM_SYNC_DATA]: '/api/mint/mints',
   [APIs.MY_NFT_LIST]: '/api/cfxs/my/nft',
-  [APIs.MY_INSCRIBE_RECORDS]: '/api/cfxs/my/new',
+  [APIs.MY_INSCRIBE_RECORDS]: '/api/cfxs/my/new2',
 };
 
 const request = async (api, { params, ...rest } = {}) => {
