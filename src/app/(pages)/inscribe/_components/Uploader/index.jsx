@@ -19,7 +19,9 @@ const AUDIO_TYPES = [
 const ALLOWED_FILE_TYPES = [...IMAGE_TYPES, ...AUDIO_TYPES];
 
 const formatBytes = (bytes) => {
-  if (bytes === 0) return '0 Bytes';
+  if (bytes === 0) {
+    return '0 Bytes';
+  }
   const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
