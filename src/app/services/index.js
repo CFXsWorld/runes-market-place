@@ -28,3 +28,7 @@ export const fetchSyncData = (_, { arg }) => {
     (r) => r.text()
   );
 };
+
+export const getMyInscribeRecords= (_, { arg }) => {
+  return request(APIs.MY_INSCRIBE_RECORDS, { method: 'get', params: arg });
+};

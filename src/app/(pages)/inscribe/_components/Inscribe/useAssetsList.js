@@ -3,8 +3,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { pageItemCount } from '@/app/utils';
 import { uniqBy } from 'lodash';
 import { useWalletStore } from '@/app/store/wallet';
-const useAssetsList = ({ open, getData, type }) => {
-  const [selected, setSelected] = useState([]);
+const useAssetsList = ({ open, getData }) => {
+  const [selected, setSelected] = useState(null);
   const [dataSource, setDataSource] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [noMore, setNoMore] = useState(false);
@@ -50,37 +50,17 @@ const useAssetsList = ({ open, getData, type }) => {
         Object.keys(dataSource)
           .sort()
           .reduce((prev, next) => prev.concat(dataSource[next]), []),
-        (item) => (type === 'NFT' ? item.tokenid : item.id)
+        (item) => item.id
       );
     }
     return null;
   }, [dataSource]);
-  const clearAll = () => {
-    setSelected([]);
-  };
 
   const onSelect = (item) => {
-    const isSelected = selected?.find((re) => re.id === item.id);
-    if (isSelected) {
-      setSelected(selected.filter((record) => record.id !== item.id));
-    } else {
-      if ((selected?.length || 0) < 23) {
-        setSelected([...selected, item]);
-      }
-    }
-  };
-
-  const selectAll = (checked) => {
-    if (checked) {
-      setSelected((source || []).slice(0, 23));
-    } else {
-      setSelected([]);
-    }
+    setSelected(item);
   };
 
   return {
-    clearAll,
-    selectAll,
     selected,
     source,
     refresh,

@@ -2,30 +2,31 @@
 
 import { Modal } from 'flowbite-react';
 import { forwardRef } from 'react';
-import AssetsList from '@/app/(pages)/wormhole/_components/TokenInput/AssetsList';
+import AssetsList from './AssetsList';
 import useSWRMutation from 'swr/mutation';
 import { APIs } from '@/app/services/request';
-import { getMyNFTList } from '@/app/services';
+import { getMyCFXsList } from '@/app/services';
 
-const NFTModal = forwardRef(({ onOpen, open, onSelect }, ref) => {
+const CFXsModal = forwardRef(({ onOpen, open, onSelect }, ref) => {
   const { isMutating, trigger: getData } = useSWRMutation(
-    APIs.MY_NFT_LIST,
-    getMyNFTList
+    APIs.MY_CFXs_LIST,
+    getMyCFXsList
   );
+
   return (
     <Modal show={open} onClose={() => onOpen(false)}>
-      <Modal.Header>Select NFT</Modal.Header>
+      <Modal.Header>Select CFXs</Modal.Header>
       <Modal.Body>
         <AssetsList
           onConfirm={onSelect}
           open={open}
           getData={getData}
           isMutating={isMutating}
-          type="NFT"
+          type="CFXs"
         />
       </Modal.Body>
     </Modal>
   );
 });
 
-export default NFTModal;
+export default CFXsModal;
