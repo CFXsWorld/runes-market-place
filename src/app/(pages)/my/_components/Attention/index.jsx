@@ -11,7 +11,7 @@ const Attention = () => {
 
   return (
     <div className="w-full border border-theme-non-opaque rounded-[8px] mb-[32px] max-md:mb-[16px]  p-[24px] flex items-start max-md:p-[12px]">
-      <ClaimModal open={openClaim} onOpen={onOpenClaim} />
+      {/*<ClaimModal open={openClaim} onOpen={onOpenClaim} />*/}
       <div className="pt-[5px] mr-[12px] max-md:hidden">
         <FlagIcon />
       </div>
