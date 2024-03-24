@@ -6,11 +6,9 @@ import { Button } from 'flowbite-react';
 import WithAuth from '@/app/components/Wallet/WithAuth';
 import usePromiseLoading from '@/app/hooks/usePromiseLoading';
 import { cn } from '@/app/utils/classnames';
-import { useState } from 'react';
 import FileUpload from '@/app/(pages)/inscribe/_components/Uploader';
 import Checkbox from '@/app/components/ui/Checkbox';
 import CFXsModal from './CFXsModal';
-import useUpload from '@/app/(pages)/inscribe/_components/Inscribe/useUpload';
 import TextInput from '@/app/(pages)/inscribe/_components/TextInput';
 
 export const tabs = [
@@ -84,15 +82,17 @@ const Inscribe = () => {
         )}
       </div>
 
-      <div className="w-full flex justify-start mt-[20px] ">
-        <Checkbox
-          value={true}
-          disabled
-          className="text-tc-secondary max-md:text-[12px] max-md:mr-[16px]"
-        >
-          Publish On IPFs
-        </Checkbox>
-      </div>
+      {type === 'file' && (
+        <div className="w-full flex justify-start mt-[20px] ">
+          <Checkbox
+            value={true}
+            disabled
+            className="text-tc-secondary max-md:text-[12px] max-md:mr-[16px]"
+          >
+            Publish On IPFs
+          </Checkbox>
+        </div>
+      )}
       <CFXsModal
         onOpen={onOpenCFXs}
         open={openCFXs}

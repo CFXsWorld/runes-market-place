@@ -2,11 +2,25 @@ import { Waypoint } from 'react-waypoint';
 import LoadMore from '@/app/components/LoadMore';
 import useMyRecordsList from '@/app/(pages)/inscribe/_components/Records/useRecord';
 import { Button } from 'flowbite-react';
-import { LoadingIcon } from '@/app/components/icons';
+import CFXsPreview from '@/app/(pages)/inscribe/_components/Records/CFXsPreview';
+import { useState } from 'react';
 
+const STATUS = {
+  '-2': 'Finalizing',
+  1: 'Finalized',
+  0: 'Failed',
+};
+
+const TYPES = {
+  1: 'Image',
+  2: 'Audio',
+  3: 'Text',
+};
 const Records = () => {
   const { source, refreshing, loadMore, isMutating, noMore, refresh } =
     useMyRecordsList();
+  const [open, onOpen] = useState(false);
+  const [item, setItem] = useState(null);
   return (
     <div>
       <p className="text-white text-[18px] mb-[20px] font-bold">Records</p>
@@ -14,6 +28,7 @@ const Records = () => {
         You need to register after submitting an inscription of your CFXs or the
         content can not be displayed on the market.
       </p>
+      <CFXsPreview open={open} onOpen={onOpen} item={item} />
       <div className="w-full pt-[32px] pb-[96px]">
         <div className="flex-center bg-fill-secondary py-[10px] px-[10px] rounded-[12px] text-tc-secondary">
           <div className="w-[100px]">Type</div>
@@ -24,10 +39,22 @@ const Records = () => {
           {(source || []).map((item) => (
             <div
               key={item.id}
-              className="w-full flex-center py-[8px] px-[10px]"
+              className="w-full flex-center py-[8px] px-[10px] text-[14px]"
             >
-              <div className="w-[100px] text-theme">Image</div>
-              <div className="flex-1">{item.id}</div>
+              <div className="w-[100px] text-theme">
+                <span
+                  className="border border-transparent border-b-theme cursor-pointer"
+                  onClick={() => {
+                    setItem(item);
+                    onOpen(true)
+                  }}
+                >
+                  {TYPES[item.regmarket] || 'UNKNOWN'}
+                </span>
+              </div>
+              <div className="flex-1">
+                {STATUS[item.allowed] || 'Finalizing'}
+              </div>
               <div className="w-[100px]">
                 <Button
                   color="outline"

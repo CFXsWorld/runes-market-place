@@ -14,4 +14,7 @@
   .flex-around {
     @apply flex justify-around  items-center;
   }
+  .break-anywhere {
+    overflow-wrap: anywhere;
+  }
 }
