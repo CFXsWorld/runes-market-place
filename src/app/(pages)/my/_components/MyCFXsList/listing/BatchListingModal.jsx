@@ -133,7 +133,7 @@ const BatchListingModal = forwardRef(
             </div>
             <div className="flex-center-between mt-[10px]">
               <span className="text-tc-secondary">Market fee</span>
-              <span className="text-tc-secondary font-medium line-through">
+              <span className="text-tc-secondary font-medium">
                 0.3%
               </span>
             </div>
