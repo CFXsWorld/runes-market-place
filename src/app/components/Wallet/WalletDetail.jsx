@@ -50,7 +50,7 @@ const WalletDetail = () => {
         <div className="flex-center">
           {cis ? <GoldenLogoIcon /> : <AvatarIcon />}
           <div className="flex flex-col ml-[10px]">
-            {cis && <span className="pb-[4px]">CIS: {cis}</span>}
+            {cis&&cis!=='0' && <span className="pb-[4px]">CIS: {cis}</span>}
 
             <span className="flex items-center text-tc-secondary text-[14px] gap-[10px]">
               {addressFormat(account)}

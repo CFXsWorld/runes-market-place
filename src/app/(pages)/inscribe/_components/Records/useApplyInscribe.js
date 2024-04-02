@@ -26,7 +26,7 @@ const useMyRecordsList = () => {
     size: pageItemCount,
     merged: 0,
     id: undefined,
-    allow: -2,
+    allow: 0,
     // owner: 'undefined',
   });
 

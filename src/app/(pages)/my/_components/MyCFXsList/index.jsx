@@ -122,7 +122,7 @@ export default function MyCFXsList({ type }) {
             }}
           >
             <div className="w-full">
-              <LoadMore loading={isMutating} data={source} noMore={noMore} />
+              <LoadMore loading={isMutating} data={source} noMore={noMore} refresh={loadMore} />
             </div>
           </Waypoint>
 

@@ -49,7 +49,7 @@ const Records = () => {
         >
           Records
         </p>
-        {isAdmin && (
+        {/*{isAdmin && (*/}
           <p
             className={cn(
               'text-tc-secondary text-[18px] mb-[20px] font-bold cursor-pointer',
@@ -61,7 +61,7 @@ const Records = () => {
           >
             Submitting
           </p>
-        )}
+        {/*)}*/}
       </div>
 
       {listType === 'record' && <MyRecordsList />}

@@ -30,7 +30,6 @@ const Header = () => {
         <div className="flex-center">
           <div className="flex-center mr-[85px]">
             <Link href="/">
-              {' '}
               <LogoIcon />
             </Link>
           </div>

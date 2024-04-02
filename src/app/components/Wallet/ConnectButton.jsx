@@ -170,7 +170,7 @@ const MobileConnect = ({
         >
           <ActiveIcon />
           <span className="ml-[5px]">
-            {cis ? `CIS:${cis}` : addressFormatShort(account)}
+            {cis && cis !== '0' ? `${cis}` : addressFormatShort(account)}
           </span>
         </Button>
       </>
