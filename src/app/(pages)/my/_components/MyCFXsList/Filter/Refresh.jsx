@@ -5,20 +5,21 @@ import { cn } from '@/app/utils/classnames';
 import useCFXsContract from '@/app/hooks/useCFXsContract';
 import { useWalletStore } from '@/app/store/wallet';
 import { useEffect, useState } from 'react';
-import { getAddress, isAddress } from 'ethers';
+import { Contract, getAddress, isAddress } from "ethers";
 
 const Refresh = ({ className, reload, total }) => {
   const [balance, setBalance] = useState(0);
-  const { contract } = useCFXsContract();
+  const { provider, newContractAddress, abi } = useCFXsContract();
   const account = useWalletStore((state) => state.account);
 
   useEffect(() => {
-    if (isAddress(account) && contract) {
+    if (isAddress(account)) {
+      const contract  = new Contract(newContractAddress,abi,provider)
       contract.balanceOf(getAddress(account)).then((res) => {
         setBalance(res.toString());
       });
     }
-  }, [account, contract]);
+  }, [account]);
   return (
     <div className={cn('flex-center', className)}>
       <span className="text-tc-secondary flex-shrink-0 flex-center gap-[12px]">
