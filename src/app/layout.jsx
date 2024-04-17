@@ -58,11 +58,11 @@ const WithWallet = ({ children }) => {
     (state) => state.updateWalletProvider
   );
   const wallets = useCFXsWallet();
-  const wallet = wallets[walletProvider];
+  const wallet = wallets[walletProvider||'MetaMask'];
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const last = localStorage.getItem('walletProvider');
+      const last = localStorage.getItem('walletProvider')||'MetaMask';
       if(last){
         updateWalletProvider(last);
       }
