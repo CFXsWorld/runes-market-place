@@ -14,7 +14,7 @@ const useWallet = () => {
   const wallet = useWalletStore((state) => state.wallet);
 
   const browserProvider = useMemo(() => {
-    return new BrowserProvider(wallet.provider || OKXWallet.provider);
+    return wallet?.provider && new BrowserProvider(wallet?.provider || OKXWallet.provider);
   }, [wallet?.provider]);
 
   return {
