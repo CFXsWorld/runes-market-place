@@ -19,7 +19,7 @@ const Refresh = ({ className, reload, total }) => {
         setBalance(res.toString());
       });
     }
-  }, [account]);
+  }, [abi, account, newContractAddress, provider]);
   return (
     <div className={cn('flex-center', className)}>
       <span className="text-tc-secondary flex-shrink-0 flex-center gap-[12px]">

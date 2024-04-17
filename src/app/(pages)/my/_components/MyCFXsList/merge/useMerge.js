@@ -1,13 +1,27 @@
 import useWallet from '@/app/hooks/useWallet';
 import useCFXsContract from '@/app/hooks/useCFXsContract';
-import { toast } from 'react-toastify';
-import { getAddress } from 'ethers';
-import { useWalletStore } from "@/app/store/wallet";
+import {
+  toast
+} from 'react-toastify';
+import {
+  getAddress
+} from 'ethers';
+import {
+  useWalletStore
+} from "@/app/store/wallet";
 
-const useMerge = ({ selected, onOpen, reload }) => {
-  const { browserProvider } = useWallet();
-  const { contract: CFXsContract } = useCFXsContract();
-  const account = useWalletStore(state=>state.account);
+const useMerge = ({
+  selected,
+  onOpen,
+  reload
+}) => {
+  const {
+    browserProvider
+  } = useWallet();
+  const {
+    contract: CFXsContract
+  } = useCFXsContract();
+  const account = useWalletStore(state => state.account);
   const merge = async () => {
     if (account && selected?.length) {
       try {
@@ -26,11 +40,13 @@ const useMerge = ({ selected, onOpen, reload }) => {
         onOpen(false);
       } catch (e) {
         console.log(e);
-        toast.error('Merge failed !');
+        toast.error(`Merge failed \n ${e?.message||e?.response?.message||''}`);
       }
     }
   };
-  return { merge };
+  return {
+    merge
+  };
 };
 
 export default useMerge;

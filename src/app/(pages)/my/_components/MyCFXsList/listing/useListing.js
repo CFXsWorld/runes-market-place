@@ -1,18 +1,33 @@
-import { useMemo, useState } from 'react';
+import {
+  useMemo,
+  useState
+} from 'react';
 import dayjs from 'dayjs';
 import useWallet from '@/app/hooks/useWallet';
-import { parseUnits } from 'ethers';
-import { toast } from 'react-toastify';
+import {
+  parseUnits
+} from 'ethers';
+import {
+  toast
+} from 'react-toastify';
 import useCFXsContract from '@/app/hooks/useCFXsContract';
 
-const useListing = ({ listingOrder, reload, onOpen }) => {
+const useListing = ({
+  listingOrder,
+  reload,
+  onOpen
+}) => {
   const fee = 0;
 
   const [price, setPrice] = useState();
   const [duration, setDuration] = useState(dayjs().add(2, 'day'));
   const dateFormate = (date) => dayjs(date).format('YYYY-MM-DD');
-  const { browserProvider } = useWallet();
-  const { contract: CFXsContract } = useCFXsContract();
+  const {
+    browserProvider
+  } = useWallet();
+  const {
+    contract: CFXsContract
+  } = useCFXsContract();
 
   const durationHours = useMemo(() => {
     return Math.ceil(dayjs(duration).diff(dayjs(), 'day', true)) * 24;
@@ -35,7 +50,7 @@ const useListing = ({ listingOrder, reload, onOpen }) => {
         onOpen(false);
       } catch (e) {
         console.log(e);
-        toast.error('Listing failed !');
+        toast.error(`Listing failed \n ${e?.message||e?.response?.message||''}`);
       }
     }
   };

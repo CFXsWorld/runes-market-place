@@ -1,10 +1,23 @@
-import { useMemo, useState } from 'react';
+import {
+  useMemo,
+  useState
+} from 'react';
 import useWallet from '@/app/hooks/useWallet';
-import { isAddress, getAddress } from 'ethers';
-import { toast } from 'react-toastify';
+import {
+  isAddress,
+  getAddress
+} from 'ethers';
+import {
+  toast
+} from 'react-toastify';
 import useCFXsContract from '@/app/hooks/useCFXsContract';
-import { omit, uniqueId } from 'lodash';
-import { useWalletStore } from '@/app/store/wallet';
+import {
+  omit,
+  uniqueId
+} from 'lodash';
+import {
+  useWalletStore
+} from '@/app/store/wallet';
 
 export const SPLIT_TYPE = {
   CUSTOM: 'CUSTOM',
@@ -19,15 +32,28 @@ const DEFAULT_OUTPUT = {
 
 const TEMP_ID = `__output__`;
 
-const useSplit = ({ reload, onOpen, splitOrder }) => {
+const useSplit = ({
+  reload,
+  onOpen,
+  splitOrder
+}) => {
   const [splitType, setSplitType] = useState(SPLIT_TYPE.CUSTOM);
-  const [items, setItems] = useState(() => [
-    { ...DEFAULT_OUTPUT, id: `${TEMP_ID}${uniqueId()}` },
-    { ...DEFAULT_OUTPUT, id: `${TEMP_ID}${uniqueId()}` },
+  const [items, setItems] = useState(() => [{
+      ...DEFAULT_OUTPUT,
+      id: `${TEMP_ID}${uniqueId()}`
+    },
+    {
+      ...DEFAULT_OUTPUT,
+      id: `${TEMP_ID}${uniqueId()}`
+    },
   ]);
   const [shareCount, setShareCount] = useState();
-  const { browserProvider } = useWallet();
-  const { contract: CFXsContract } = useCFXsContract();
+  const {
+    browserProvider
+  } = useWallet();
+  const {
+    contract: CFXsContract
+  } = useCFXsContract();
   const account = useWalletStore((state) => state.account);
 
   const shareItems = useMemo(() => {
@@ -38,8 +64,7 @@ const useSplit = ({ reload, onOpen, splitOrder }) => {
       const remainder = Number(splitOrder.amount) % Number(shareCount);
       return [...new Array(Number(shareCount))].map((_, index) => ({
         owner: getAddress(account),
-        amount:
-          index === Number(shareCount) - 1 ? quotient + remainder : quotient,
+        amount: index === Number(shareCount) - 1 ? quotient + remainder : quotient,
         data: '',
       }));
     }
@@ -74,7 +99,7 @@ const useSplit = ({ reload, onOpen, splitOrder }) => {
         toast.success('Split success !');
         onOpen(false);
       } catch (e) {
-        toast.error('Split failed !');
+        toast.error(`Split failed \n ${e?.message||e?.response?.message||''}`);
       }
     }
   };
@@ -82,7 +107,10 @@ const useSplit = ({ reload, onOpen, splitOrder }) => {
   const addItem = (item, index) => {
     if (setItems.length < 24) {
       setItems((prev) => {
-        return [...prev, { ...DEFAULT_OUTPUT, id: `${TEMP_ID}${uniqueId()}` }];
+        return [...prev, {
+          ...DEFAULT_OUTPUT,
+          id: `${TEMP_ID}${uniqueId()}`
+        }];
       });
     }
   };
