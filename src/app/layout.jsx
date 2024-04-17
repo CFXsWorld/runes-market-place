@@ -63,11 +63,14 @@ const WithWallet = ({ children }) => {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const last = localStorage.getItem('walletProvider');
-      updateWalletProvider(last);
+      if(last){
+        updateWalletProvider(last);
+      }
+
     }
   }, []);
 
-  // console.log('current wallet:', walletProvider);
+  console.log('current wallet:', walletProvider);
 
   if (!wallet) {
     return children;
