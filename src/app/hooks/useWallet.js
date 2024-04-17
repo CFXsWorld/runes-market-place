@@ -11,11 +11,11 @@ import * as OKXWallet from '@cfxjs/use-wallet-react/ethereum';
 
 
 const useWallet = () => {
-  const wallet = useWalletStore((state) => state.wallet);
+  const wallet = useWalletStore((state) => state.wallet || OKXWallet);
 
   const browserProvider = useMemo(() => {
-    return wallet?.provider && new BrowserProvider(wallet?.provider || OKXWallet.provider);
-  }, [wallet?.provider]);
+    return OKXWallet?.provider && new BrowserProvider(OKXWallet?.provider);
+  }, []);
 
   return {
     ...wallet,

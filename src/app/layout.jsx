@@ -66,9 +66,8 @@ const WithWallet = ({ children }) => {
       if(last){
         updateWalletProvider(last);
       }
-
     }
-  }, []);
+  }, [updateWalletProvider]);
 
   console.log('current wallet:', walletProvider);
 
