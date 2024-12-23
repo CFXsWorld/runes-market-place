@@ -34,7 +34,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'https://api3.conins.io/:path*',
+        destination: 'https://api.cfxs.io/:path*',
       },
     ];
   },

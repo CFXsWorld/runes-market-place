@@ -1,6 +1,15 @@
-import { createContext, useContext, useRef } from 'react';
-import { immer } from 'zustand/middleware/immer';
-import { createStore, useStore } from 'zustand';
+import {
+  createContext,
+  useContext,
+  useRef
+} from 'react';
+import {
+  immer
+} from 'zustand/middleware/immer';
+import {
+  createStore,
+  useStore
+} from 'zustand';
 
 const context = createContext(null);
 
@@ -65,13 +74,20 @@ const create = (initProps = {}) =>
     }))
   );
 
-const WalletProvider = ({ children, store }) => {
+const WalletProvider = ({
+  children,
+  store
+}) => {
   const storeRef = useRef();
   if (!storeRef.current) {
     storeRef.current = create(store);
   }
-  return (
-    <context.Provider value={storeRef.current}> {children}</context.Provider>
+  return ( <
+    context.Provider value = {
+      storeRef.current
+    } > {
+      children
+    } < /context.Provider>
   );
 };
 
